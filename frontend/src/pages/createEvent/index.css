@@ -1,0 +1,178 @@
+.createWrapper{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 100%;
+    height: auto;
+    gap: 1rem;
+}
+
+.createHeader{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+}
+
+.createTitle{
+    font-size: 20px;
+    font-weight: 600;
+    color: #000;
+}
+
+.createDesc{
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+    text-align: center;
+}
+
+.createBody{
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: 3fr 2fr;
+    gap: 1rem;
+}
+
+.createPreviewArea{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.createBtn{
+    width: 100%;
+    height: 36px;
+    padding: 0;
+    background: var(--accent-color);
+    color: #fff;
+    border-radius: 8px;
+    font-size: 16px;
+    outline: none;
+    border: none;
+    cursor: pointer;
+}
+
+.createBtn:hover{
+    opacity: 0.8;
+}
+
+
+
+.createInputWrapper{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.createInputSelectBoxs{
+    width: 100%;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.createLocationArea{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 1rem;
+}
+
+.createLocationPricesAndPreview{
+    width: 100%;
+    height: auto;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 8px;
+}
+
+.createLocationPreview{
+    border: 1px solid var(--button-color);
+    border-radius: 8px;
+    padding: 8px;
+    width: calc(100% - 16px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.createLocationPreviewTitle{
+    width: 50%;
+    border: 1px solid #000;
+    border-radius: 4px;
+    padding: 4px;
+    text-align: center;
+}
+
+.createLocationPreviewContent{
+    width: 100%;
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: space-between;
+    border: 1px solid #000;
+    border-radius: 4px;
+    margin-top: 8px;
+    overflow: hidden;
+}
+
+.createLocationPreviewContentItem{
+    height: 33%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.createLocationPreviewContentItem:nth-child(2){
+    border-top: 1px solid #000;
+    border-bottom: 1px solid #000;
+}
+
+.createLocationPreviewContentItem span{
+    font-size: 14px;
+    font-weight: 400;
+    color: #000;
+}
+
+.createPreviewImage{
+    background: red;
+    width: 100%;
+    position: relative;
+    height: auto;
+}
+
+.createPreviewImage img{
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    aspect-ratio: 16/9;
+}
+
+.createPreviewImage input{
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    z-index: 0;
+    top: 0;
+    left: 0;
+}
+
+

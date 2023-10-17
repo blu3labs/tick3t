@@ -1,0 +1,42 @@
+.uiInputWrapper{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 2px;
+}
+
+.uiInputWrapper span{
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+}
+
+.uiInputWrapper input{
+    height: 36px;
+    width: calc(100% - 16px);
+    padding: 0 8px;
+    border-radius: 8px;
+    border: 1px solid var(--button-color);
+    outline: none;
+    background: none;
+    font-size: 16px;
+    font-weight: 400;
+    color: #000;
+}
+
+.uiInputWrapper input:focus{
+    border: 1px solid #000;
+}
+
+.uiInputWrapper p{
+    margin: 0;
+    padding: 0;
+    min-height: 21px;
+    font-size: 14px;
+    color: var(--accent-color);
+    font-weight: 600;
+    margin-bottom: 2px;
+}
