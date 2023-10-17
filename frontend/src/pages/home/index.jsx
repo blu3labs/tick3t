@@ -7,6 +7,15 @@ import "./index.css";
 function Home() {
   const [category, setCategory] = useState("All Events");
 
+  let filteredEvents = events?.filter((item) => {
+    if (category === "All Events") {
+      return item;
+    } else {
+      return item.category === category;
+    }
+  });
+
+
   return (
     <div className="homeWrapper">
       <Category category={category} setCategory={setCategory} />
@@ -19,13 +28,13 @@ function Home() {
         <div className="homeNoEvents">
           <span>Someting went wrong. Please try again later.</span>
         </div>
-      ) : events?.length == 0 ? (
+      ) : filteredEvents?.length == 0 ? (
         <div className="homeNoEvents">
           <span>There is no event in this category.</span>
         </div>
       ) : (
         <div className="homeEvents">
-          {events?.map((item, index) => {
+          {filteredEvents?.map((item, index) => {
             return <Card key={index} index={index} item={item} />;
           })}
         </div>

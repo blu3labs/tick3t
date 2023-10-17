@@ -17,28 +17,20 @@ function Card({ index, item }) {
       ></div>
       <div className="homeEventCardInfo">
         <div className="homeEventCardInfoTop">
-        <div className="homeEventCardTitle">{item.title}</div>
-        <div className="homeEventCardDateClock">
+          <div className="homeEventCardTitle">{item.title}</div>
+          <div className="homeEventCardDateClock">
             <div className="homeEventCardDate">
-
-          <FaRegCalendarAlt className="homeEventCardDateIcon" />
-          <span>{item.date}</span>
+              <FaRegCalendarAlt className="homeEventCardDateIcon" />
+              <span>{item.date}</span>
             </div>
-            <div className="homeEventCardClock">
-
-          {item.clock}
-            </div>
-
+            <div className="homeEventCardClock">{item.clock}</div>
+          </div>
         </div>
-        </div>
-
-
         <div className="homeEventCardLocation">
-        <HiOutlineLocationMarker className="homeEventCardLocationIcon" />
-        <span>{item.location}</span>
+          <HiOutlineLocationMarker className="homeEventCardLocationIcon" />
+          <span>{item.location}</span>
+        </div>
       </div>
-      </div>
-    
     </Link>
   );
 }
