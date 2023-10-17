@@ -1,0 +1,54 @@
+.header {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  padding: 1rem 0;
+}
+
+.headerLogo {
+  text-decoration: none;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: auto;
+  height: auto;
+}
+
+.headerLogo img {
+  width: 36px;
+  height: 36px;
+}
+
+.headerLogo span{
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: #000;
+}
+
+.headerRightContent{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+}
+
+.connectBtn{
+    background: var(--button-color);
+    color: #fff;
+    border: none;
+    border-radius: 8px;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.2s ease-in-out;
+}
+
+.connectBtn:hover{
+    opacity: 0.8;
+}

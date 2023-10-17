@@ -1,0 +1,24 @@
+.app{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: auto;
+}
+
+.appContent{
+    width: 95%;
+    max-width: 1200px;
+    height: auto;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    border-left: 2px dotted #000;
+    border-right: 2px dotted #000;
+    gap: 2rem;
+}
+
+
+
