@@ -1,0 +1,18 @@
+.uiInputWrapper textarea {
+  resize: none;
+  min-height: 36px;
+  width: calc(100% - 16px) !important;
+  padding: 4px 8px;
+  border-radius: 8px;
+  border: 1px solid var(--button-color);
+  outline: none;
+  background: none;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+  font-family: "Inter", sans-serif !important;
+}
+
+.uiInputWrapper textarea:focus {
+  border: 1px solid #000;
+}

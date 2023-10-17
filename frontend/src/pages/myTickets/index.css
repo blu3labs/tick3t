@@ -1,0 +1,220 @@
+.myTicketsWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  gap: 1rem;
+}
+
+.myTicketsHeader {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+
+.myTicketsTitle {
+  font-size: 20px;
+  font-weight: 600;
+  color: #000;
+}
+
+.myTicketsTab {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: auto;
+}
+
+.myTicketsTabItem {
+  background: none;
+  outline: none;
+  border: none;
+  margin: 0;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+}
+
+.myTicketsTabItemActive {
+  color: var(--accent-color);
+}
+
+.noMyTickets {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.noMyTickets span {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+}
+
+.myTickets {
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.myTicketsCard {
+  background: #fff;
+  box-shadow: 0px 0px 4px 1px rgba(0, 0, 0, 0.1);
+  width: calc(100% - 16px);
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  border-radius: 8px;
+  padding: 8px;
+}
+
+.myTicketsCardLeft {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  width: calc(100% - 8px);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding-right: 8px;
+}
+
+.myTicketsCardLeft img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+}
+
+.myTicketsCardLeft button {
+  width: 100%;
+  height: auto;
+  padding: 8px 0;
+  border-radius: 4px;
+  background: var(--accent-color);
+  outline: none;
+  border: none;
+  font-size: 16px;
+  font-weight: 400;
+  color: #fff;
+  cursor: pointer;
+}
+
+.myTicketsCardLeft button:hover {
+  opacity: 0.9;
+}
+
+.myTicketsCardRight {
+  border-left: 4px dashed var(--bg-color);
+  border-top-right-radius: 8px;
+  border-bottom-right-radius: 8px;
+  width: calc(100% - 16px);
+  height: calc(100% - 32px);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: space-between;
+  padding: 16px 8px;
+  position: relative;
+}
+
+.myTicketsCardRight::before,
+.myTicketsCardRight::after {
+  content: "";
+  position: absolute;
+  display: block;
+  width: 16px;
+  height: 16px;
+  background: var(--bg-color);
+  border-radius: 50%;
+  left: -10px;
+}
+
+.myTicketsCardRight::before {
+  top: -16px;
+}
+
+.myTicketsCardRight::after {
+  bottom: -12px;
+}
+
+.myTicketsCardItem {
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  gap: 6px;
+}
+
+.myTicketsCardIcon {
+  color: var(--accent-color);
+  font-size: 16px;
+  margin-top: 2.5px;
+}
+
+.myTicketsCardItem span {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  width: calc(100% - 22px);
+}
+
+@media only screen and (max-width: 768px) {
+  .myTickets {
+    grid-template-columns: 1fr;
+  }
+  .myTicketsCardItem span {
+    font-size: 14px;
+  }
+  .myTicketsCard {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+  .myTicketsCardRight {
+    border-left: none;
+    border-top-right-radius: 0px;
+    border-bottom-right-radius: 0px;
+    border-top-left-radius: 8px;
+    border-bottom-left-radius: 8px;
+    width: calc(100% - 16px);
+    height: auto;
+    padding: 8px;
+    gap: 8px;
+  }
+  .myTicketsCardIcon {
+    margin-top: 1px;
+  }
+
+  .myTicketsCardRight {
+    border-top: 4px dashed var(--bg-color);
+    padding-top: 8px;
+  }
+
+  .myTicketsCardRight::before {
+    top: -9px;
+    left: -15px;
+  }
+
+  .myTicketsCardRight::after {
+    right: -15px;
+    left: auto;
+    top: -11px;
+    bottom: auto;
+  }
+}
