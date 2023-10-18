@@ -4,23 +4,26 @@ pragma solidity 0.8.20;
 
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
-import {LibTicket} from "./common/LibTicket.sol";
-import {TicketValidatorERC721} from "./common/TicketValidatorERC721.sol";
+import {LibTicket} from "../common/LibTicket.sol";
+import {TicketValidatorERC721} from "./TicketValidatorERC721.sol";
 
 contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
     address public organizer;
     uint256[3] public prices;
+    string private _uri;
 
     event Sold(address indexed to, uint256 indexed tokenId);
 
     constructor(
         string memory name_, 
+        string memory uri_,
         address organizer_, 
         uint256[3] memory prices_
     ) 
         ERC721(name_, name_) 
         TicketValidatorERC721(name_, "1")
-    {
+    {   
+        _uri = uri_;
         organizer = organizer_;
         prices = prices_;
     }
@@ -39,6 +42,7 @@ contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
         bytes memory signature
     ) external nonReentrant {
         address owner = ownerOf(ticket.tokenId);
+        require(owner == ticket.owner, "Invalid owner");
         _validateTicket(owner, ticket, signature);
     }
 
@@ -52,5 +56,14 @@ contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
         } else {
             revert("Invalid tokenId");
         }
+    }
+
+    function _baseURI() internal view override returns (string memory) {
+        return _uri;
+    }
+
+    function _update(address to, uint256 tokenId, address auth) internal override returns (address) {
+        require(!isUsedTicket(tokenId), "Ticket already used");
+        return super._update(to, tokenId, auth);
     }
 }
