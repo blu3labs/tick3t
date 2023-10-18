@@ -21,6 +21,9 @@ export const eventModel = async (orm: D1Orm, db: any) => {
           type: DataTypes.INTEGER,
           notNull: true,
         },
+        address: {
+          type: DataTypes.STRING,
+        },
         title: {
           type: DataTypes.STRING,
         },
@@ -39,15 +42,15 @@ export const eventModel = async (orm: D1Orm, db: any) => {
         type: {
           type: DataTypes.STRING,
         },
-
       }
     );
-    
+
     type Event = Infer<typeof event>;
     if (TABLE_NAMES.event === "") {
       const { meta: create } = await db
         .prepare(
           `CREATE TABLE ${event.tableName} (id integer primary key, 
+            address text,
             title text,
             category text,
             date text,
@@ -59,7 +62,7 @@ export const eventModel = async (orm: D1Orm, db: any) => {
         .run();
 
       (event.tableName as any) = create.txn!.name;
-      console.log("created event table")
+      console.log("created event table");
     } else {
       (event.tableName as any) = TABLE_NAMES.event;
     }
