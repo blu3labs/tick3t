@@ -23,7 +23,7 @@ function PreviewCard({ title, category, venue, date, clock, image, setImage }) {
       ></div>
       <div className="homeEventCardInfo">
         <div className="homeEventCardInfoTop">
-          <div className="homeEventCardTitle">{title ?? "Title"}</div>
+          <div className="homeEventCardTitle">{title ? title : "Title"}</div>
           <div className="homeEventCardDateClock">
             <div className="homeEventCardDate">
               <FaRegCalendarAlt className="homeEventCardDateIcon" />
@@ -46,7 +46,7 @@ function PreviewCard({ title, category, venue, date, clock, image, setImage }) {
         </div>
         <div className="homeEventCardLocation">
           <HiOutlineLocationMarker className="homeEventCardLocationIcon" />
-          <span>{venue ?? "Location"}</span>
+          <span>{venue ? venue : "Location"}</span>
         </div>
       </div>
     </div>
