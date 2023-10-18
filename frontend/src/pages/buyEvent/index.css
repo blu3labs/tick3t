@@ -307,6 +307,62 @@
   color: #000;
 }
 
+
+.eventBuySeat span{
+  width: 40px;
+  height: 32px;
+  cursor: pointer;
+}
+
+.eventSeatInfo{
+  width: calc(100% - 32px);
+  height: auto;
+  display: grid;
+  grid-template-columns: repeat(3,1fr);
+  gap: 8px;
+  padding:  8px 16px;
+  border-top: 1px solid #000;
+}
+
+.eventSeatInfoBox{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  gap: 4px;
+}
+
+.eventSeatInfoBox span:nth-child(1){
+  font-size: 14px;
+    font-weight: 400;
+    color: #000;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid #000;
+    border-top-right-radius: 8px;
+    border-top-left-radius: 8px;
+    height: 32px;
+    width: 40px;
+}
+
+.eventSeatInfoBox span:nth-child(2){
+  font-size: 16px;
+    font-weight: 500;
+    color: #000;
+}
+
+
+.eventStageStep1{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
 @media only screen and (max-width: 768px) {
   .eventBuyBottomSection {
     display: flex;

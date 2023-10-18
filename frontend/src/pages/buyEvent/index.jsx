@@ -6,6 +6,7 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { categoryColor } from "../../utils/categoryDetail";
 import "./index.css";
 import StageContent from "./components/stageContent";
+import ScreenContent from "./components/screenContent";
 
 function BuyEvent() {
   const { id } = useParams();
@@ -88,7 +89,7 @@ function BuyEvent() {
             <StageContent 
             data={data}
             />
-            : null
+            : <ScreenContent data={data} />
           }
 
       
