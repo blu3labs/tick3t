@@ -1,11 +1,15 @@
 import React from "react";
+import "../index.css";
 
-function PreviewLocation({ venue }) {
- 
-
+function PreviewLocation({ venue, minHeight }) {
   const Avenue = () => {
     return (
-      <div className="createLocationPreviewContent">
+      <div
+        className="createLocationPreviewContent"
+        style={{
+          minHeight: minHeight,
+        }}
+      >
         <div
           className="createLocationPreviewContentItem"
           style={{
@@ -39,7 +43,12 @@ function PreviewLocation({ venue }) {
 
   const Theatre = () => {
     return (
-      <div className="createLocationPreviewContent">
+      <div
+        className="createLocationPreviewContent"
+        style={{
+          minHeight: minHeight,
+        }}
+      >
         <div className="createLocationPreviewTheatreItem">
           {Array(30)
             .fill(0)
@@ -63,7 +72,6 @@ function PreviewLocation({ venue }) {
               return (
                 <span
                   style={{
-                    
                     background:
                       "linear-gradient(to right, rgb(191, 149, 63), rgb(252, 246, 186), #e3a214, rgb(251, 245, 183), rgb(170, 119, 28))",
                   }}

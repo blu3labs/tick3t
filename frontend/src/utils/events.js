@@ -9,6 +9,7 @@ export const events = [
     clock: "21:00",
     category: "Sports",
     location: "Kadıköy, Istanbul",
+    venue: "The Avenue, Paris",
   },
   {
     id: 2,
@@ -19,6 +20,8 @@ export const events = [
     clock: "19:00",
     category: "Music",
     location: "Alsancak, Izmir",
+    venue: "The Avenue, Paris2",
+
   },
   {
     id: 3,
@@ -29,6 +32,8 @@ export const events = [
     clock: "20:00",
     category: "Others",
     location: "Beşiktaş, Istanbul",
+    venue: "The Avenue, Paris",
+
   },
 
   {
@@ -40,6 +45,8 @@ export const events = [
     clock: "",
     category: "Movie",
     location: "Cinemaximum, Ankara",
+    venue: "The Avenue, Paris2",
+
   },
   {
     id: 5,
@@ -50,5 +57,7 @@ export const events = [
     clock: "20:00",
     category: "Others",
     location: "Berlin, Germany",
+    venue: "The Avenue, Paris2",
+
   },
 ];

@@ -15,8 +15,8 @@
     flex-direction: column;
     align-items: center;
     justify-content: flex-start;
-    /* border-left: 2px dotted #000; */
-    /* border-right: 2px dotted #000; */
+    /* border-left: 2px dotted #000;
+    border-right: 2px dotted #000; */
     gap: 2rem;
 }
 
