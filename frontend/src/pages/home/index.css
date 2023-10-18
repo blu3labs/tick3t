@@ -184,4 +184,7 @@
   .homeTopArea {
     justify-content: center;
   }
+  .homeCategoryItem{
+    padding: 0 4px;
+  }
 }

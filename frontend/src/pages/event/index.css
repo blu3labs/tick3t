@@ -224,6 +224,7 @@
     justify-content: center;
     gap: 6px;
     margin-top: -8px;
+    text-decoration: none;
 }
 
 .buyBtn:hover{

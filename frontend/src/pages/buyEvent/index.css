@@ -1,0 +1,350 @@
+.eventBuyTopSection {
+  width: 100%;
+  height: auto;
+  max-width: 600px;
+  min-height: 150px;
+  display: grid;
+  grid-template-columns: 2fr 3fr;
+  margin-bottom: 1rem;
+  border-radius: 8px;
+  overflow: hidden;
+}
+
+.eventBuyTopSection img {
+  aspect-ratio: 16/9;
+  width: 100%;
+  height: 100%;
+}
+
+.eventBuyTopSectionCard {
+  background: var(--box-color);
+  box-shadow: 0px 0px 8px rgba(0, 0, 0, 0.25);
+  border-radius: 8px;
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+}
+
+.eventBuyTopSectionCardCategory {
+  width: 16px;
+  height: 100%;
+  background: #000;
+}
+
+.eventBuyTopSectionCardDetail {
+  width: calc(100% - 48px);
+  padding: 1rem;
+  height: calc(100% - 2rem);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eventBuyTopSectionCardBottom {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+}
+
+.eventBuyTopSectionCardBottomIcon {
+  color: var(--accent-color);
+  font-size: 20px;
+}
+
+.eventBuyTopSectionCardBottom span {
+  font-size: 16px;
+  color: #000;
+  font-weight: 500;
+}
+
+.eventBuyTopSectionCardTop {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.eventBuyTopSectionCardTopTitle {
+  font-size: 18px;
+  color: #000;
+  font-weight: 500;
+}
+.eventBuyTopSectionCardTopDateWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+}
+.eventBuyTopSectionCardTopDate {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+}
+
+.eventBuyTopSectionCardTopDateIcon {
+  color: var(--accent-color);
+  font-size: 20px;
+}
+
+.eventBuyTopSectionCardTopDateWrapper span {
+  font-size: 16px;
+  color: #000;
+  font-weight: 500;
+}
+
+.eventBuyBottomSection {
+  padding-top: 1rem;
+  width: 100%;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  border-top: 1px solid var(--button-color);
+}
+
+.eventStageLeftSection {
+  width: 100%;
+  height: auto;
+  display: flex;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.eventStageRightSection {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  width: 100%;
+  height: auto;
+  gap: 1rem;
+}
+
+.eventRightSectionTopSelectBoxs {
+  width: 100%;
+  height: auto;
+  display: grid;
+  grid-template-columns: 3fr 1fr;
+  gap: 1rem;
+}
+
+.eventRightSectionInputBoxs {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.eventRightSectionInputBox {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 2px;
+}
+
+.eventRightSectionInputBoxHeader {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eventRightSectionInputBoxHeader span {
+  font-size: 16px;
+  color: #000;
+  font-weight: 500;
+}
+
+.eventRightSectionInputBoxHeader button {
+  background: none;
+  border: none;
+  outline: none;
+  cursor: pointer;
+  padding: 0;
+  margin: 0;
+  font-size: 16px;
+  color: var(--accent-color);
+  font-weight: 500;
+}
+
+.eventRightSectionInputBoxHeader button:hover {
+  text-decoration: underline;
+}
+
+.eventRightSectionInputArea {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+}
+
+.eventRightSectionInputArea input {
+  height: 36px;
+  width: calc(100% - 16px);
+  padding: 0 8px;
+  border-radius: 8px;
+  border: 1px solid var(--button-color);
+  outline: none;
+  background: none;
+  font-size: 16px;
+  font-weight: 400;
+  color: #000;
+}
+
+.eventRightSectionInputArea input:focus {
+  border: 1px solid #000;
+}
+
+.eventRightSectionInputArea p {
+  margin: 0;
+  padding: 0;
+  min-height: 21px;
+  font-size: 14px;
+  color: var(--accent-color);
+  font-weight: 600;
+  margin-bottom: 2px;
+}
+
+.buyEventStage {
+  height: 125px;
+  position: relative;
+  cursor: pointer;
+}
+
+.buyEventStage span:nth-child(1) {
+  font-size: 16px;
+}
+
+.buyEventStage span:nth-child(2) {
+  position: absolute;
+  right: 8px;
+  bottom: 8px;
+  background: var(--accent-color);
+  color: #fff;
+  width: 70px;
+  height: 24px;
+  border-radius: 8px;
+  font-size: 14px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.eventStageStep2 {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.eventStageStep2Item {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.eventStageStep2Item span:nth-child(1) {
+  font-size: 16px;
+  color: #000;
+  font-weight: 400;
+}
+
+.eventStageStep2Item span:nth-child(2) {
+  font-size: 16px;
+  color: #000;
+  font-weight: 500;
+  text-align: right;
+  max-width: 50%;
+  text-overflow: ellipsis;
+  overflow: hidden;
+}
+
+.eventStageStep2Title {
+  width: 100%;
+  text-align: center;
+  font-size: 18px;
+  color: #000;
+  font-weight: 500;
+}
+
+.eventStageStep2Buttons {
+  width: 100%;
+  height: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  margin-top: 8px;
+}
+
+.eventStageStep2Buttons button:nth-child(1) {
+  background: none;
+  border: 1px solid var(--accent-color);
+  color: #000;
+}
+
+@media only screen and (max-width: 768px) {
+  .eventBuyBottomSection {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+
+  }
+
+  .eventBuyTopSection {
+     display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .eventBuyTopSectionCard {
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+  .eventBuyTopSectionCardCategory {
+    width: 100%;
+    height: 16px;
+  }
+  .eventBuyTopSectionCardDetail {
+    width: calc(100% - 2rem);
+    height: auto;
+    gap: 4px;
+  }
+  .eventBuyTopSectionCardTopTitle {
+    font-size: 16px;
+  }
+  .eventBuyTopSection img {
+    max-height: 150px;
+    object-fit: cover;
+  }
+  .eventBuyTopSection {
+    min-height: auto;
+    height: auto;
+  }
+}

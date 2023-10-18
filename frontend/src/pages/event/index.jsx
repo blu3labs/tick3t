@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { Link, useParams } from "react-router-dom";
 import { events } from "../../utils/events";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { BsTicketPerforated } from "react-icons/bs";
 import { LiaSitemapSolid } from "react-icons/lia";
-import "./index.css";
 import PreviewLocation from "../createEvent/components/previewLocation";
+import "./index.css";
 
 function Event() {
   const { id } = useParams();
@@ -129,7 +129,11 @@ function Event() {
               <PreviewLocation venue={data.venue} minHeight={"150px"} />
             </div>
 
-            <button className="buyBtn">Buy Ticket</button>
+            <Link
+              to={`/event/${id}/buy`}
+             
+
+            className="buyBtn">Buy Ticket</Link>
           </div>
         </div>
       </div>
