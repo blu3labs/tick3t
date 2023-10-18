@@ -6,6 +6,7 @@ import Baojs from "baojs";
 import { tableland } from "./config/db";
 import { eventModel } from "./model/event-model";
 import { userModel, userI } from "./model/user-model";
+import { EventBodyRequestData, UserBodyRequestData } from "./types";
 const app = new Baojs();
 
 
@@ -28,7 +29,7 @@ async function main() {
     });
 
     app.post("/user", async (ctx) => {
-      const body = ctx.req.json();
+      const body: UserBodyRequestData = await ctx.req.json();
 
       const checkUser = await user?.First({
         where: {
@@ -47,7 +48,7 @@ async function main() {
       const id = ctx.params.id;
       const eventData = await event?.First({
         where: {
-          id: id,
+          id: parseInt(id),
         },
       });
       return ctx.sendPrettyJson({
@@ -58,7 +59,7 @@ async function main() {
 
     app.get("/all/events/:category", async (ctx) => {
       const category = ctx.params.category;
-      const eventData = await event?.Find({
+      const eventData = await event?.All({
         where: {
           category: category,
         },
@@ -72,7 +73,7 @@ async function main() {
     });
 
     app.post("/event", async (ctx) => {
-      const body = ctx.req.json();
+      const body: EventBodyRequestData = await ctx.req.json();
       const createEvent = await event?.InsertOne({
         address: body.address,
         title: body.title,
