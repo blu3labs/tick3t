@@ -4,6 +4,7 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import "../index.css";
 import moment from "moment";
+import UploadFile from "./uploadFile";
 
 function PreviewCard({ title, category, venue, date, clock, image, setImage }) {
   return (
@@ -13,23 +14,7 @@ function PreviewCard({ title, category, venue, date, clock, image, setImage }) {
         cursor: "auto",
       }}
     >
-      <div className="createPreviewImage">
-        <img
-          src={
-            image
-              ? URL.createObjectURL(image)
-              : "https://via.placeholder.com/400x300"
-          }
-          alt="preview"
-          draggable={false}
-          
-        />
-      
-        <input
-          type="file"
-          onChange={(e) => setImage(e.target.files[0])}
-        />
-      </div>
+      <UploadFile image={image} setImage={setImage} />
       <div
         className="homeEventCategoryColor"
         style={{

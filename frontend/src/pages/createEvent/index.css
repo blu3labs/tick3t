@@ -153,26 +153,54 @@
 }
 
 .createPreviewImage{
-    background: red;
     width: 100%;
-    position: relative;
     height: auto;
+    min-height: 175px;
+    max-height: 250px;
+    position: relative;
 }
 
-.createPreviewImage img{
+
+
+
+.upload-message{
+    height: 100%;
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+    background: #e1e0e0;
+}
+
+
+
+.createPreviewLogoBox{
+    width: 100%;
+    height: auto;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+}
+
+.createPreviewLogoBoxIcon{
+    color: var(--accent-color);
+    width: 24px;
+    height: 24px;
+}
+
+.createPreviewLogoActive{
+  width: 100%;
+  height: 100%;
+  position: relative;
+}
+
+.createPreviewLogoActive img{
     width: 100%;
     height: 100%;
     object-fit: cover;
     aspect-ratio: 16/9;
+    cursor: pointer;
 }
-
-.createPreviewImage input{
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    z-index: 0;
-    top: 0;
-    left: 0;
-}
-
 
