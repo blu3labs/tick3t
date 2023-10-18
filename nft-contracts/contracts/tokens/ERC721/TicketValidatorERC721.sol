@@ -5,7 +5,7 @@ pragma solidity 0.8.20;
 import {EIP712} from "@openzeppelin/contracts/utils/cryptography/EIP712.sol";
 import {SignatureChecker} from "@openzeppelin/contracts/utils/cryptography/SignatureChecker.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
-import {LibTicket} from "./LibTicket.sol";
+import {LibTicket} from "../common/LibTicket.sol";
 
 abstract contract TicketValidatorERC721 is EIP712 {
     using SignatureChecker for address;
@@ -19,6 +19,10 @@ abstract contract TicketValidatorERC721 is EIP712 {
 
     function getUsedTickets() external view returns (uint256[] memory) {
         return _usedTickets.values();
+    }
+
+    function isUsedTicket(uint256 tokenId) public view returns (bool) {
+        return _usedTickets.contains(tokenId);
     }
 
     function _validateTicket(
