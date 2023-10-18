@@ -77,7 +77,7 @@ function CreateEvent() {
       <div className="createHeader">
         <div className="createTitle">Create Event</div>
         <div className="createDesc">
-          Lorem ipsum dolor sit amet consectetur adipisicing elit.
+          Enter the details of the event you want to create.
         </div>
       </div>
 
@@ -129,34 +129,49 @@ function CreateEvent() {
             {venue && (
               <div className="createLocationPricesAndPreview">
                 <div className="createLocationPrices">
+                  <div
+                    className="createLocationPreviewTitle"
+                    style={{
+                      marginBottom: "8px",
+                    }}
+                  >
+                    <span>{venue}</span>
+                  </div>
+
                   <Input
-                    title={"Diamond Price"}
-                    placeholder="Please enter Diamond"
+                    title={
+                      venue == "The Avenue, Paris"
+                        ? "Diamond Price"
+                        : "0-30 Seat Price"
+                    }
+                    placeholder="Please enter price"
                     value={venuePrice1}
                     onChange={(e) => setVenuePrice1(e.target.value)}
-                    error={
-                      venuePrice1 === "" ? "Diamond price is a required." : null
-                    }
+                    error={venuePrice1 === "" ? "Price is a required." : null}
                   />
 
                   <Input
-                    title={"Gold Price"}
-                    placeholder="Please enter Gold"
+                    title={
+                      venue == "The Avenue, Paris"
+                        ? "Gold Price"
+                        : "31-60 Seat Price"
+                    }
+                    placeholder="Please enter price"
                     value={venuePrice2}
                     onChange={(e) => setVenuePrice2(e.target.value)}
-                    error={
-                      venuePrice2 === "" ? "Gold price is a required." : null
-                    }
+                    error={venuePrice2 === "" ? "Price is a required." : null}
                   />
 
                   <Input
-                    title={"General Price"}
-                    placeholder="Please enter General"
+                    title={
+                      venue == "The Avenue, Paris"
+                        ? "General Price"
+                        : "61-90 Seat Price"
+                    }
+                    placeholder="Please enter price"
                     value={venuePrice3}
                     onChange={(e) => setVenuePrice3(e.target.value)}
-                    error={
-                      venuePrice3 === "" ? "General price is a required." : null
-                    }
+                    error={venuePrice3 === "" ? "Price is a required." : null}
                   />
                 </div>
                 <PreviewLocation venue={venue} />
