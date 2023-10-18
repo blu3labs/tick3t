@@ -1,17 +1,27 @@
-const server = Bun.serve({
-    port: 3000,
-    fetch(req) {
-        const url = new URL(req.url);
-        const { pathname } = new URL(url);
-        if (url.pathname === "/event" && req.method === "GET") {}
-        if (url.pathname === "/event" && req.method === "POST") {}
-        if (url.pathname === "/user" && req.method === "GET") {}
-        if (url.pathname === "/user" && req.method === "POST") {}
-        if (url.pathname === "/qr" && req.method === "GET") {}
-        return new Response("404!");
-    },
-  });
-  
+import * as dotenv from "dotenv";
+dotenv.config();
+import { Database } from "@tableland/sdk";
+import { Wallet, ethers, getDefaultProvider } from "ethers";
+import Baojs from "baojs"
+import {
+  tableland
+} from "./config/db";
+import { eventModel } from "./model/event-model";
+import { userModel } from "./model/user-model";
+const app = new Baojs()
 
-  console.log(`Listening on http://localhost:${server.port} ...`);
-  
+
+tableland().then(async (res) => {
+  const { orm, db } = res;
+  const user = await userModel(orm!, db);
+  const event = await eventModel(orm!, db);
+  console.log("user", user);
+  console.log("event", event);
+})
+
+app.listen({
+  port:3019
+})
+
+
+console.log(`Listening on http://localhost:${3019} ...`);

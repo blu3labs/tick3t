@@ -1,11 +1,30 @@
+import {
+  D1Orm,
+  DataTypes,
+  Model,
+  GenerateQuery,
+  QueryType,
+  type Infer,
+} from "d1-orm";
+import { NonceManager } from "@ethersproject/experimental";
 import { Database } from "@tableland/sdk";
-import { Wallet, getDefaultProvider } from "ethers";
+import { Wallet, ethers } from "ethers";
 
-const privateKey = process.env.KEY || "";
-console.log(`Using private key: ${privateKey}`);
-const wallet = new Wallet(privateKey);
+export const tableland = async ():Promise<{ orm: D1Orm | undefined,  db: Database | undefined}> => {
+  try {
+    const privateKey = process.env.KEY || "";
+    console.log(`Using private key: ${privateKey}`);
+    const provider = new ethers.providers.JsonRpcProvider(
+      "https://arbitrum-goerli.blockpi.network/v1/rpc/public"
+    );
+    const baseSigner = new ethers.Wallet(privateKey, provider);
+    const signer = new NonceManager(baseSigner);
 
-const provider = getDefaultProvider("http://127.0.0.1:8545");
-const signer = wallet.connect(provider);
-
-const db = new Database({signer});
+    const db = new Database({ signer, autoWait: true });
+    const orm = new D1Orm(db);
+    return { orm, db };
+  } catch (error) {
+    console.log(error);
+  }
+  return {orm: undefined, db: undefined}
+};
