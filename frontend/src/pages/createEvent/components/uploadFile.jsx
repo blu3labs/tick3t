@@ -33,18 +33,17 @@ function UploadFile({ image, setImage }) {
     const fileSizeInBytes = acceptedFiles[0]?.size;
     const fileSizeInMB = fileSizeInBytes / (1024 * 1024);
 
-    if (fileSizeInMB > 10) {
-      toast.error("Please upload a logo smaller than 10MB.");
+    if (fileSizeInMB > 50) {
+      toast.error("Please upload a logo smaller than 50MB.");
       return;
     }
 
-    const reader = new FileReader();
-    reader.onload = () => {
-      const base64String = reader.result;
-      setImage(base64String);
-    };
+    setImage(acceptedFiles[0]);
 
+
+    const reader = new FileReader();
     reader.readAsDataURL(acceptedFiles[0]);
+
     setIsUploading(false);
   };
 
@@ -62,7 +61,9 @@ function UploadFile({ image, setImage }) {
       <input {...getInputProps()} />
       {image ? (
         <div className="createPreviewLogoActive">
-          <img src={image} alt="image" draggable="false" />
+          <img src={
+            typeof image === "string" ? image : URL.createObjectURL(image)
+          } alt="image" draggable="false" />
         </div>
       ) : (
         <div className="upload-message">

@@ -1,14 +1,16 @@
 import React, { useEffect, useState } from "react";
-import { Select, DatePicker } from "antd";
+import { Web3Storage } from "web3.storage";
 import PreviewCard from "./components/previewCard";
-import Input from "../../ui/input";
-import Textarea from "../../ui/textarea";
-import "./index.css";
-import SelectBox from "../../ui/selectBox";
-import { categoryList } from "../../utils/categoryDetail";
-import Datepicker from "../../ui/Datepicker";
+import Input from "@/ui/input";
+import Textarea from "@/ui/textarea";
+import SelectBox from "@/ui/selectBox";
+import { categoryList } from "@/utils/categoryDetail";
+import Datepicker from "@/ui/Datepicker";
 import moment from "moment";
 import PreviewLocation from "./components/previewLocation";
+import "./index.css";
+import toast from "react-hot-toast";
+import Spin from "../../ui/spin";
 
 function CreateEvent() {
   const [title, setTitle] = useState(null);
@@ -71,6 +73,77 @@ function CreateEvent() {
     { label: "The Avenue, Paris", value: "The Avenue, Paris" },
     { label: "Theatre Hall, Istanbul", value: "Theatre Hall, Istanbul" },
   ];
+
+  const validation = () => {
+    if (
+      title === null ||
+      image === null ||
+      category === null ||
+      date === null ||
+      description === null ||
+      venue === null ||
+      venuePrice1 === null ||
+      venuePrice2 === null ||
+      venuePrice3 === null ||
+      title === "" ||
+      description === "" ||
+      venuePrice1 === "" ||
+      venuePrice2 === "" ||
+      venuePrice3 === ""
+    ) {
+      return false;
+    }
+
+    return true;
+  };
+
+  const [loading, setLoading] = useState(false);
+  const handleCreate = async () => {
+    if (image === null) {
+      toast.error("Please upload a image.");
+      return;
+    }
+
+    if (!validation()) {
+      toast.error("Please fill all fields.");
+      return;
+    }
+
+    if (dateError() !== null) {
+      toast.error(dateError());
+      return;
+    }
+
+    setLoading(true);
+    try {
+      //* image upload to web3.storage
+      const client = new Web3Storage({
+        token: import.meta.env.VITE_WEB3STORAGE_KEY,
+      });
+
+      const imageCid = await client.put([image]);
+      console.log("stored files with cid:", imageCid);
+
+      //* create event on api
+      let data = {
+        title: title,
+        image: imageCid,
+        category: category,
+        date: date,
+        description: description,
+        venue: venue,
+        venuePrice1: venuePrice1,
+        venuePrice2: venuePrice2,
+        venuePrice3: venuePrice3,
+      };
+
+      console.log(data, "data");
+      toast.success("Event created successfully.");
+    } catch (e) {
+      console.log(e);
+    }
+    setLoading(false);
+  };
 
   return (
     <div className="createWrapper">
@@ -188,7 +261,17 @@ function CreateEvent() {
             venue={venue}
             setImage={setImage}
           />
-          <button className="createBtn">Create</button>
+          <button
+            className="createBtn"
+            onClick={handleCreate}
+            disabled={loading}
+            style={{
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.5 : "auto" ,
+            }}
+          >
+            Create {loading && <Spin />}
+          </button>
         </div>
       </div>
     </div>

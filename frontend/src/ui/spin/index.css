@@ -1,0 +1,10 @@
+.custom-loader {
+    width:12px;
+    height:12px;
+    border-radius:50%;
+    border:3px solid;
+    border-color:#e2e2e23d;
+    border-right-color: #e2e2e2;
+    animation:s2 1s infinite linear;
+  }
+  @keyframes s2 {to{transform: rotate(1turn)}}
