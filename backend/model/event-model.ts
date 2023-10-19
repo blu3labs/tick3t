@@ -33,13 +33,19 @@ export const eventModel = async (orm: D1Orm, db: any) => {
         date: {
           type: DataTypes.STRING,
         },
-        location: {
+        venue: {
           type: DataTypes.STRING,
         },
         image: {
           type: DataTypes.STRING,
         },
-        type: {
+        venuePrice1: {
+          type: DataTypes.STRING,
+        },
+        venuePrice2: {
+          type: DataTypes.STRING,
+        },
+        venuePrice3: {
           type: DataTypes.STRING,
         },
         chain: {
@@ -57,9 +63,11 @@ export const eventModel = async (orm: D1Orm, db: any) => {
             title text,
             category text,
             date text,
-            location text,
+            venue text,
             image text,
-            type text,
+            venuePrice1 text,
+            venuePrice2 text,
+            venuePrice3 text,
             chain text
             );`
         )

@@ -16,50 +16,6 @@ const { orm, db } = await tableland();
 const event = await eventModel(orm!, db);
 const qr = await qrModel(orm!, db);
 
-// app.get("/user/:id", async (req, res) => {
-//   const address = req.params.id;
-//   const userData = await user?.First({
-//     where: {
-//       address: address,
-//     },
-//   });
-//   res.json({
-//     status: 200,
-//     data: userData,
-//   });
-// });
-
-// app.post("/user", async (req, res) => {
-//   const body: UserBodyRequestData = req.body;
-//   for (let i in body.addresses) {
-//     const checkUser = await user?.First({
-//       where: {
-//         address: body.addresses[i].address,
-//       },
-//     });
-//     if (checkUser) {
-//       let addTickets = checkUser.tickets + "," + body.addresses[i].ticket;
-//       const updateTickets = await user?.Update({
-//         where: {
-//           address: body.addresses[i].address,
-//         },
-//         data: {
-//           tickets: addTickets,
-//         },
-//       });
-//     }
-
-//     const createUser = await user?.InsertOne({
-//       address: body.addresses[i].address,
-//       tickets: body.addresses[i].ticket,
-//     });
-//   }
-//   res.json({
-//     status: 200,
-//     data: "success",
-//   });
-// });
-
 app.get("/event/:id", async (req, res) => {
   const address = req.params.id;
   const eventData = await event?.First({
@@ -102,9 +58,12 @@ app.post("/event", async (req, res) => {
     title: body.title,
     category: body.category,
     date: body.date,
-    location: body.location,
+    venue: body.location,
     image: body.image,
-    type: body.type,
+    venuePrice1: body.venuePrice1,
+    venuePrice2: body.venuePrice2,
+    venuePrice3: body.venuePrice3,
+    chain: body.chain,
   });
   res.json({
     status: 200,
@@ -116,6 +75,12 @@ app.post("/qr", async (req, res) => {
   const body = req.body;
   const createEvent = await qr?.InsertOne({
     signature: body.signature,
+    owner: body.owner,
+    collection: body.collection,
+    tokenId: body.tokenId,
+    amount: body.amount,
+    deadline: body.deadline,
+    salt: body.salt,
   });
   res.json({
     status: 200,
