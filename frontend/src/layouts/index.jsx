@@ -29,7 +29,7 @@ export default function MainLayout() {
     (async () => {
       const options = {
         clientId:
-          "BPuRRfHaSiEY7lO6bxcDaBkNM12nfcedhdB6w3QPuLOPsu-MqR0Zbq918xazA76nBM586rsFsVbZ3sTNnfGFnis",
+          "BBpDQVTjPZubZrGp18Vrdig7buc7WWRGQWl4jGUfRkpHWyPgM4DK7yHCs18BNtslGjAPndswugK98ieNxm2ZgVY",
         web3AuthNetwork: "testnet",
         chainConfig: {
           chainNamespace: CHAIN_NAMESPACES.EIP155,
