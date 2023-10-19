@@ -59,45 +59,45 @@ export async function ValidateTicket(
   deadline: string,
   salt: string,
   signature: string
-) { 
-    const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
-    const privateKey = process.env.VALIDATOR_KEY || "";
-    const wallet = new ethers.Wallet(privateKey, provider);
-    const contract = new Contract(
+) {
+  const provider = new ethers.providers.JsonRpcProvider(process.env.RPC_URL);
+  const privateKey = process.env.VALIDATOR_KEY || "";
+  const wallet = new ethers.Wallet(privateKey, provider);
+  const contract = new Contract(collection, abi, wallet);
+  const tokenId_ = parseUnits(tokenId, 0);
+  const deadline_ = parseUnits(deadline, 0);
+  const salt_ = parseUnits(salt, 0);
+  try {
+    const estimate = contract.estimateGas.use(
+      {
+        owner,
         collection,
-        abi,
-        wallet
+        tokenId_,
+        deadline_,
+        salt_,
+      },
+      signature
     );
-    const tokenId_ = parseUnits(tokenId, 0);
-    const deadline_ = parseUnits(deadline, 0);
-    const salt_ = parseUnits(salt, 0);
-    try {const estimate = contract.estimateGas.use(
-        {
-            owner,
-            collection,
-            tokenId_,
-            deadline_,
-            salt_,
-        },
-        signature
-    );} catch (error) {
-        //todo add error handling to return message
-        return "there was an error";
-        console.log(error);
-    }
-    try {const tx = contract.use(
-        {
-            owner,
-            collection,
-            tokenId_,
-            deadline_,
-            salt_,
-        },
-        signature
-    );} catch (error) {
-        //todo add error handling to return message
-        return "there was an error";
-        console.log(error);
-    }
-    return "Success!";
+  } catch (error) {
+    //todo add error handling to return message
+    return "there was an error";
+    console.log(error);
+  }
+  try {
+    const tx = contract.use(
+      {
+        owner,
+        collection,
+        tokenId_,
+        deadline_,
+        salt_,
+      },
+      signature
+    );
+  } catch (error) {
+    //todo add error handling to return message
+    return "there was an error";
+    console.log(error);
+  }
+  return "Success!";
 }

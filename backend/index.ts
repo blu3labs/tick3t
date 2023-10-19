@@ -112,10 +112,10 @@ app.post("/check/qr", async (req, res) => {
     body.salt,
     body.signature
   );
-    res.json({
-      status: 200,
-      data: msg,
-    });
+  res.json({
+    status: 200,
+    data: msg,
+  });
 });
 
 app.listen(3001, () => {
