@@ -24,31 +24,289 @@
   height: 36px;
 }
 
-.headerLogo span{
-    font-size: 1.5rem;
-    font-weight: 700;
-    color: #000;
+.headerLogo span {
+  font-size: 1.5rem;
+  font-weight: 700;
+  color: #000;
 }
 
-.headerRightContent{
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-    justify-content: center;
+.headerRightContent {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
 }
 
-.connectBtn{
-    background: var(--button-color);
-    color: #fff;
-    border: none;
-    border-radius: 8px;
-    padding: 0.5rem 1rem;
-    font-size: 1rem;
+.connectBtn {
+  background: var(--button-color);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.connectBtn:hover {
+  opacity: 0.8;
+}
+
+.ant-modal .ant-modal-content {
+  border-radius: 32px !important;
+  max-width: 392px !important;
+  min-height: 180px !important;
+  max-height: 95% !important;
+  border-width: 1px !important;
+  border-color: rgb(243 244 246) !important;
+}
+.ant-modal-root .ant-modal-mask {
+  background-color: rgba(0, 0, 0, 0.1) !important;
+}
+
+.ant-modal-close:hover{
+  background-color: transparent !important;
+}
+
+.smartAccountModal {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
+.smartAccountModalTitle {
+  color: #111928;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.75rem;
+}
+
+.smartAccountCreateBtn {
+  background-color: #f3f4f6;
+  border-radius: 4px;
+  color: #111928;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+  padding: 6px 0;
+  width: 100%;
+  outline: none;
+  cursor: pointer;
+  border: 1px solid #d1d5db;
+
+}
+
+.smartAccountCreateBtn:hover {
+  background: rgb(209 213 219);
+}
+
+.smartAccountModalList{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+  border-top: 1px solid rgb(219, 220, 221);
+}
+
+.smartAccountModalListEmpty{
+    color: rgb(107 114 128);
+    font-size: 14px;
     font-weight: 500;
-    cursor: pointer;
-    transition: all 0.2s ease-in-out;
+    line-height: 1rem;
+    margin-top: 1rem;
+    text-align: center;
 }
 
-.connectBtn:hover{
-    opacity: 0.8;
+.smartAccountModalListItemWrapper{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  margin: 4px 0;
+}
+.smartAccountModalListItemWrapper:first-child{
+  margin-top: 16px;
+}
+
+.smartAccountModalListItemCopy{
+  background: #f3f4f6;
+  border-radius: 4px;
+  color: #111928;
+  border: 1px solid #d1d5db;
+  outline: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 24px;
+  height: 36px;
+  padding: 0;
+  margin: 0;
+}
+.smartAccountModalListItemCopy:hover{
+  background: rgb(209 213 219);
+}
+
+.smartAccountModalListItemCopyIcon{
+  width: 16px;
+  height: 16px;
+  margin-left: -1px;
+}
+
+.smartAccountModalListItem{
+  width: calc(100% - 36px);
+  height: 36px;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  cursor: pointer;
+  background: #f3f4f6;
+  border-radius: 4px;
+  color: #111928;
+  border: 1px solid #d1d5db;
+  padding: 0 4px;
+}
+.smartAccountModalListItem:hover{
+  background: rgb(209 213 219);
+
+}
+.smartAccountModalListItemBalance{
+  font-size: 16px;
+  font-weight: 500;
+  width: 70px;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+}
+
+.smartAccountModalListItemAddress{
+  width: calc(100% - 78px);
+  font-size: 16px;
+  font-weight: 500;
+  text-overflow: ellipsis;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+.accountModal{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+  padding-top: 1rem;
+}
+
+.accountModalWallet{
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+}
+.accountModalWallet span:nth-child(1){
+  color: #111928;
+  font-size: 1.25rem;
+  font-weight: 700;
+  line-height: 1.75rem;
+}
+
+.accountModalWallet span:nth-child(2){
+  color: #6b7280;
+  font-size: 1rem;
+  font-weight: 500;
+  line-height: 1.5rem;
+}
+
+.accountModalButtons{
+  width: 100%;
+  height: auto;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+}
+
+.accountModalButtons button{
+  background: #f3f4f6;
+  border-radius: 8px;
+  color: #111928;
+  border: 1px solid #d1d5db;
+  outline: none;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  width: 100%;
+  height: auto;
+  padding: 8px 0;
+  margin: 0;
+  gap: 2px;
+}
+
+.accountModalButtons button:hover{
+  background: rgb(209 213 219);
+}
+
+.accountModalButtonsIcon{
+  width:18px;
+  height:18px;
+}
+
+.accountModalButtons button span{
+  font-size: 16px;
+  font-weight: 400;
+}
+
+.abstractAccountBtn{
+  background: var(--button-color);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+  border: 2px solid var(--button-color);
+}
+
+.abstractAccountBtn:hover{
+  opacity: 0.8;
+}
+
+
+.useSmartAccountBtn{
+  background: rgb(223, 224, 223);
+  color: #868484;
+  border: 2px solid #868484;
+  border-radius: 8px;
+  padding: 0.5rem 1rem;
+  font-size: 1rem;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease-in-out;
+}
+
+.useSmartAccountBtn:hover{
+  opacity: 0.8;
 }

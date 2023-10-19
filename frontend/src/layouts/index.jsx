@@ -1,7 +1,7 @@
 import { Outlet } from "react-router-dom";
 import AppWrapper from "@/ui/wrapper/app";
 import Header from "@/components/header";
-import { Toaster } from "react-hot-toast";
+import toast, { Toaster } from "react-hot-toast";
 import {
   ADAPTER_EVENTS,
   CHAIN_NAMESPACES,
@@ -15,7 +15,15 @@ import { useEffect, useState } from "react";
 
 export default function MainLayout() {
   const connectedHandler = (data) => console.log("CONNECTED", data);
-  const disconnectedHandler = (data) => console.log("DISCONNECTED", data);
+  const disconnectedHandler = (data) => {
+    console.log("DISCONNECTED", data)
+  };
+
+
+
+
+
+
   const [web3AuthModalPack, setWeb3AuthModalPack] = useState();
   const [safeAuthSignInResponse, setSafeAuthSignInResponse] = useState(null);
   const [userInfo, setUserInfo] = useState();
