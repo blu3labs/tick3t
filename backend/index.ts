@@ -75,7 +75,7 @@ app.post("/event", async (req, res) => {
 app.post("/qr", async (req, res) => {
   const body = req.body;
   const createEvent = await qr?.InsertOne({
-    signature: body.signature,
+    hash: body.hash,
     owner: body.owner,
     collection: body.collection,
     tokenId: body.tokenId,
@@ -90,10 +90,10 @@ app.post("/qr", async (req, res) => {
 });
 
 app.get("/qr/:id", async (req, res) => {
-  const signature = req.params.id;
+  const hash = req.params.id;
   const qrData = await qr?.First({
     where: {
-      signature: signature,
+      hash: hash,
     },
   });
   res.json({
@@ -110,7 +110,7 @@ app.post("/check/qr", async (req, res) => {
     body.tokenId,
     body.deadline,
     body.salt,
-    body.signature
+    body.hash
   );
   res.json({
     status: 200,

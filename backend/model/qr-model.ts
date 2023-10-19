@@ -14,16 +14,17 @@ export const qrModel = async (orm: D1Orm, db: any) => {
       {
         D1Orm: orm,
         tableName: "qr",
-        primaryKeys: "id",
-        autoIncrement: "id",
+        primaryKeys: "hash",
+        // autoIncrement: "id",
       },
       {
-        id: {
-          type: DataTypes.INTEGER,
-          notNull: true,
-        },
-        signature: {
+        // id: {
+        //   type: DataTypes.INTEGER,
+        //   notNull: true,
+        // },
+        hash: {
           type: DataTypes.STRING,
+          notNull: true
         },
         owner: {
           type: DataTypes.STRING,
@@ -50,7 +51,7 @@ export const qrModel = async (orm: D1Orm, db: any) => {
       const { meta: create } = await db
         .prepare(
           `CREATE TABLE ${qr.tableName} (id integer primary key, 
-                signature text,
+                hash text,
                 owner text,
                 collection text,
                 tokenId text,

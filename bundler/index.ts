@@ -115,7 +115,8 @@ app.post("/send-tx", async (context) =>{
 
     try {
      const tx = await safeContract.execTransaction(...args,{gasLimit:1000000})
-
+     // we will wait that the transaction is mined.
+     await tx.wait()
     return context.sendJson({result:"Transaction sent successfuly."})
     }catch(err){
         console.log(err)
