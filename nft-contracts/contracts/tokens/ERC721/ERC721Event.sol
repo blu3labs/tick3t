@@ -5,14 +5,19 @@ pragma solidity 0.8.20;
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {LibTicket} from "../common/LibTicket.sol";
 import {TicketValidatorERC721} from "./TicketValidatorERC721.sol";
 
 contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
+    using Address for address payable;
     using EnumerableSet for EnumerableSet.UintSet;
 
-    address public organizer;
+    address payable immutable public organizer;
+    address payable immutable public feeRecipient;
+    uint256 public immutable serviceFee;
     uint256[3] public prices;
+    
     string private _uri;
 
     mapping (address => EnumerableSet.UintSet) private _userTickets;
@@ -22,7 +27,9 @@ contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
     constructor(
         string memory name_, 
         string memory uri_,
-        address organizer_, 
+        address payable organizer_, 
+        address payable feeRecipient_,
+        uint256 serviceFee_,
         uint256[3] memory prices_
     ) 
         ERC721(name_, name_) 
@@ -30,16 +37,19 @@ contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
     {   
         _uri = uri_;
         organizer = organizer_;
+        feeRecipient = feeRecipient_;
+        serviceFee = serviceFee_;
         prices = prices_;
+
     }
 
     function buy(uint256 tokenId) external payable nonReentrant {
         require(tokenId > 0 && tokenId <= 90, "Invalid tokenId");
-        require(msg.value == _getPrice(tokenId), "Invalid msg.value");
-        (bool success, ) = organizer.call{value: msg.value}("");
-        require(success, "Failed to send Ether");
         _safeMint(msg.sender, tokenId);
         _userTickets[msg.sender].add(tokenId);
+        require(msg.value == _getPrice(tokenId) + serviceFee, "Invalid msg.value");
+        organizer.sendValue(msg.value - serviceFee);
+        feeRecipient.sendValue(serviceFee);
         emit Sold(msg.sender, tokenId);
     }
 

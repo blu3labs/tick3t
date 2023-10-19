@@ -14,22 +14,40 @@ contract Factory {
     function createERC721Event(
         string memory name,
         string memory uri,
-        address organizer,
+        address payable organizer,
+        address payable feeRecipient,
+        uint256 serviceFee,
         uint256[3] memory prices,
         bytes32 salt
     ) external {
-        ERC721Event eventContract = new ERC721Event{salt: salt}(name, uri, organizer, prices);
+        ERC721Event eventContract = new ERC721Event{salt: salt}(
+            name,
+            uri,
+            organizer,
+            feeRecipient,
+            serviceFee,
+            prices
+        );
         emit ERC721EventCreated(address(eventContract));
     }
 
     function createERC1155Event(
         string memory name,
         string memory uri,
-        address organizer,
+        address payable organizer,
+        address payable feeRecipient,
+        uint256 serviceFee,
         uint256[3] memory prices,
         bytes32 salt
     ) external {
-        ERC1155Event eventContract = new ERC1155Event{salt: salt}(name, uri, organizer, prices);
+        ERC1155Event eventContract = new ERC1155Event{salt: salt}(
+            name,
+            uri,
+            organizer,
+            feeRecipient,
+            serviceFee,
+            prices
+        );
         emit ERC1155EventCreated(address(eventContract));
     }
 
