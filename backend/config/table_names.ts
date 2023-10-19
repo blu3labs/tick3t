@@ -7,6 +7,6 @@ export interface TableNameI {
 }
 
 export const TABLE_NAMES: TableNameI = {
-    event: "",
-    user: "user_421613_222"
+    event: "event_421613_232",
+    user: "user_421613_231"
 }

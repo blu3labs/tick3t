@@ -62,7 +62,7 @@ export const eventModel = async (orm: D1Orm, db: any) => {
         .run();
 
       (event.tableName as any) = create.txn!.name;
-      console.log("created event table");
+      console.log("created event table", create.txn!.name);
     } else {
       (event.tableName as any) = TABLE_NAMES.event;
     }
