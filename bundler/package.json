@@ -1,0 +1,21 @@
+{
+  "name": "bundler-tick3t",
+  "module": "index.ts",
+  "type": "module",
+  "devDependencies": {
+    "bun-types": "latest"
+  },
+  "peerDependencies": {
+    "typescript": "^5.0.0"
+  },
+  "dependencies": {
+    "@ethersproject/abi": "^5.7.0",
+    "@ethersproject/bignumber": "^5.7.0",
+    "@ethersproject/bytes": "^5.7.0",
+    "@ethersproject/contracts": "^5.7.0",
+    "@ethersproject/providers": "^5.7.2",
+    "@safe-global/safe-core-sdk-types": "^2.3.0",
+    "baojs": "^0.2.1",
+    "ethers": "^5.4.5"
+  }
+}
