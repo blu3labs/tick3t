@@ -10,7 +10,10 @@ function Header({login, authData, logout, modalProvider, setSafeAuthSignInRespon
 
   // authData.safes    => ARRAY OF SMART ACCOUNT
   // authData.eoa => main wallet address
+  // const provider = new Web3Provider(modalProvider.getProvider())
+  // const signer = provider.getSigner()
 
+  // console.log(signer,"signer")
 
   const createNewSmartAcc = async () => {
     const createNewSmartAccount = async () => {
