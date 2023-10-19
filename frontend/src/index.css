@@ -12,3 +12,8 @@ body {
   margin: 0;
   font-family: 'Inter', sans-serif !important;
 }
+
+
+button.w3a-button.w3a-button--primary.w-full.w3ajs-external-toggle__button{
+  background: var(--button-color) !important; 
+}
