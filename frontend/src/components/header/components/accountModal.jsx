@@ -7,7 +7,7 @@ import { IoExitOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 import "../index.css";
 
-function AccountModal({ address, logout }) {
+function AccountModal({ address, logout,isAbstract }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -53,7 +53,7 @@ function AccountModal({ address, logout }) {
   return (
     <>
       <button onClick={showModal}  className={
-        false ? "useSmartAccountBtn" : "abstractAccountBtn"
+        isAbstract ? "useSmartAccountBtn" : "abstractAccountBtn"
       }>
         {address?.slice(0, 6) + "..." + address?.slice(-4)}
       </button>

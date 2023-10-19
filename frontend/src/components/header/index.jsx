@@ -2,53 +2,40 @@ import React, { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
 import Logo from "@/assets/vite.svg";
 import "./index.css";
-import { Web3Provider } from "@ethersproject/providers";
-import { EthersAdapter, SafeFactory } from "@safe-global/protocol-kit";
+
 import toast from "react-hot-toast";
 import AccountModal from "./components/accountModal";
 import SmartAccountModal from "./components/smartAccountModal";
 
-function Header({
-  login,
-  authData,
-  logout,
-  modalProvider,
-  setSafeAuthSignInResponse,
-}) {
-  console.log(authData, "authData");
+function Header({ login, authData, logout, chainId,signer,setSafeAuthSignInResponse }) {
+  const [activeAddress, setActiveAddress] = useState(null);
+  const [isAbstract, setIsAbstract] = useState(false);
 
-  // authData.safes    => ARRAY OF SMART ACCOUNT
-  // authData.eoa => main wallet address
+  const getActiveAccount = () => {
+    let localStrgAbstract = localStorage.getItem("abstractAccount");
+    let localStrgActive = localStorage.getItem("activeAddress");
 
-  const [chainId, setChainId] = useState(null);
-  const [signer, setSigner] = useState(null);
-  const [provider, setProvider] = useState(null);
-  useEffect(() => {
-    if (authData) {
-      let provider_ = new Web3Provider(modalProvider?.getProvider());
-      setProvider(provider_);
-
-      let signer_ = provider_?.getSigner();
-
-      setSigner(signer_);
-
-      const getChainId = async () => {
-        try {
-          let res = await signer_?.getChainId();
-          setChainId(res);
-        } catch (err) {
-          console.log(err);
-          setChainId(null);
-        }
-      };
-
-      getChainId();
+    if (localStrgAbstract) {
+      setIsAbstract(localStrgAbstract === "true" ? true : false);
+    } else {
+      setIsAbstract(false);
+      localStorage.setItem("abstractAccount", false);
     }
+
+    if (localStrgActive) {
+      setActiveAddress(localStrgActive);
+    } else {
+      setActiveAddress(authData?.eoa || null);
+      localStorage.setItem("activeAddress", authData?.eoa || null);
+    }
+  };
+
+  useEffect(() => {
+    getActiveAccount();
   }, [authData]);
 
-  console.log(chainId, "chainId");
-  console.log(signer, "signer");
-  console.log(provider, "provider");
+  console.log("activeAddress", activeAddress);
+  console.log("isAbstract", isAbstract);
 
   const handleSwitchNetwork = async () => {
     if (typeof window.ethereum === "undefined") {
@@ -79,7 +66,7 @@ function Header({
       </Link>
 
       <div className="headerRightContent">
-        {authData === null ? (
+        {authData === null || chainId === null ? (
           <button className="connectBtn" onClick={login}>
             Connect
           </button>
@@ -95,8 +82,18 @@ function Header({
           </button>
         ) : (
           <>
-            <SmartAccountModal list={authData?.safes} />
-            <AccountModal address={authData?.eoa} logout={logout} />
+            <SmartAccountModal
+              list={authData?.safes}
+              isAbstract={isAbstract}
+              activeAddress={activeAddress}
+              signer={signer}
+              setSafeAuthSignInResponse={setSafeAuthSignInResponse}
+            />
+            <AccountModal
+              address={authData?.eoa}
+              logout={logout}
+              isAbstract={isAbstract}
+            />
           </>
         )}
       </div>

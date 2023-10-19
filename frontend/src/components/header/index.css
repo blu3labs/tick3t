@@ -99,7 +99,11 @@
   outline: none;
   cursor: pointer;
   border: 1px solid #d1d5db;
-
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
 }
 
 .smartAccountCreateBtn:hover {

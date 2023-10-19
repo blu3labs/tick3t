@@ -2,9 +2,20 @@ import React, { useState } from "react";
 import { Modal } from "antd";
 import { AiOutlineCopy } from "react-icons/ai";
 import { toast } from "react-hot-toast";
+import axios from "axios";
+import { ethers } from "ethers";
+import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
+import { GelatoRelayPack } from "@safe-global/relay-kit";
+import Spin from "@/ui/spin";
 import "../index.css";
 
-function SmartAccountModal({ list }) {
+function SmartAccountModal({
+  list,
+  isAbstract,
+  activeAddress,
+  signer,
+  setSafeAuthSignInResponse,
+}) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -13,31 +24,28 @@ function SmartAccountModal({ list }) {
     setIsModalOpen(false);
   };
 
+  const [loading, setLoading] = useState(false);
   const createNewSmartAcc = async () => {
-    const createNewSmartAccount = async () => {
-      const txServiceUrl = "https://safe-transaction-goerli.safe.global";
+    if (!signer) {
+      toast.error("Please connect your wallet");
+      return;
+    }
 
-      setLoading(true);
-      const provider = new Web3Provider(modalProvider.getProvider());
-      const signer = provider.getSigner();
+    setLoading(true);
+    try {
+      console.log("girdin 0", signer);
+
       const ethAdapter = new EthersAdapter({
         ethers,
         signerOrProvider: signer,
       });
-      // const safeService = new SafeApiKit({ txServiceUrl, ethAdapter })
 
-      // const signInInfo = await web3AuthModalPack?.signIn()
-      const signeAddr = await signer.getAddress();
+      const signeAddr = await signer?.getAddress();
       const ownersData = [signeAddr];
       const safeFactoryC = {
         owners: ownersData,
         threshold: 1,
       };
-
-      // const safeFactory = await SafeFactory.create({
-      //   ethAdapter
-
-      // })
 
       const newSafeData = await Safe.create({
         ethAdapter,
@@ -47,9 +55,13 @@ function SmartAccountModal({ list }) {
         },
       });
 
+      console.log("girdin 1");
+
       const relayKit = new GelatoRelayPack(
         "_mhz0rzLWDbZ6_qEdg9c5qF50kgQ_XuKOlTFxXVdIbg_"
       );
+
+      console.log("girdin2");
 
       const txNewSafe = await newSafeData.createSafeDeploymentTransaction(
         undefined,
@@ -57,7 +69,7 @@ function SmartAccountModal({ list }) {
           gasLimit: 1000000,
         }
       );
-      //let's create our safe smart account
+      console.log("girdin 3");
 
       const safeTransactionRelay = await relayKit.createRelayedTransaction({
         safe: newSafeData,
@@ -65,12 +77,17 @@ function SmartAccountModal({ list }) {
           { data: txNewSafe.data, to: txNewSafe.to, value: txNewSafe.value },
         ],
       });
+      console.log("girdin 41", newSafeData);
+      console.log("girdin 42", safeTransactionRelay);
 
       const signedSafeTransaction = await newSafeData.signTransaction(
         safeTransactionRelay
       );
 
+      console.log("girdin 5");
+
       const sign = signedSafeTransaction.encodedSignatures();
+      console.log("girdin 6");
 
       const request = await axios.post(
         "https://blu3labs-tick3t-bundler.blu3.app/create-smartaccount",
@@ -82,39 +99,60 @@ function SmartAccountModal({ list }) {
       );
 
       setLoading(false);
-      const newAddress = request.data.smartAccountAddress;
+      const newAddress = request?.data?.smartAccountAddress;
       setSafeAuthSignInResponse((oldData) => ({
         eoa: signeAddr,
         safes: [newAddress, ...oldData?.safes],
       }));
       toast.success("Smart Account Created:" + newAddress);
-    };
+    } catch (err) {
+      console.log(err);
+      toast.error("Failed to create smart account");
+    }
+    setLoading(false);
   };
 
-
-
-  let isAbstractAccount = false;
   return (
     <>
-      <button onClick={showModal}
-
-      className={
-        isAbstractAccount ? "abstractAccountBtn" : "useSmartAccountBtn"
-      }
-      
+      <button
+        onClick={showModal}
+        className={isAbstract ? "abstractAccountBtn" : "useSmartAccountBtn"}
       >
-        {isAbstractAccount ? "0xcd54...54564" : "Use Smart Account"}
+        {isAbstract
+          ? activeAddress
+            ? activeAddress?.slice(0, 6) + "..." + activeAddress?.slice(-4)
+            : "Abstract Account"
+          : "Use Smart Account"}
       </button>
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null} centered>
         <div className="smartAccountModal">
           <div className="smartAccountModalTitle">Your Smart Accounts</div>
-          <button onClick={createNewSmartAcc} className="smartAccountCreateBtn">Create New Smart Account</button>
-          <button onClick={createNewSmartAcc} className="smartAccountCreateBtn"
+
+          <button
+            onClick={createNewSmartAcc}
+            className="smartAccountCreateBtn"
+            disabled={loading}
             style={{
+              cursor: loading ? "not-allowed" : "pointer",
+              opacity: loading ? 0.5 : 1,
+            }}
+          >
+            {loading
+              ? "New Smart Account Creating..."
+              : "Create New Smart Account"}
+          </button>
+          {isAbstract && (
+            <button
+              onClick={createNewSmartAcc}
+              className="smartAccountCreateBtn"
+              style={{
                 backgroundColor: "var(--accent-color)",
                 color: "white",
-            }}
-          >Switch Back to EOA</button>
+              }}
+            >
+              Switch Back to EOA
+            </button>
+          )}
           <div className="smartAccountModalList">
             {list?.length > 0 ? (
               list?.map((item, index) => (

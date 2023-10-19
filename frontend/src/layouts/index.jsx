@@ -10,25 +10,18 @@ import {
 import { OpenloginAdapter } from "@web3auth/openlogin-adapter";
 import { EthereumPrivateKeyProvider } from "@web3auth/ethereum-provider";
 import { Web3AuthModalPack } from "@safe-global/auth-kit";
-import { Buffer } from "buffer";
 import { useEffect, useState } from "react";
+import { Web3Provider } from "@ethersproject/providers";
+import GeneralLoading from "../components/generalLoading";
 
 export default function MainLayout() {
-  const connectedHandler = (data) => console.log("CONNECTED", data);
-  const disconnectedHandler = (data) => {
-    console.log("DISCONNECTED", data)
-  };
-
-
-
-
-
+  const connectedHandler = () => console.log("CONNECTED");
+  const disconnectedHandler = () => console.log("DISCONNECTED");
 
   const [web3AuthModalPack, setWeb3AuthModalPack] = useState();
-  const [safeAuthSignInResponse, setSafeAuthSignInResponse] = useState(null);
-  const [userInfo, setUserInfo] = useState();
-  const [provider, setProvider] = useState(null);
-  // Initialize Web3Auth
+  const [safeAuthSignInResponse, setSafeAuthSignInResponse] = useState(
+    JSON.parse(localStorage.getItem("safe-auth-sign-in-response")) || null
+  );
 
   useEffect(() => {
     (async () => {
@@ -39,11 +32,11 @@ export default function MainLayout() {
         chainConfig: {
           chainNamespace: CHAIN_NAMESPACES.EIP155,
           chainId: "0x5",
-          rpcTarget: `https://rpc.goerli.eth.gateway.fm`,
+          rpcTarget: `https://goerli.blockpi.network/v1/rpc/public`,
         },
         uiConfig: {
           loginMethodsOrder: ["google", "facebook"],
-          theme: "light"
+          theme: "light",
         },
       };
 
@@ -56,9 +49,7 @@ export default function MainLayout() {
           label: "Metamask",
           showOnDesktop: true,
           showOnMobile: false,
-       
         },
-        
       };
 
       const pvkeyProvider = new EthereumPrivateKeyProvider({
@@ -108,40 +99,78 @@ export default function MainLayout() {
         );
       };
     })();
-  }, []);
+  }, [safeAuthSignInResponse]);
 
   const login = async () => {
     if (!web3AuthModalPack) return;
-
     const signInInfo = await web3AuthModalPack.signIn();
-    console.log("SIGN IN RESPONSE: ", signInInfo);
-
-    const userInfo = await web3AuthModalPack.getUserInfo();
-    console.log("USER INFO: ", userInfo);
-
     setSafeAuthSignInResponse(signInInfo);
-    setUserInfo(userInfo || undefined);
-    setProvider(web3AuthModalPack.getProvider());
+    localStorage.setItem(
+      "safe-auth-sign-in-response",
+      JSON.stringify(signInInfo)
+    );
   };
 
   const logout = async () => {
     if (!web3AuthModalPack) return;
-
     await web3AuthModalPack.signOut();
-
-    setProvider(null);
     setSafeAuthSignInResponse(null);
+    localStorage.removeItem("safe-auth-sign-in-response");
   };
+
+  const [chainId, setChainId] = useState(null);
+  const [signer, setSigner] = useState(null);
+  const [provider, setProvider] = useState(null);
+
+  useEffect(() => {
+    if (web3AuthModalPack && safeAuthSignInResponse) {
+      let provider_ = new Web3Provider(web3AuthModalPack?.getProvider());
+      setProvider(provider_);
+    }
+  }, [web3AuthModalPack, safeAuthSignInResponse]);
+
+  useEffect(() => {
+    if (provider) {
+      let signer_ = provider.getSigner();
+      setSigner(signer_);
+    }
+  }, [provider]);
+
+  useEffect(() => {
+    if (signer) {
+      const getChainId = async () => {
+        try {
+          let res = await signer?.getChainId();
+          setChainId(res);
+        } catch (err) {
+          console.log(err);
+          setChainId(null);
+        }
+      };
+
+      getChainId();
+    }
+  }, [signer]);
+
+  console.log("chainId", chainId);
+  console.log("signer", signer);
+  console.log("provider", provider);
+
+
+  if (!web3AuthModalPack) return <GeneralLoading />;
 
   return (
     <AppWrapper>
       <Toaster />
+
       <Header
         login={login}
-        authData={safeAuthSignInResponse}
         logout={logout}
-        modalProvider={web3AuthModalPack}
+        authData={safeAuthSignInResponse}
         setSafeAuthSignInResponse={setSafeAuthSignInResponse}
+        signer={signer}
+        chainId={chainId}
+     
       />
       <Outlet />
     </AppWrapper>
