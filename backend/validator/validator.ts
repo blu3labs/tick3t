@@ -68,13 +68,15 @@ export async function ValidateTicket(
         abi,
         wallet
     );
+    const tokenId_ = parseUnits(tokenId, 0);
+    const deadline_ = parseUnits(deadline, 0);
     const salt_ = parseUnits(salt, 0);
     try {const estimate = contract.estimateGas.use(
         {
             owner,
             collection,
-            tokenId,
-            deadline,
+            tokenId_,
+            deadline_,
             salt_,
         },
         signature
@@ -87,8 +89,8 @@ export async function ValidateTicket(
         {
             owner,
             collection,
-            tokenId,
-            deadline,
+            tokenId_,
+            deadline_,
             salt_,
         },
         signature
