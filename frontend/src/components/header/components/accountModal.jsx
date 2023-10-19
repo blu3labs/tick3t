@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
 import { getEthBalance } from "../../../utils/getEthBalance";
-import { MetaMaskAvatar } from "react-metamask-avatar";
+// import { MetaMaskAvatar } from "react-metamask-avatar";
 import { AiOutlineCopy } from "react-icons/ai";
 import { IoExitOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
@@ -60,7 +60,7 @@ function AccountModal({ address, logout,isAbstract }) {
 
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null} centered>
         <div className="accountModal">
-          <MetaMaskAvatar address={address} size={64} />
+        
           <div className="accountModalWallet">
             <span>{address?.slice(0, 10) + "..." + address?.slice(-8)}</span>
             <span>

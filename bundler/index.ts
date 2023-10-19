@@ -56,15 +56,18 @@ app.post("/create-smartaccount", async (context) => {
     signatures: response.signatures,
     from: response.from,
   };
+  console.log(ticketTransaction)
 
   const encodedTransaction = await getEncodedTransaction(
     ticketTransaction,
     globalBundlerSigner
   );
 
+  console.log("Start")
   const safeProxy = getSafeProxyFactoryContract(globalBundlerSigner);
   try {
  
+    console.log(encodedTransaction, ticketTransaction)
     console.log("Smart account creation in process....");
     const tx = await globalBundlerSigner.sendTransaction({
       data: encodedTransaction,
@@ -72,6 +75,7 @@ app.post("/create-smartaccount", async (context) => {
       gasLimit: 10000000,
     });
 
+    
     const Result = await tx.wait();
 
     const addressOfProxy = Result.logs[0].address

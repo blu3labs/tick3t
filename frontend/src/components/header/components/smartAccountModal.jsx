@@ -8,11 +8,13 @@ import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import { GelatoRelayPack } from "@safe-global/relay-kit";
 import Spin from "@/ui/spin";
 import "../index.css";
+import { hashMessage, hexlify, recoverAddress } from "ethers/lib/utils";
 
 function SmartAccountModal({
   list,
   isAbstract,
   activeAddress,
+  provider,
   signer,
   setSafeAuthSignInResponse,
 }) {
@@ -33,13 +35,14 @@ function SmartAccountModal({
 
     setLoading(true);
     try {
-      console.log("girdin 0", signer);
+
 
       const ethAdapter = new EthersAdapter({
         ethers,
         signerOrProvider: signer,
       });
 
+      // eslint-disable-next-line react/prop-types
       const signeAddr = await signer?.getAddress();
       const ownersData = [signeAddr];
       const safeFactoryC = {
@@ -55,13 +58,12 @@ function SmartAccountModal({
         },
       });
 
-      console.log("girdin 1");
+
 
       const relayKit = new GelatoRelayPack(
         "_mhz0rzLWDbZ6_qEdg9c5qF50kgQ_XuKOlTFxXVdIbg_"
       );
 
-      console.log("girdin2");
 
       const txNewSafe = await newSafeData.createSafeDeploymentTransaction(
         undefined,
@@ -69,7 +71,7 @@ function SmartAccountModal({
           gasLimit: 1000000,
         }
       );
-      console.log("girdin 3");
+      
 
       const safeTransactionRelay = await relayKit.createRelayedTransaction({
         safe: newSafeData,
@@ -77,23 +79,34 @@ function SmartAccountModal({
           { data: txNewSafe.data, to: txNewSafe.to, value: txNewSafe.value },
         ],
       });
-      console.log("girdin 41", newSafeData);
-      console.log("girdin 42", safeTransactionRelay);
+   
 
-      const signedSafeTransaction = await newSafeData.signTransaction(
-        safeTransactionRelay
-      );
+      const hashOfTx =  hashMessage(JSON.stringify(safeTransactionRelay.data))
 
-      console.log("girdin 5");
+      let signatureData = ''
+      let signedVersion = {}
+    try {
+      // eslint-disable-next-line react/prop-types
+      signatureData = await provider.send('eth_sign', [
+        // eslint-disable-next-line react/prop-types
+        (await signer.getAddress()).toLowerCase(),
+        hexlify(hashOfTx)
+      ])
 
-      const sign = signedSafeTransaction.encodedSignatures();
-      console.log("girdin 6");
+    } catch (err) {
+       signedVersion = await newSafeData.signTransaction(safeTransactionRelay)
+       signatureData = signedVersion.encodedSignatures()
+             // eslint-disable-next-line react/prop-types
+
+    }
+    
+
 
       const request = await axios.post(
-        "https://blu3labs-tick3t-bundler.blu3.app/create-smartaccount",
+        "http://localhost:3012/create-smartaccount",
         JSON.stringify({
-          ...signedSafeTransaction,
-          signatures: sign,
+          ...safeTransactionRelay,
+          signatures: signatureData,
           from: signeAddr,
         })
       );

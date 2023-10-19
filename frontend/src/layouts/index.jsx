@@ -133,6 +133,7 @@ export default function MainLayout() {
     if (provider) {
       let signer_ = provider.getSigner();
       setSigner(signer_);
+
     }
   }, [provider]);
 
@@ -166,6 +167,7 @@ export default function MainLayout() {
       <Header
         login={login}
         logout={logout}
+        provider={provider}
         authData={safeAuthSignInResponse}
         setSafeAuthSignInResponse={setSafeAuthSignInResponse}
         signer={signer}

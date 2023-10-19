@@ -7,7 +7,7 @@ import toast from "react-hot-toast";
 import AccountModal from "./components/accountModal";
 import SmartAccountModal from "./components/smartAccountModal";
 
-function Header({ login, authData, logout, chainId,signer,setSafeAuthSignInResponse }) {
+function Header({ login, authData, logout, provider, chainId,signer,setSafeAuthSignInResponse }) {
   const [activeAddress, setActiveAddress] = useState(null);
   const [isAbstract, setIsAbstract] = useState(false);
 
@@ -84,6 +84,7 @@ function Header({ login, authData, logout, chainId,signer,setSafeAuthSignInRespo
           <>
             <SmartAccountModal
               list={authData?.safes}
+              provider={provider}
               isAbstract={isAbstract}
               activeAddress={activeAddress}
               signer={signer}

@@ -74,7 +74,7 @@ export const getSafeProxyFactoryContract = (signer: Signer): Contract => {
 
 export const getSafeContract = (address: string, signer: Signer): Contract => {
   const ABI = safeAbi;
-  console.log(signer, ABI);
+
   if (signer) {
     return new Contract(address, ABI, signer);
   } else {
