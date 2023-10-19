@@ -28,8 +28,8 @@ abstract contract TicketValidatorERC1155 is EIP712 {
     ) internal {
         require(ticket.owner.isValidSignatureNow(ticket.hash(), signature), "Invalid signature");
         require(ticket.collection == address(this), "Invalid collection");
-        require(ticket.amount <= balance - _usedTicketsOfUser[ticket.owner][ticket.tokenId], "Invalid amount");
+        require(balance > _usedTicketsOfUser[ticket.owner][ticket.tokenId], "Ticket already used");
         require(ticket.deadline >= block.timestamp, "Ticket expired");
-        _usedTicketsOfUser[ticket.owner][ticket.tokenId] += ticket.amount;
+        _usedTicketsOfUser[ticket.owner][ticket.tokenId]++;
     }
 }

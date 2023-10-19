@@ -33,7 +33,6 @@ abstract contract TicketValidatorERC721 is EIP712 {
         require(owner.isValidSignatureNow(ticket.hash(), signature), "Invalid signature");
         require(ticket.collection == address(this), "Invalid collection");
         require(!_usedTickets.contains(ticket.tokenId), "Ticket already used");
-        require(ticket.amount == 1, "Invalid amount");
         require(ticket.deadline >= block.timestamp, "Ticket expired");
         _usedTickets.add(ticket.tokenId);
     }

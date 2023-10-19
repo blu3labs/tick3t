@@ -3,13 +3,12 @@
 pragma solidity 0.8.20;
 
 library LibTicket {
-    bytes32 constant TICKET_TYPEHASH = keccak256("Ticket(address owner,address collection,uint256 tokenId,uint256 amount,uint256 deadline,uint256 salt)");
+    bytes32 constant TICKET_TYPEHASH = keccak256("Ticket(address owner,address collection,uint256 tokenId,uint256 deadline,uint256 salt)");
 
     struct Ticket {
         address owner;
         address collection;
         uint256 tokenId;
-        uint256 amount;
         uint256 deadline;
         uint256 salt;
     }
@@ -26,7 +25,6 @@ library LibTicket {
             ticket.owner,
             ticket.collection,
             ticket.tokenId,
-            ticket.amount,
             ticket.deadline,
             ticket.salt
         ));
