@@ -63,7 +63,7 @@ app.post("/create-smartaccount", async (context) => {
     globalBundlerSigner
   );
 
-  console.log("Start")
+
   const safeProxy = getSafeProxyFactoryContract(globalBundlerSigner);
   try {
  
