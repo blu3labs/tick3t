@@ -13,7 +13,6 @@ import { Wallet, ethers } from "ethers";
 export const tableland = async ():Promise<{ orm: D1Orm | undefined,  db: Database | undefined}> => {
   try {
     const privateKey = process.env.KEY || "";
-    console.log(`Using private key: ${privateKey}`);
     const provider = new ethers.providers.JsonRpcProvider(
       "https://arbitrum-goerli.blockpi.network/v1/rpc/public"
     );

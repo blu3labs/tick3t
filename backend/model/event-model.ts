@@ -42,6 +42,9 @@ export const eventModel = async (orm: D1Orm, db: any) => {
         type: {
           type: DataTypes.STRING,
         },
+        chain: {
+          type: DataTypes.STRING,
+        },
       }
     );
 
@@ -56,7 +59,8 @@ export const eventModel = async (orm: D1Orm, db: any) => {
             date text,
             location text,
             image text,
-            type text
+            type text,
+            chain text
             );`
         )
         .run();

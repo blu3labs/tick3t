@@ -15,4 +15,5 @@ export interface EventBodyRequestData {
   location: string;
   image: string;
   type: string;
+  chain: string;
 }

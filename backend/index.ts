@@ -13,52 +13,52 @@ const app: express.Application = express();
 app.use(cors());
 app.use(express.json());
 const { orm, db } = await tableland();
-const user = await userModel(orm!, db);
+// const user = await userModel(orm!, db);
 const event = await eventModel(orm!, db);
 
-app.get("/user/:id", async (req, res) => {
-  const address = req.params.id;
-  const userData = await user?.First({
-    where: {
-      address: address,
-    },
-  });
-  res.json({
-    status: 200,
-    data: userData,
-  });
-});
+// app.get("/user/:id", async (req, res) => {
+//   const address = req.params.id;
+//   const userData = await user?.First({
+//     where: {
+//       address: address,
+//     },
+//   });
+//   res.json({
+//     status: 200,
+//     data: userData,
+//   });
+// });
 
-app.post("/user", async (req, res) => {
-  const body: UserBodyRequestData = req.body;
-  for (let i in body.addresses) {
-    const checkUser = await user?.First({
-      where: {
-        address: body.addresses[i].address,
-      },
-    });
-    if (checkUser) {
-      let addTickets = checkUser.tickets + "," + body.addresses[i].ticket;
-      const updateTickets = await user?.Update({
-        where: {
-          address: body.addresses[i].address,
-        },
-        data: {
-          tickets: addTickets,
-        },
-      });
-    }
+// app.post("/user", async (req, res) => {
+//   const body: UserBodyRequestData = req.body;
+//   for (let i in body.addresses) {
+//     const checkUser = await user?.First({
+//       where: {
+//         address: body.addresses[i].address,
+//       },
+//     });
+//     if (checkUser) {
+//       let addTickets = checkUser.tickets + "," + body.addresses[i].ticket;
+//       const updateTickets = await user?.Update({
+//         where: {
+//           address: body.addresses[i].address,
+//         },
+//         data: {
+//           tickets: addTickets,
+//         },
+//       });
+//     }
 
-    const createUser = await user?.InsertOne({
-      address: body.addresses[i].address,
-      tickets: body.addresses[i].ticket,
-    });
-  }
-  res.json({
-    status: 200,
-    data: "success",
-  });
-});
+//     const createUser = await user?.InsertOne({
+//       address: body.addresses[i].address,
+//       tickets: body.addresses[i].ticket,
+//     });
+//   }
+//   res.json({
+//     status: 200,
+//     data: "success",
+//   });
+// });
 
 app.get("/event/:id", async (req, res) => {
   const address = req.params.id;
