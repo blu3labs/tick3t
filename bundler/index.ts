@@ -69,7 +69,6 @@ app.post("/create-smartaccount", async (context) => {
     const tx = await globalBundlerSigner.sendTransaction({
       data: encodedTransaction,
       to: safeProxy.address,
-
       gasLimit: 10000000,
     });
 
@@ -79,11 +78,47 @@ app.post("/create-smartaccount", async (context) => {
     return context.sendJson({smartAccountAddress: addressOfProxy})
   } catch (err) {
     console.log(err, "error");
+    return context.sendJson({
+        result: "error_creation",
+        error:err
+      });
   }
-  return context.sendJson({
-    result: "ok",
-  });
+
 });
+
+//Endpoint for execution from a smart account
+app.post("/send-tx", async (context) =>{
+
+    const reqData: SafeTransactionData & {signature:string, address:string} = await context.req.json() 
+    const safeContract = getSafeContract(reqData?.address, globalBundlerSigner)
+
+
+
+    const correctTx = {
+        to: reqData.to,
+        value: reqData.value,
+        data: reqData.data,
+        operation: reqData.operation,
+        safeTxGas: reqData.safeTxGas,
+        baseGas: reqData.baseGas,
+        gasPrice: reqData.gasPrice,
+        gasToken: reqData.gasToken,
+        refundReceiver: reqData.refundReceiver,
+        signatures: reqData.signature,
+    }
+
+    const args = Object.values(correctTx)
+
+    try {
+     const tx = await safeContract.execTransaction(...args,{gasLimit:1000000})
+
+    return context.sendJson({result:"Transaction sent successfuly."})
+    }catch(err){
+        console.log(err)
+        return context.sendJson({result:"error", error:err})
+    }
+})
+
 
 app.listen({
     port: parseInt(process.env.PORT!) || 3000,
