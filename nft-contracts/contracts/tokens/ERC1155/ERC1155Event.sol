@@ -7,7 +7,7 @@ import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol
 import {LibTicket} from "../common/LibTicket.sol";
 import {TicketValidatorERC1155} from "./TicketValidatorERC1155.sol";
 
-contract ERC721Event is ERC1155, TicketValidatorERC1155, ReentrancyGuard {
+contract ERC1155Event is ERC1155, TicketValidatorERC1155, ReentrancyGuard {
     address public organizer;
     uint256[3] public prices;
 
