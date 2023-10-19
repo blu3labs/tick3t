@@ -9,6 +9,7 @@ import { GelatoRelayPack } from "@safe-global/relay-kit";
 import Spin from "@/ui/spin";
 import "../index.css";
 import { hashMessage, hexlify, recoverAddress } from "ethers/lib/utils";
+import { BUNDLER_API_URL } from "../../../utils/apiUrls";
 
 function SmartAccountModal({
   list,
@@ -103,7 +104,7 @@ function SmartAccountModal({
 
 
       const request = await axios.post(
-        "http://localhost:3012/create-smartaccount",
+        BUNDLER_API_URL+"/create-smartaccount",
         JSON.stringify({
           ...safeTransactionRelay,
           signatures: signatureData,
