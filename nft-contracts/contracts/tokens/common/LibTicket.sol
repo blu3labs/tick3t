@@ -14,6 +14,12 @@ library LibTicket {
         uint256 salt;
     }
 
+    struct TicketInfo {
+        string  tokenUri;
+        uint256 amount;
+        uint256 usedAmount;
+    }
+
     function hash(Ticket memory ticket) internal pure returns (bytes32) {
         return keccak256(abi.encode(
             TICKET_TYPEHASH,
