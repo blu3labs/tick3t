@@ -25,7 +25,6 @@ function ScreenContent({ data }) {
   };
 
   const handleNext = () => {
-
     if (seats.length === 0) {
       toast.error("Please select seats.");
       return;
@@ -43,9 +42,6 @@ function ScreenContent({ data }) {
       toast.error("Please enter your wallet address.");
       return;
     }
-
-
-
 
     setStep(2);
   };
@@ -103,8 +99,6 @@ function ScreenContent({ data }) {
       }
     });
 
-    
-
     setSeats(tempWallets);
   };
 
@@ -119,10 +113,8 @@ function ScreenContent({ data }) {
       }
     });
 
-   
     setSeats(tempWallets);
   };
-
 
   console.log(seats);
 
@@ -267,7 +259,8 @@ function ScreenContent({ data }) {
                     <div className="eventRightSectionInputBox">
                       <div className="eventRightSectionInputBoxHeader">
                         <span>
-                          {index + 1}.Ticket | Seat {item.number} | {item.price} ETH
+                          {index + 1}.Ticket | Seat {item.number} | {item.price}{" "}
+                          ETH
                         </span>
                         <button onClick={() => useMyWallet(item.number)}>
                           Use My Wallet
@@ -306,39 +299,24 @@ function ScreenContent({ data }) {
           <div className="eventStageStep2">
             <div className="eventStageStep2Title">Summary</div>
 
-        
-
-              
-            {
-              seats.map((item, index) => {
-                return (
-                  <div className="eventStageStep2Item">
-                    <span>{index + 1}.Ticket | Seat {item.number}</span>
-                    <span title={item.wallet}>
-                      {item.wallet}
-                    </span>
-                    <span>
-                      {
-                        item.price
-                      } ETH
-                    </span>
-                  </div>
-                );
-              })
-            }
-
-
-
+            {seats.map((item, index) => {
+              return (
+                <div className="eventStageStep2Item">
+                  <span>
+                    {index + 1}.Ticket | Seat {item.number}<br/>{item.price} ETH
+                  </span>
+                  <span title={item.wallet}>{item.wallet}</span>
+                </div>
+              );
+            })}
 
             <div className="eventStageStep2Item">
               <span>Total Cost</span>
               <span>
-                {
-                  seats?.reduce((acc, item) => {
-                    return acc + item.price;
-                  }, 0)
-                } ETH
-
+                {seats?.reduce((acc, item) => {
+                  return acc + item.price;
+                }, 0)}{" "}
+                ETH
               </span>
             </div>
 

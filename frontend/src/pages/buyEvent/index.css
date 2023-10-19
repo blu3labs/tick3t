@@ -264,7 +264,7 @@
   height: auto;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  align-items: flex-start;
   justify-content: space-between;
 }
 
@@ -272,6 +272,7 @@
   font-size: 16px;
   color: #000;
   font-weight: 400;
+  text-align: left;
 }
 
 .eventStageStep2Item span:nth-child(2) {
@@ -363,6 +364,18 @@
   align-items: center;
   justify-content: center;
 }
+
+@media only screen and (max-width: 1052px) {
+  .eventBuyBottomSection{
+    display: flex;
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+  }
+}
+
+
+
 @media only screen and (max-width: 768px) {
   .eventBuyBottomSection {
     display: flex;
@@ -402,5 +415,26 @@
   .eventBuyTopSection {
     min-height: auto;
     height: auto;
+  }
+  .eventBuySeat span{
+    width: 28px;
+    height: 24px;
+  }
+  .eventSeatInfoBox span:nth-child(1){
+    font-size: 12px;
+    height: 24px;
+    width: 28px;
+  }
+  .eventSeatInfoBox span:nth-child(2){
+    font-size: 14px;
+  }
+  .createLocationPreviewTheatreItem{
+    gap: 2px;
+    width: 98%;
+  }
+
+  .eventSeatInfo{
+    width: calc(100% - 16px);
+    padding:  4px 8px;
   }
 }
