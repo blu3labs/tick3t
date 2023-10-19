@@ -6,6 +6,7 @@ import { Wallet, ethers, getDefaultProvider } from "ethers";
 import { tableland } from "./config/db";
 import { eventModel } from "./model/event-model";
 import { qrModel } from "./model/qr-model";
+import { ValidateTicket } from "./validator/validator";
 import express from "express";
 import cors from "cors";
 
@@ -101,7 +102,21 @@ app.get("/qr/:id", async (req, res) => {
   });
 });
 
-app.get("/check/qr", async (req, res) => {});
+app.post("/check/qr", async (req, res) => {
+  const body = req.body;
+  const [msg] = await ValidateTicket(
+    body.owner,
+    body.collection,
+    body.tokenId,
+    body.deadline,
+    body.salt,
+    body.signature
+  );
+    res.json({
+      status: 200,
+      data: msg,
+    });
+});
 
 app.listen(3001, () => {
   console.log("server started");
