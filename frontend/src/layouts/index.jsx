@@ -14,6 +14,8 @@ import { useEffect, useState } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import GeneralLoading from "../components/generalLoading";
 
+
+
 export default function MainLayout() {
   const connectedHandler = () => console.log("CONNECTED");
   const disconnectedHandler = () => console.log("DISCONNECTED");
