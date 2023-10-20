@@ -14,8 +14,6 @@ import { useEffect, useState } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import GeneralLoading from "../components/generalLoading";
 
-
-
 export default function MainLayout() {
   const connectedHandler = () => console.log("CONNECTED");
   const disconnectedHandler = () => console.log("DISCONNECTED");
@@ -126,16 +124,27 @@ export default function MainLayout() {
 
   useEffect(() => {
     if (web3AuthModalPack && safeAuthSignInResponse) {
-      let provider_ = new Web3Provider(web3AuthModalPack?.getProvider());
-      setProvider(provider_);
+      try {
+        let provider_ = new Web3Provider(web3AuthModalPack?.getProvider());
+        setProvider(provider_);
+      } catch (err) {
+        console.log(err);
+        setProvider(null);
+      }
     }
   }, [web3AuthModalPack, safeAuthSignInResponse]);
 
+  console.log("memoli", web3AuthModalPack?.getProvider());
+
   useEffect(() => {
     if (provider) {
-      let signer_ = provider.getSigner();
-      setSigner(signer_);
-
+      try {
+        let signer_ = provider.getSigner();
+        setSigner(signer_);
+      } catch (err) {
+        console.log(err);
+        setSigner(null);
+      }
     }
   }, [provider]);
 
@@ -159,13 +168,15 @@ export default function MainLayout() {
   console.log("signer", signer);
   console.log("provider", provider);
 
+  console.log(web3AuthModalPack, "web3AuthModalPack");
 
-  if (!web3AuthModalPack) return <GeneralLoading />;
+  if (web3AuthModalPack === null || web3AuthModalPack === undefined) {
+    return <GeneralLoading />;
+  }
 
   return (
     <AppWrapper>
       <Toaster />
-
       <Header
         login={login}
         logout={logout}
@@ -174,7 +185,6 @@ export default function MainLayout() {
         setSafeAuthSignInResponse={setSafeAuthSignInResponse}
         signer={signer}
         chainId={chainId}
-     
       />
       <Outlet />
     </AppWrapper>
