@@ -1,12 +1,52 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import SelectBox from "@/ui/selectBox";
 import { toast } from "react-hot-toast";
 import "../index.css";
+import { useDispatch, useSelector } from "react-redux";
+import { erc721ABI } from "../../../contract";
+import { setChainId } from "../../../redux/authSlice";
+import BigNumber from "bignumber.js";
+import { ethers } from "ethers";
+import { writeContract } from "../../../utils/writeContract";
+import { useNavigate } from "react-router-dom";
+import { readContract } from "../../../utils/readContract";
 
-function ScreenContent({ data }) {
+function ScreenContent({ data, id }) {
+  console.log(data);
+
+  const navigate = useNavigate();
+
+  let serviceFee = 0.0001;
   const [step, setStep] = useState(1);
 
-  const myWalletAddress = "0x1234567890123456789012345678901234567890";
+  const dispatch = useDispatch();
+
+  const { activeAddress, isAbstract, signer, chainId, safeAuthSignInResponse } =
+    useSelector((state) => state.auth);
+
+  const [seats, setSeats] = useState([]);
+
+  const [disabledSeats, setDisabledSeats] = useState([]);
+
+  const getDisabledSeats = async () => {
+    try {
+      let context = {
+        address: id,
+        abi: erc721ABI,
+        method: "getUsedTickets",
+      };
+
+      let res = await readContract(context);
+
+      setDisabledSeats(res);
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    getDisabledSeats();
+  }, [id]);
 
   const inputError = (address) => {
     if (address === null) {
@@ -46,23 +86,81 @@ function ScreenContent({ data }) {
     setStep(2);
   };
 
+  const [totalTicketCost, setTotalTicketCost] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
+
+  const calculateTotalCost = () => {
+    if (step === 1) return;
+
+    let value = new BigNumber(0);
+
+    seats.forEach((item) => {
+      value = new BigNumber(item.price).plus(value);
+    });
+
+    setTotalTicketCost(value.toString(10));
+
+    value = new BigNumber(value).plus(serviceFee);
+
+    setTotalCost(value.toString(10));
+  };
+
+  useEffect(() => {
+    calculateTotalCost();
+  }, [seats, step]);
+  const [loading, setLoading] = useState(false);
   const handleBuy = async () => {
+    let idArgs = [];
+    let walletArgs = [];
+
+    seats.forEach((item) => {
+      idArgs.push(item.number);
+      walletArgs.push(item.wallet);
+    });
+
+    let args_ = [idArgs, walletArgs];
+
+    console.log(args_, "args");
+
+    console.log(ethers.utils.parseEther(totalCost.toString(10)), "value");
+
+    let context = {
+      address: id,
+      abi: erc721ABI,
+      method: "buy",
+      message: "Success! You bought the ticket.",
+      args: args_,
+      val: ethers.utils.parseEther(totalCost.toString(10)),
+      signer,
+      chainId,
+      safeAuthSignInResponse,
+      dispatch,
+      setChainId: setChainId,
+    };
+
+    console.log(context, "context");
+
+    setLoading(true);
     try {
-      console.log("Buy");
+      if (isAbstract) {
+        console.log("Abstract Account");
+      } else {
+        let res = await writeContract(context);
+
+        if (res === "err") {
+          setLoading(false);
+          return;
+        } else {
+          navigate("/my-tickets");
+        }
+      }
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
-  const [seats, setSeats] = useState([]);
-  const [disabledSeats, setDisabledSeats] = useState([1, 5, 25, 50, 74, 88]);
-
   const handleAddorRemoveSeat = (seat) => {
-    // seat = { number: 1, price: 0.1, wallet: null}
-    // 0-30 : 0.1 ETH
-    // 31-60 : 0.01 ETH
-    // 61-90 : 0.001 ETH
-
     let seatsNums = seats?.map((item) => item?.number);
 
     if (seatsNums?.includes(seat)) {
@@ -79,11 +177,20 @@ function ScreenContent({ data }) {
       }
 
       if (seat >= 1 && seat <= 30) {
-        setSeats([...seats, { number: seat, price: 0.1, wallet: null }]);
+        setSeats([
+          ...seats,
+          { number: seat, price: parseFloat(data.venuePrice1), wallet: null },
+        ]);
       } else if (seat >= 31 && seat <= 60) {
-        setSeats([...seats, { number: seat, price: 0.01, wallet: null }]);
+        setSeats([
+          ...seats,
+          { number: seat, price: parseFloat(data.venuePrice2), wallet: null },
+        ]);
       } else if (seat >= 61 && seat <= 90) {
-        setSeats([...seats, { number: seat, price: 0.001, wallet: null }]);
+        setSeats([
+          ...seats,
+          { number: seat, price: parseFloat(data.venuePrice3), wallet: null },
+        ]);
       }
     }
   };
@@ -93,7 +200,7 @@ function ScreenContent({ data }) {
 
     tempWallets = tempWallets.map((item) => {
       if (item.number === number) {
-        return { ...item, wallet: myWalletAddress };
+        return { ...item, wallet: activeAddress };
       } else {
         return item;
       }
@@ -203,7 +310,7 @@ function ScreenContent({ data }) {
                       "linear-gradient(-72deg, rgb(222, 222, 255), rgb(255, 255, 255) 16%, rgb(222, 222, 255) 27%, rgb(222, 222, 255) 36%, rgb(255, 255, 255) 45%, rgb(255, 255, 255) 60%, rgb(222, 222, 255) 72%, rgb(255, 255, 255) 80%, rgb(222, 222, 255) 84%)",
                   }}
                 ></span>
-                <span>0.1 ETH</span>
+                <span>{data.venuePrice1} ETH</span>
               </div>
               <div className="eventSeatInfoBox">
                 <span
@@ -212,7 +319,7 @@ function ScreenContent({ data }) {
                       "linear-gradient(to right, rgb(191, 149, 63), rgb(252, 246, 186), #e3a214, rgb(251, 245, 183), rgb(170, 119, 28))",
                   }}
                 ></span>
-                <span>0.01 ETH</span>
+                <span>{data.venuePrice2} ETH</span>
               </div>
               <div className="eventSeatInfoBox">
                 <span
@@ -221,7 +328,7 @@ function ScreenContent({ data }) {
                       "linear-gradient(to right, rgb(222, 222, 222), rgb(255, 255, 255), rgb(222, 222, 222), rgb(255, 255, 255)",
                   }}
                 ></span>
-                <span>0.001 ETH</span>
+                <span>{data.venuePrice3} ETH</span>
               </div>
               <div className="eventSeatInfoBox">
                 <span
@@ -303,7 +410,9 @@ function ScreenContent({ data }) {
               return (
                 <div className="eventStageStep2Item">
                   <span>
-                    {index + 1}.Ticket | Seat {item.number}<br/>{item.price} ETH
+                    {index + 1}.Ticket | Seat {item.number}
+                    <br />
+                    {item.price} ETH
                   </span>
                   <span title={item.wallet}>{item.wallet}</span>
                 </div>
@@ -311,20 +420,33 @@ function ScreenContent({ data }) {
             })}
 
             <div className="eventStageStep2Item">
+              <span>Service Fee</span>
+              <span>{serviceFee} ETH</span>
+            </div>
+
+            <div className="eventStageStep2Item">
+              <span>Total Ticket Cost</span>
+              <span>{totalTicketCost?.toString(10)} ETH</span>
+            </div>
+
+            <div className="eventStageStep2Item">
               <span>Total Cost</span>
-              <span>
-                {seats?.reduce((acc, item) => {
-                  return acc + item.price;
-                }, 0)}{" "}
-                ETH
-              </span>
+              <span>{totalCost?.toString(10)} ETH</span>
             </div>
 
             <div className="eventStageStep2Buttons">
               <button className="buyBtn" onClick={() => setStep(1)}>
                 Back
               </button>
-              <button className="buyBtn" onClick={handleBuy}>
+              <button
+                className="buyBtn"
+                onClick={handleBuy}
+                disabled={loading}
+                style={{
+                  cursor: loading ? "not-allowed" : "pointer",
+                  opacity: loading && 0.5,
+                }}
+              >
                 Buy
               </button>
             </div>

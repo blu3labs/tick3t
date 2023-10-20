@@ -7,6 +7,9 @@ import { categoryColor } from "../../utils/categoryDetail";
 import "./index.css";
 import StageContent from "./components/stageContent";
 import ScreenContent from "./components/screenContent";
+import { BACKEND_API_URL } from "@/utils/apiUrls";
+import axios from "axios";
+import moment from "moment";
 
 function BuyEvent() {
   const { id } = useParams();
@@ -14,12 +17,10 @@ function BuyEvent() {
   const [data, setData] = useState(null);
   const getEvent = async () => {
     try {
-      //* Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1_000));
-      const response = await events.find((event) => event.id == id);
+      const { data: res } = await axios.get(`${BACKEND_API_URL}/event/${id}`);
 
-      if (response) {
-        setData(response);
+      if (res?.status == 200) {
+        setData(res?.data);
       } else {
         setData(false);
       }
@@ -29,9 +30,22 @@ function BuyEvent() {
     }
   };
 
+
   useEffect(() => {
     getEvent();
-  }, []);
+
+    let interval = setInterval(
+      () => {
+        getEvent();
+      },
+
+      10_000
+    );
+
+    return () => {
+      clearInterval(interval);
+    };
+  }, [id]);
 
   if (data === null) {
     return (
@@ -70,32 +84,32 @@ function BuyEvent() {
                 <div className="eventBuyTopSectionCardTopDateWrapper">
                   <div className="eventBuyTopSectionCardTopDate">
                     <FaRegCalendarAlt className="eventBuyTopSectionCardTopDateIcon" />
-                    <span>{data.date}</span>
+                    <span>
+                      {moment(data.date * 1000)
+                        .utc()
+                        .format("DD.MM.YYYY")}
+                    </span>
                   </div>
-                  <span>{data.clock}</span>
+                  <span>
+                    {moment(data.date * 1000)
+                      .utc()
+                      .format("HH:mm")}
+                  </span>
                 </div>
               </div>
               <div className="eventBuyTopSectionCardBottom">
                 <HiOutlineLocationMarker className="eventBuyTopSectionCardBottomIcon" />
-                <span>{data.location}</span>
+                <span>{data.venue}</span>
               </div>
             </div>
           </div>
         </div>
 
-          {
-            data.venue == "The Avenue, Paris"
-            ?
-            <StageContent 
-            data={data}
-            />
-            : <ScreenContent data={data} />
-          }
-
-      
-
-
-
+        {data.venue == "The Avenue, Paris" ? (
+          <StageContent data={data} id={id}/>
+        ) : (
+          <ScreenContent data={data} id={id}/>
+        )}
       </div>
     );
   }

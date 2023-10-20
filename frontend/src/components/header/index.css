@@ -37,6 +37,14 @@
   color: #000;
 }
 
+.headerLinks{
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+}
+
 .headerLinkItem{
   background: none;
   outline: none;
@@ -208,7 +216,7 @@
 .smartAccountModalListItemBalance{
   font-size: 16px;
   font-weight: 500;
-  width: 70px;
+  max-width: 80px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -218,7 +226,7 @@
 }
 
 .smartAccountModalListItemAddress{
-  width: calc(100% - 78px);
+  width: calc(100% - 88px);
   font-size: 16px;
   font-weight: 500;
   text-overflow: ellipsis;
@@ -332,4 +340,27 @@
 
 .useSmartAccountBtn:hover{
   opacity: 0.8;
+}
+
+
+@media only screen and (max-width: 768px){
+  .header{
+    flex-direction: column;
+    align-items: flex-start;
+    justify-content: flex-start;
+    gap: 1rem;
+  }
+  .headerLeft{
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .mobileLogo{
+    width: 100%;
+    justify-content: center;
+  }
+  .headerRightContent{
+    width: 100%;
+    justify-content: center;
+  }
 }

@@ -1,13 +1,12 @@
 import React, { useState, useEffect } from "react";
 import { Link, useParams } from "react-router-dom";
-import { events } from "../../utils/events";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { BsTicketPerforated } from "react-icons/bs";
 import { LiaSitemapSolid } from "react-icons/lia";
 import PreviewLocation from "../createEvent/components/previewLocation";
-import axios from "axios"
-import moment from "moment"
+import axios from "axios";
+import moment from "moment";
 import { BACKEND_API_URL } from "../../utils/apiUrls";
 
 import "./index.css";
@@ -18,8 +17,8 @@ function Event() {
   const [data, setData] = useState(null);
   const getEvent = async () => {
     try {
-      //* Simulate API call
-      const {data:res} = await axios.get(`${BACKEND_API_URL}/event/${id}`)
+    
+      const { data: res } = await axios.get(`${BACKEND_API_URL}/event/${id}`);
 
       if (res?.status == 200) {
         setData(res?.data);
@@ -31,9 +30,21 @@ function Event() {
       setData(false);
     }
   };
-  console.log(data,"event")
+
   useEffect(() => {
     getEvent();
+
+    let interval = setInterval(
+      () => {
+        getEvent();
+      },
+
+      10_000
+    );
+
+    return () => {
+      clearInterval(interval);
+    };
   }, [id]);
 
   if (data === null) {
@@ -64,9 +75,7 @@ function Event() {
               <img src={data.image} alt={data.title} draggable="false" />
             </div>
             <div className="eventDetailDesc">
-              <span>
-                {data.description}
-              </span>
+              <span>{data.description}</span>
             </div>
 
             <div className="eventDetailChatArea">
@@ -85,7 +94,9 @@ function Event() {
               </div>
               <div className="eventRightDetailItemContent">
                 <span>
-                  {moment(data.date * 1000).format("DD.MM.YYYY, HH:MM")}
+                  {moment(data.date * 1000)
+                    .utc()
+                    .format("DD.MM.YYYY, HH:mm")}
                 </span>
               </div>
             </div>
@@ -127,11 +138,9 @@ function Event() {
               <PreviewLocation venue={data.venue} minHeight={"150px"} />
             </div>
 
-            <Link
-              to={`/event/${id}/buy`}
-             
-
-            className="buyBtn">Buy Ticket</Link>
+            <Link to={`/event/${id}/buy`} className="buyBtn">
+              Buy Ticket
+            </Link>
           </div>
         </div>
       </div>

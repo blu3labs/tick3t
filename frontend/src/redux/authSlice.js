@@ -71,6 +71,10 @@ const authSlice = createSlice({
     },
     setSafeAuthSignInResponse: (state, action) => {
         state.safeAuthSignInResponse = action.payload;
+        localStorage.setItem(
+          "safe-auth-sign-in-response",
+          JSON.stringify(action.payload)
+        );
         },
 
     setWeb3AuthModalPack: (state, action) => {

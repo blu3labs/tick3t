@@ -3,7 +3,7 @@ import SelectBox from "@/ui/selectBox";
 import { toast } from "react-hot-toast";
 import "../index.css";
 
-function StageContent({ data }) {
+function StageContent({ data,id }) {
   const [category, setCategory] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const categoryOptions = [

@@ -15,7 +15,9 @@ function Header() {
   let isMyTicketsPage = location.pathname === "/my-tickets";
 
   const dispatch = useDispatch();
-  const { safeAuthSignInResponse, chainId,web3AuthModalPack } = useSelector((state) => state.auth);
+  const { safeAuthSignInResponse, chainId, web3AuthModalPack } = useSelector(
+    (state) => state.auth
+  );
   const handleSwitchNetwork = async () => {
     if (typeof window.ethereum === "undefined") {
       toast.error("Metamask not found. Please install Metamask");
@@ -35,17 +37,18 @@ function Header() {
     }
   };
 
-
- 
   return (
     <div className="header">
       <div className="headerLeft">
-        <Link to="/" className="headerLogo">
+        <Link
+          to="/"
+          className={`headerLogo ${!safeAuthSignInResponse && "mobileLogo"}`}
+        >
           <img src={Logo} alt="logo" draggable="false" />
           <span>TICK3T</span>
         </Link>
         {safeAuthSignInResponse && (
-          <>
+          <div className="headerLinks">
             <Link
               to="/create-event"
               className="headerLinkItem"
@@ -64,7 +67,7 @@ function Header() {
             >
               My Tickets
             </Link>
-          </>
+          </div>
         )}
       </div>
 
@@ -72,7 +75,7 @@ function Header() {
         {safeAuthSignInResponse === null || chainId === null ? (
           <button
             className="connectBtn"
-            onClick={()=>dispatch(handleLogin({web3AuthModalPack}))}
+            onClick={() => dispatch(handleLogin({ web3AuthModalPack }))}
           >
             Connect
           </button>

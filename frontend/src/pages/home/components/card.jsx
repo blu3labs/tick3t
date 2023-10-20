@@ -22,9 +22,9 @@ function Card({ index, item }) {
           <div className="homeEventCardDateClock">
             <div className="homeEventCardDate">
               <FaRegCalendarAlt className="homeEventCardDateIcon" />
-              <span>{moment(item.date * 1000).format("DD.MM.YYYY")}</span>
+              <span>{moment(item.date * 1000).utc().format("DD.MM.YYYY")}</span>
             </div>
-            <div className="homeEventCardClock">{moment(item.date * 1000).format("HH:MM")}</div>
+            <div className="homeEventCardClock">{moment(item.date * 1000).utc().format("HH:mm")}</div>
           </div>
         </div>
         <div className="homeEventCardLocation">

@@ -7,41 +7,44 @@ import axios from "axios";
 import { BACKEND_API_URL } from "../../utils/apiUrls";
 import { useSelector } from "react-redux";
 function Home() {
-
-
-
-
   const [category, setCategory] = useState("All Events");
 
+  const [events, setEvents] = useState(null);
 
-
-  const [events, setEvents] = useState(null)
-
-  const fetchAllEvents = async () =>{
+  const fetchAllEvents = async () => {
     try {
-      const {data: res} = await axios.get(`${BACKEND_API_URL}/all/events/${category}`)
-      setEvents(res?.data?.results)
+      const { data: res } = await axios.get(
+        `${BACKEND_API_URL}/all/events`
+      );
+
+      let arr_ = [...res?.data?.results];
+      setEvents(arr_?.reverse());
     } catch (error) {
-      console.log(error)
-      setEvents(false)
+      console.log(error);
+      setEvents(false);
     }
-  }
+  };
 
-  useEffect(()=>{
-    fetchAllEvents()
-  },[category])
+  useEffect(() => {
+    fetchAllEvents();
 
-  console.log(events,"events")
+    let interval = setInterval(() => {
+      fetchAllEvents();
+    }
+    , 10_000);
 
+    return () => {
+      clearInterval(interval);
+    }
+  }, []);
 
-  let filteredEvents = []
-  // events?.filter((item) => {
-  //   if (category === "All Events") {
-  //     return item;
-  //   } else {
-  //     return item.category === category;
-  //   }
-  // });
+  let filteredEvents = events?.filter((item) => {
+    if (category === "All Events") {
+      return item;
+    } else {
+      return item.category === category;
+    }
+  });
 
   return (
     <div className="homeWrapper">
@@ -55,13 +58,13 @@ function Home() {
         <div className="homeNoEvents">
           <span>Someting went wrong. Please try again later.</span>
         </div>
-      ) : events?.length == 0 ? (
+      ) : filteredEvents?.length == 0 ? (
         <div className="homeNoEvents">
           <span>There is no event in this category.</span>
         </div>
       ) : (
         <div className="homeEvents">
-          {events?.map((item, index) => {
+          {filteredEvents?.map((item, index) => {
             return <Card key={index} index={index} item={item} />;
           })}
         </div>

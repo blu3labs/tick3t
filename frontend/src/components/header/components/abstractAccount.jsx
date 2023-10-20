@@ -22,6 +22,8 @@ function AbstractAccount({
     }
   };
 
+  
+
   useEffect(() => {
     getBalance();
   }, [item]);
@@ -39,12 +41,17 @@ function AbstractAccount({
             activeAddress?.toLowerCase() === item?.toLowerCase() && "white",
         }}
       >
-        <div className="smartAccountModalListItemAddress">{item}</div>
-        <div className="smartAccountModalListItemBalance">
+        <div className="smartAccountModalListItemAddress"
+        title={item}
+        
+        >{item}</div>
+        <div className="smartAccountModalListItemBalance"
+        title={balance?.toString(10) / 10 ** 18}
+        >
           {parseFloat(balance?.toString(10) / 10 ** 18).toLocaleString(
             "en-US",
             {
-              maximumFractionDigits: 6,
+              maximumFractionDigits: 4,
             }
           )}{" "}
           ETH

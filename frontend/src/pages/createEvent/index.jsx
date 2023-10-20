@@ -12,8 +12,15 @@ import "./index.css";
 import toast from "react-hot-toast";
 import Spin from "../../ui/spin";
 import { BACKEND_API_URL } from "../../utils/apiUrls";
-import axios from "axios"
+import axios from "axios";
+import { factoryABI, factoryAddress } from "../../contract";
+import { useDispatch, useSelector } from "react-redux";
+import { writeContract } from "../../utils/writeContract";
+import { ethers } from "ethers";
+import { setChainId } from "../../redux/authSlice";
+import { useNavigate } from "react-router-dom";
 function CreateEvent() {
+  const navigate = useNavigate();
   const [title, setTitle] = useState(null);
   const [image, setImage] = useState(null);
   const [category, setCategory] = useState(null);
@@ -98,6 +105,11 @@ function CreateEvent() {
     return true;
   };
 
+  const dispatch = useDispatch();
+  const { isAbstract, signer, chainId, safeAuthSignInResponse } = useSelector(
+    (state) => state.auth
+  );
+
   const [loading, setLoading] = useState(false);
   const handleCreate = async () => {
     if (image === null) {
@@ -117,17 +129,79 @@ function CreateEvent() {
 
     setLoading(true);
     try {
-      //* image upload to web3.storage
+      let methodName = {
+        "The Avenue, Paris": "setERC1155Factory",
+        "Theatre Hall, Istanbul": "createERC721Event",
+      };
+
+      let context = {
+        address: factoryAddress,
+        abi: factoryABI,
+        method: methodName[venue],
+        args: [
+          title,
+          "http://localhost:3000",
+          date,
+          [
+            ethers.utils.parseEther(venuePrice1?.toString()),
+            ethers.utils.parseEther(venuePrice2?.toString()),
+            ethers.utils.parseEther(venuePrice3?.toString()),
+          ],
+          ethers.utils.randomBytes(32),
+        ],
+
+        signer: signer,
+        chainId: chainId,
+        safeAuthSignInResponse: safeAuthSignInResponse,
+        dispatch: dispatch,
+        setChainId: setChainId,
+      };
+
+      let address_ = "";
+
+      if (isAbstract) {
+        //* create event on abstract
+        console.log("abstract account...");
+      } else {
+        try {
+          let res = await writeContract(context);
+
+          if (res === "err") {
+            setLoading(false);
+            return;
+          } else {
+            for (let i = 0; i < res?.logs?.length; i++) {
+              if (
+                res?.logs[i]?.topics[0] ==
+                "0x4260f8c98a0b70328f2767f65cae27a2f61dcb6c94b0975f77af1c1440ece982"
+              ) {
+                let decoded = ethers.utils.defaultAbiCoder.decode(
+                  ["address"],
+                  res?.logs[i]?.topics[1]
+                );
+                address_ = decoded?.[0];
+                break;
+              }
+            }
+          }
+        } catch (e) {
+          console.log(e);
+          setLoading(false);
+          return;
+        }
+      }
+
+      //* create event on api
+
+      //* upload image on web3 storage
       const client = new Web3Storage({
         token: import.meta.env.VITE_WEB3STORAGE_KEY,
       });
 
       const imageCid = await client.put([image], { wrapWithDirectory: false });
-      console.log("stored files with cid:", imageCid);
 
-      //* create event on api
       let data = {
-        address: "test",
+        address: address_,
         title: title,
         image: "https://w3s.link/ipfs/" + imageCid,
         category: category,
@@ -137,18 +211,14 @@ function CreateEvent() {
         venuePrice1: venuePrice1,
         venuePrice2: venuePrice2,
         venuePrice3: venuePrice3,
-        chain: "5"
+        chain: "5",
       };
 
-      const {data: res} = await axios.post(`${BACKEND_API_URL}/event`,data)
-      console.log(res,"api return")
+      await axios.post(`${BACKEND_API_URL}/event`, data);
 
-      
-
-      console.log(data, "data");
+      navigate("/event/" + address_);
       toast.success("Event created successfully.");
     } catch (e) {
-      setLoading(false)
       console.log(e);
     }
     setLoading(false);
@@ -226,6 +296,11 @@ function CreateEvent() {
                         ? "Diamond Price"
                         : "0-30 Seat Price"
                     }
+                    onKeyPress={(event) => {
+                      if (!/[0-9+.]/.test(event.key)) {
+                        event.preventDefault();
+                      }
+                    }}
                     placeholder="Please enter price"
                     value={venuePrice1}
                     onChange={(e) => setVenuePrice1(e.target.value)}
@@ -238,6 +313,11 @@ function CreateEvent() {
                         ? "Gold Price"
                         : "31-60 Seat Price"
                     }
+                    onKeyPress={(event) => {
+                      if (!/[0-9+.]/.test(event.key)) {
+                        event.preventDefault();
+                      }
+                    }}
                     placeholder="Please enter price"
                     value={venuePrice2}
                     onChange={(e) => setVenuePrice2(e.target.value)}
@@ -250,6 +330,11 @@ function CreateEvent() {
                         ? "General Price"
                         : "61-90 Seat Price"
                     }
+                    onKeyPress={(event) => {
+                      if (!/[0-9+.]/.test(event.key)) {
+                        event.preventDefault();
+                      }
+                    }}
                     placeholder="Please enter price"
                     value={venuePrice3}
                     onChange={(e) => setVenuePrice3(e.target.value)}
@@ -276,7 +361,7 @@ function CreateEvent() {
             disabled={loading}
             style={{
               cursor: loading ? "not-allowed" : "pointer",
-              opacity: loading ? 0.5 : "auto" ,
+              opacity: loading && 0.5,
             }}
           >
             Create {loading && <Spin />}
