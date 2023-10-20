@@ -1,6 +1,6 @@
 import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
 import axios from "axios";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { hexlify } from "ethers/lib/utils";
 import { toast } from "react-hot-toast";
 import { BUNDLER_API_URL } from "./apiUrls";
@@ -84,7 +84,7 @@ export const writeContractAbstract = async (data) => {
     });
     const callInformation = {
       to: contract.address,
-      value: val_,
+      value: BigNumber.from(val_).toString(),
       data: callData,
       operation: 0,
     };
@@ -120,6 +120,7 @@ export const writeContractAbstract = async (data) => {
         hexlify(hash),
       ]);
 
+      signedVersion = normalTx
       //   signedVersion = await safeSDK.signTransaction(normalTx)
     } catch (err) {
       signedVersion = await safeSDK.signTransaction(normalTx);

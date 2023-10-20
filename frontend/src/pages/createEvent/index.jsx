@@ -175,20 +175,21 @@ function CreateEvent() {
           } else {
 
             console.log(res ,"hello");
-            return;
-            // for (let i = 0; i < res?.logs?.length; i++) {
-            //   if (
-            //     res?.logs[i]?.topics[0] ==
-            //     "0x4260f8c98a0b70328f2767f65cae27a2f61dcb6c94b0975f77af1c1440ece982"
-            //   ) {
-            //     let decoded = ethers.utils.defaultAbiCoder.decode(
-            //       ["address"],
-            //       res?.logs[i]?.topics[1]
-            //     );
-            //     address_ = decoded?.[0];
-            //     break;
-            //   }
-            // }
+            setLoading(false)
+          
+            for (let i = 0; i < res?.logs?.length; i++) {
+              if (
+                res?.logs[i]?.topics[0] ==
+                "0x4260f8c98a0b70328f2767f65cae27a2f61dcb6c94b0975f77af1c1440ece982"
+              ) {
+                let decoded = ethers.utils.defaultAbiCoder.decode(
+                  ["address"],
+                  res?.logs[i]?.topics[1]
+                );
+                address_ = decoded?.[0];
+                break;
+              }
+            }
           }
         } catch (e) {
           console.log(e);
