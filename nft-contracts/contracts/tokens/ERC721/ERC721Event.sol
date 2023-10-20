@@ -57,6 +57,7 @@ contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
         for (uint256 i = 0; i < recipients.length; i++) {
             uint256 tokenId = tokenIds[i];
             require(tokenId > 0 && tokenId <= 90, "Invalid tokenId");
+
             _safeMint(msg.sender, tokenId);
             _userTickets[msg.sender].add(tokenId);
             totalPrice += _getPrice(tokenId);
@@ -117,7 +118,7 @@ contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
         address auth
     ) internal override whenNotEnded returns (address) {
         require(!isUsedTicket(tokenId), "Ticket already used");
-        address from = ownerOf(tokenId);
+        address from = _ownerOf(tokenId);
         if (from != address(0)) {
             _userTickets[from].remove(tokenId);
         }

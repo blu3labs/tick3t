@@ -124,7 +124,8 @@ contract ERC1155Event is ERC1155, TicketValidatorERC1155, ReentrancyGuard {
         for (uint256 i = 0; i < ids.length; i++) {
             require(
                 balanceOf(from, ids[i]) >=
-                    getUsedTicketsOfUser(from, ids[i]) + values[i],
+                    getUsedTicketsOfUser(from, ids[i]) + values[i] ||
+                    from == address(0),
                 "Sender do not have enough unused tickets"
             );
         }
