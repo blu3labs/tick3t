@@ -37,22 +37,11 @@ app.get("/event/:id", async (req, res) => {
   });
 });
 
-app.get("/all/events/:category", async (req, res) => {
-  const category = req.params.category;
+app.get("/all/events", async (req, res) => {
 
-  if (category === "All Events") {
-    const eventData = await event?.All({});
-    res.json({
-      status: 200,
-      data: eventData,
-    });
-    return;
-  }
-  const eventData = await event?.All({
-    where: {
-      category: category,
-    },
-  });
+  const eventData = await event?.All({});
+  // reverse the array
+
   res.json({
     status: 200,
     data: eventData,
