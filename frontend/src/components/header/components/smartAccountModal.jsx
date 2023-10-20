@@ -11,18 +11,26 @@ import "../index.css";
 import { hashMessage, hexlify, recoverAddress } from "ethers/lib/utils";
 import { BUNDLER_API_URL } from "../../../utils/apiUrls";
 import AbstractAccount from "./abstractAccount";
-
-function SmartAccountModal({
-  walletAddress,
-  list,
-  isAbstract,
-  setIsAbstract,
-  activeAddress,
+import { useDispatch, useSelector } from "react-redux";
+import {
   setActiveAddress,
-  provider,
-  signer,
+  setIsAbstract,
   setSafeAuthSignInResponse,
-}) {
+} from "../../../redux/authSlice";
+
+function SmartAccountModal() {
+  const dispatch = useDispatch();
+  const {
+    safeAuthSignInResponse,
+    isAbstract,
+    activeAddress,
+    provider,
+    signer,
+  } = useSelector((state) => state.auth);
+
+  let walletAddress = safeAuthSignInResponse?.eoa;
+  let list = safeAuthSignInResponse?.safes;
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -107,11 +115,18 @@ function SmartAccountModal({
 
       setLoading(false);
       const newAddress = request?.data?.smartAccountAddress;
-      setSafeAuthSignInResponse((oldData) => ({
-        eoa: signeAddr,
-        safes: [newAddress, ...oldData?.safes],
-      }));
-      toast.success("Smart Account Created:" + newAddress);
+      dispatch(
+        setSafeAuthSignInResponse((oldData) => ({
+          eoa: signeAddr,
+          safes: [newAddress, ...oldData?.safes],
+        }))
+      );
+      toast.success(
+        "Smart Account Created:" +
+          newAddress?.slice(0, 5) +
+          "..." +
+          newAddress?.slice(-3)
+      );
     } catch (err) {
       console.log(err);
       toast.error("Failed to create smart account");
@@ -120,10 +135,8 @@ function SmartAccountModal({
   };
 
   const handleBackToEOA = async () => {
-    setActiveAddress(walletAddress);
-    setIsAbstract(false);
-    localStorage.setItem("abstractAccount", "false");
-    localStorage.setItem("activeAddress", walletAddress);
+    dispatch(setActiveAddress(walletAddress));
+    dispatch(setIsAbstract(false));
   };
 
   const handleSwitchAbstractAccount = async (item) => {
@@ -131,10 +144,8 @@ function SmartAccountModal({
       return;
     }
 
-    setActiveAddress(item);
-    setIsAbstract(true);
-    localStorage.setItem("abstractAccount", "true");
-    localStorage.setItem("activeAddress", item);
+    dispatch(setActiveAddress(item));
+    dispatch(setIsAbstract(true));
   };
 
   return (
