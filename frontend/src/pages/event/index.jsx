@@ -150,6 +150,9 @@ function Event() {
                 <span>Seating Plane</span>
               </div>
 
+
+             
+
               <PreviewLocation venue={data.venue} minHeight={"150px"} />
             </div>
 

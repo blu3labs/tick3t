@@ -174,7 +174,7 @@ function CreateEvent() {
             return;
           } else {
 
-            console.log(res ,"içerde");
+            console.log(res ,"hello");
             return;
             // for (let i = 0; i < res?.logs?.length; i++) {
             //   if (
