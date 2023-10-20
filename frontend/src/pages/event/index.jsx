@@ -6,6 +6,10 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { BsTicketPerforated } from "react-icons/bs";
 import { LiaSitemapSolid } from "react-icons/lia";
 import PreviewLocation from "../createEvent/components/previewLocation";
+import axios from "axios"
+import moment from "moment"
+import { BACKEND_API_URL } from "../../utils/apiUrls";
+
 import "./index.css";
 
 function Event() {
@@ -15,11 +19,10 @@ function Event() {
   const getEvent = async () => {
     try {
       //* Simulate API call
-      await new Promise((resolve) => setTimeout(resolve, 1_000));
-      const response = await events.find((event) => event.id == id);
+      const {data:res} = await axios.get(`${BACKEND_API_URL}/event/${id}`)
 
-      if (response) {
-        setData(response);
+      if (res?.status == 200) {
+        setData(res?.data);
       } else {
         setData(false);
       }
@@ -28,10 +31,10 @@ function Event() {
       setData(false);
     }
   };
-
+  console.log(data,"event")
   useEffect(() => {
     getEvent();
-  }, []);
+  }, [id]);
 
   if (data === null) {
     return (
@@ -62,12 +65,7 @@ function Event() {
             </div>
             <div className="eventDetailDesc">
               <span>
-                Lorem ipsum dolor sit amet consectetur, adipisicing elit. Eum
-                accusamus quidem eius nemo aspernatur, vel sequi! Porro enim
-                ratione tempore officiis velit? Non animi quaerat unde sit illum
-                ratione consequuntur minima quam, ipsam porro. Provident quasi
-                nulla iste enim cumque optio adipisci quidem expedita
-                consequuntur?
+                {data.description}
               </span>
             </div>
 
@@ -87,7 +85,7 @@ function Event() {
               </div>
               <div className="eventRightDetailItemContent">
                 <span>
-                  {data.date}, {data.clock}
+                  {moment(data.date * 1000).format("DD.MM.YYYY, HH:MM")}
                 </span>
               </div>
             </div>
@@ -98,7 +96,7 @@ function Event() {
                 <span>Location</span>
               </div>
               <div className="eventRightDetailItemContent">
-                <span>{data.location}</span>
+                <span>{data.venue}</span>
               </div>
             </div>
 
@@ -109,13 +107,13 @@ function Event() {
               </div>
               <div className="eventRightDetailItemContentVenue">
                 <span>
-                  Diamond - <b>1 ETH</b>
+                  Diamond - <b>{data.venuePrice1} ETH</b>
                 </span>
                 <span>
-                  Gold - <b>0.5 ETH</b>
+                  Gold - <b>{data.venuePrice2} ETH</b>
                 </span>
                 <span>
-                  General - <b>0.1 ETH</b>
+                  General - <b>{data.venuePrice3} ETH</b>
                 </span>
               </div>
             </div>

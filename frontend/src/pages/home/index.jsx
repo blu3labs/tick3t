@@ -1,20 +1,47 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { events } from "../../utils/events";
 import Category from "./components/category";
 import Card from "./components/card";
 import "./index.css";
-
+import axios from "axios";
+import { BACKEND_API_URL } from "../../utils/apiUrls";
+import { useSelector } from "react-redux";
 function Home() {
+
+
+
+
   const [category, setCategory] = useState("All Events");
 
-  let filteredEvents = events?.filter((item) => {
-    if (category === "All Events") {
-      return item;
-    } else {
-      return item.category === category;
-    }
-  });
 
+
+  const [events, setEvents] = useState(null)
+
+  const fetchAllEvents = async () =>{
+    try {
+      const {data: res} = await axios.get(`${BACKEND_API_URL}/all/events/${category}`)
+      setEvents(res?.data?.results)
+    } catch (error) {
+      console.log(error)
+      setEvents(false)
+    }
+  }
+
+  useEffect(()=>{
+    fetchAllEvents()
+  },[category])
+
+  console.log(events,"events")
+
+
+  let filteredEvents = []
+  // events?.filter((item) => {
+  //   if (category === "All Events") {
+  //     return item;
+  //   } else {
+  //     return item.category === category;
+  //   }
+  // });
 
   return (
     <div className="homeWrapper">
@@ -28,13 +55,13 @@ function Home() {
         <div className="homeNoEvents">
           <span>Someting went wrong. Please try again later.</span>
         </div>
-      ) : filteredEvents?.length == 0 ? (
+      ) : events?.length == 0 ? (
         <div className="homeNoEvents">
           <span>There is no event in this category.</span>
         </div>
       ) : (
         <div className="homeEvents">
-          {filteredEvents?.map((item, index) => {
+          {events?.map((item, index) => {
             return <Card key={index} index={index} item={item} />;
           })}
         </div>

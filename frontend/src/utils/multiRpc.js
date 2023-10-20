@@ -1,4 +1,5 @@
-export const multichainRpc = [
+export const multiRpc = [
+  "https://eth-goerli.g.alchemy.com/v2/vwviUzeEMaoaRjJ-IhbeDNZtp5-Aj0je",
   "https://goerli.blockpi.network/v1/rpc/public",
   "wss://goerli.gateway.tenderly.co",
   "wss://ethereum-goerli.publicnode.com",

@@ -1,42 +1,21 @@
 import React, { useEffect, useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useLocation } from "react-router-dom";
 import Logo from "@/assets/vite.svg";
 import "./index.css";
 
 import toast from "react-hot-toast";
 import AccountModal from "./components/accountModal";
 import SmartAccountModal from "./components/smartAccountModal";
+import { useDispatch, useSelector } from "react-redux";
+import { handleLogin, setChainId } from "../../redux/authSlice";
 
-function Header({ login, authData, logout, provider, chainId,signer,setSafeAuthSignInResponse }) {
-  const [activeAddress, setActiveAddress] = useState(null);
-  const [isAbstract, setIsAbstract] = useState(false);
+function Header() {
+  const location = useLocation();
+  let isCreatePage = location.pathname === "/create-event";
+  let isMyTicketsPage = location.pathname === "/my-tickets";
 
-  const getActiveAccount = () => {
-    let localStrgAbstract = localStorage.getItem("abstractAccount");
-    let localStrgActive = localStorage.getItem("activeAddress");
-
-    if (localStrgAbstract) {
-      setIsAbstract(localStrgAbstract === "true" ? true : false);
-    } else {
-      setIsAbstract(false);
-      localStorage.setItem("abstractAccount", false);
-    }
-
-    if (localStrgActive) {
-      setActiveAddress(localStrgActive);
-    } else {
-      setActiveAddress(authData?.eoa || null);
-      localStorage.setItem("activeAddress", authData?.eoa || null);
-    }
-  };
-
-  useEffect(() => {
-    getActiveAccount();
-  }, [authData]);
-
-  console.log("activeAddress", activeAddress);
-  console.log("isAbstract", isAbstract);
-
+  const dispatch = useDispatch();
+  const { safeAuthSignInResponse, chainId,web3AuthModalPack } = useSelector((state) => state.auth);
   const handleSwitchNetwork = async () => {
     if (typeof window.ethereum === "undefined") {
       toast.error("Metamask not found. Please install Metamask");
@@ -48,26 +27,53 @@ function Header({ login, authData, logout, provider, chainId,signer,setSafeAuthS
         method: "wallet_switchEthereumChain",
         params: [{ chainId: "0x5" }],
       });
+      dispatch(setChainId(5));
       toast.success("Successfully switched to Goerli");
-
-      //*todo
-      setChainId(5);
     } catch (error) {
       console.error(error);
-      toast.error("Failed to switch to Goerli");
+      toast.error("Failed switch to Goerli");
     }
   };
 
+
+ 
   return (
     <div className="header">
-      <Link to="/" className="headerLogo">
-        <img src={Logo} alt="logo" draggable="false" />
-        <span>TICK3T</span>
-      </Link>
+      <div className="headerLeft">
+        <Link to="/" className="headerLogo">
+          <img src={Logo} alt="logo" draggable="false" />
+          <span>TICK3T</span>
+        </Link>
+        {safeAuthSignInResponse && (
+          <>
+            <Link
+              to="/create-event"
+              className="headerLinkItem"
+              style={{
+                color: isCreatePage && "var(--accent-color)",
+              }}
+            >
+              Create
+            </Link>
+            <Link
+              to="/my-tickets"
+              className="headerLinkItem"
+              style={{
+                color: isMyTicketsPage && "var(--accent-color)",
+              }}
+            >
+              My Tickets
+            </Link>
+          </>
+        )}
+      </div>
 
       <div className="headerRightContent">
-        {authData === null || chainId === null ? (
-          <button className="connectBtn" onClick={login}>
+        {safeAuthSignInResponse === null || chainId === null ? (
+          <button
+            className="connectBtn"
+            onClick={()=>dispatch(handleLogin({web3AuthModalPack}))}
+          >
             Connect
           </button>
         ) : chainId !== 5 ? (
@@ -82,19 +88,8 @@ function Header({ login, authData, logout, provider, chainId,signer,setSafeAuthS
           </button>
         ) : (
           <>
-            <SmartAccountModal
-              list={authData?.safes}
-              provider={provider}
-              isAbstract={isAbstract}
-              activeAddress={activeAddress}
-              signer={signer}
-              setSafeAuthSignInResponse={setSafeAuthSignInResponse}
-            />
-            <AccountModal
-              address={authData?.eoa}
-              logout={logout}
-              isAbstract={isAbstract}
-            />
+            <SmartAccountModal />
+            <AccountModal />
           </>
         )}
       </div>

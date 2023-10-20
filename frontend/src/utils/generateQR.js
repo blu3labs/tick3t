@@ -1,6 +1,6 @@
 import { _TypedDataEncoder, hashMessage } from "ethers/lib/utils";
 
-import signAbi from "./abis/signlib.json";
+import signAbi from "@/contract/signlib.json";
 import { Contract } from "@ethersproject/contracts";
 import axios from "axios";
 import { GelatoRelayPack } from "@safe-global/relay-kit";
