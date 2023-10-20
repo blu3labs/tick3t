@@ -5,6 +5,7 @@ pragma solidity 0.8.20;
 import {ERC721} from "@openzeppelin/contracts/token/ERC721/ERC721.sol";
 import {ReentrancyGuard} from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet.sol";
+import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {LibTicket} from "../common/LibTicket.sol";
 import {TicketValidatorERC721} from "./TicketValidatorERC721.sol";
@@ -12,63 +13,81 @@ import {TicketValidatorERC721} from "./TicketValidatorERC721.sol";
 contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
     using Address for address payable;
     using EnumerableSet for EnumerableSet.UintSet;
+    using Strings for address;
 
-    address payable immutable public organizer;
-    address payable immutable public feeRecipient;
+    address payable public immutable organizer;
+    address payable public immutable feeRecipient;
     uint256 public immutable serviceFee;
+    uint256 public immutable date;
     uint256[3] public prices;
-    
+
     string private _uri;
 
-    mapping (address => EnumerableSet.UintSet) private _userTickets;
+    mapping(address => EnumerableSet.UintSet) private _userTickets;
 
     event Sold(address indexed to, uint256 indexed tokenId);
 
     constructor(
-        string memory name_, 
+        string memory name_,
         string memory uri_,
-        address payable organizer_, 
         address payable feeRecipient_,
         uint256 serviceFee_,
+        uint256 date_,
         uint256[3] memory prices_
-    ) 
-        ERC721(name_, name_) 
-        TicketValidatorERC721(name_, "1")
-    {   
-        _uri = uri_;
-        organizer = organizer_;
+    ) ERC721(name_, name_) TicketValidatorERC721(name_, "1") {
+        _uri = string.concat(uri_, address(this).toHexString());
+        organizer = payable(msg.sender);
         feeRecipient = feeRecipient_;
         serviceFee = serviceFee_;
+        date = date_;
         prices = prices_;
-
     }
 
-    function buy(uint256 tokenId) external payable nonReentrant {
-        require(tokenId > 0 && tokenId <= 90, "Invalid tokenId");
-        _safeMint(msg.sender, tokenId);
-        _userTickets[msg.sender].add(tokenId);
-        require(msg.value == _getPrice(tokenId) + serviceFee, "Invalid msg.value");
+    modifier whenNotEnded() {
+        require(block.timestamp < date, "Event ended");
+        _;
+    }
+
+    function buy(
+        uint256[] memory tokenIds,
+        address[] memory recipients
+    ) external payable nonReentrant whenNotEnded {
+        require(recipients.length == tokenIds.length, "Invalid input");
+        uint256 totalPrice;
+        for (uint256 i = 0; i < recipients.length; i++) {
+            uint256 tokenId = tokenIds[i];
+            require(tokenId > 0 && tokenId <= 90, "Invalid tokenId");
+            _safeMint(msg.sender, tokenId);
+            _userTickets[msg.sender].add(tokenId);
+            totalPrice += _getPrice(tokenId);
+            emit Sold(recipients[i], tokenId);
+        }
+        require(msg.value == totalPrice + serviceFee, "Invalid msg.value");
         organizer.sendValue(msg.value - serviceFee);
         feeRecipient.sendValue(serviceFee);
-        emit Sold(msg.sender, tokenId);
     }
 
     function use(
         LibTicket.Ticket memory ticket,
         bytes memory signature
-    ) external nonReentrant {
+    ) external nonReentrant whenNotEnded {
         address owner = ownerOf(ticket.tokenId);
         require(owner == ticket.owner, "Invalid owner");
         _validateTicket(owner, ticket, signature);
     }
 
-    function getUserTickets(address user) external view returns (LibTicket.TicketInfo[] memory) {
+    function getUserTickets(
+        address user
+    ) external view returns (LibTicket.TicketInfo[] memory) {
         uint256 length = _userTickets[user].length();
-        LibTicket.TicketInfo[] memory tickets = new LibTicket.TicketInfo[](length);
+        LibTicket.TicketInfo[] memory tickets = new LibTicket.TicketInfo[](
+            length
+        );
         for (uint256 i = 0; i < length; i++) {
             uint256 tokenId = _userTickets[user].at(i);
             tickets[i] = LibTicket.TicketInfo({
-                tokenUri: tokenURI(tokenId),
+                tokenUri: _baseURI(),
+                tokenId: tokenId,
                 amount: 1,
                 usedAmount: isUsedTicket(tokenId) ? 1 : 0
             });
@@ -92,7 +111,11 @@ contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
         return _uri;
     }
 
-    function _update(address to, uint256 tokenId, address auth) internal override returns (address) {
+    function _update(
+        address to,
+        uint256 tokenId,
+        address auth
+    ) internal override whenNotEnded returns (address) {
         require(!isUsedTicket(tokenId), "Ticket already used");
         address from = ownerOf(tokenId);
         if (from != address(0)) {

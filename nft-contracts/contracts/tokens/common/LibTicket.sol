@@ -15,6 +15,7 @@ library LibTicket {
 
     struct TicketInfo {
         string  tokenUri;
+        uint256 tokenId;
         uint256 amount;
         uint256 usedAmount;
     }

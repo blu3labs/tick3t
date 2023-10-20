@@ -1,5 +1,6 @@
 require("@nomicfoundation/hardhat-toolbox");
 require("hardhat-log-remover");
+require("hardhat-contract-sizer");
 require("dotenv").config();
 
 module.exports = {
@@ -26,21 +27,9 @@ module.exports = {
     ],
   },
   networks: {
-    bscTestnet: {
-      url: "https://data-seed-prebsc-1-s1.binance.org:8545",
-      accounts: [
-        process.env.PV_KEY
-      ],
-    },
-    mumbai: {
-      url: "https://rpc.ankr.com/polygon_mumbai",
+    goerli: {
+      url: process.env.GOERLI_URL,
       accounts: [process.env.PV_KEY],
     },
   },
-  etherscan: {
-    apiKey: {
-        bscTestnet: process.env.BSC_TESTNET_API_KEY,
-        polygonMumbai: process.env.POLYGON_MUMBAI_API_KEY,
-    }
-  }
 };
