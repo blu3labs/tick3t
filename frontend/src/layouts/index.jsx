@@ -13,15 +13,22 @@ import { Web3AuthModalPack } from "@safe-global/auth-kit";
 import { useEffect, useState } from "react";
 import { Web3Provider } from "@ethersproject/providers";
 import GeneralLoading from "../components/generalLoading";
+import { useDispatch, useSelector } from "react-redux";
+import {
+  setWeb3AuthModalPack,
+  walletController,
+  setProvider,
+  setSigner,
+  setChainId,
+} from "@/redux/authSlice";
 
 export default function MainLayout() {
+  const dispatch = useDispatch();
+  const { web3AuthModalPack, safeAuthSignInResponse, signer, provider } =
+    useSelector((state) => state.auth);
+
   const connectedHandler = () => console.log("CONNECTED");
   const disconnectedHandler = () => console.log("DISCONNECTED");
-
-  const [web3AuthModalPack, setWeb3AuthModalPack] = useState();
-  const [safeAuthSignInResponse, setSafeAuthSignInResponse] = useState(
-    JSON.parse(localStorage.getItem("safe-auth-sign-in-response")) || null
-  );
 
   useEffect(() => {
     (async () => {
@@ -86,7 +93,7 @@ export default function MainLayout() {
         disconnectedHandler
       );
 
-      setWeb3AuthModalPack(web3AuthModalPack);
+      dispatch(setWeb3AuthModalPack(web3AuthModalPack));
 
       return () => {
         web3AuthModalPack.unsubscribe(
@@ -101,97 +108,30 @@ export default function MainLayout() {
     })();
   }, [safeAuthSignInResponse]);
 
-  const [activeAddress, setActiveAddress] = useState(null);
-  const [isAbstract, setIsAbstract] = useState(false);
-
-  const walletController = async () => {
-    try {
-      let localStrgAbstract = localStorage.getItem("abstractAccount");
-      let localStrgActive = localStorage.getItem("activeAddress");
-
-      if (localStrgAbstract) {
-        setIsAbstract(localStrgAbstract === "true" ? true : false);
-      } else {
-        setIsAbstract(false);
-        localStorage.setItem("abstractAccount", false);
-      }
-
-      if (localStrgActive) {
-        setActiveAddress(localStrgActive);
-      } else {
-        setActiveAddress(safeAuthSignInResponse?.eoa || null);
-        localStorage.setItem(
-          "activeAddress",
-          safeAuthSignInResponse?.eoa || null
-        );
-      }
-    } catch (err) {
-      console.log(err);
-    }
-  };
-
   useEffect(() => {
-    walletController();
+    dispatch(walletController());
   }, [safeAuthSignInResponse]);
-
-  const login = async () => {
-    if (!web3AuthModalPack) return;
-    const signInInfo = await web3AuthModalPack.signIn();
-    setSafeAuthSignInResponse(signInInfo);
-
-    let wallet = signInInfo?.eoa;
-    let localWallet = localStorage.getItem("walletAddress");
-    if (localWallet) {
-      if (
-        wallet?.toLowerCase() !== localWallet?.toLowerCase()
-      ) {
-        setActiveAddress(wallet);
-        setIsAbstract(false);
-        localStorage.setItem("abstractAccount", false);
-        localStorage.setItem("activeAddress", wallet);
-      }
-    }
-
-    localStorage.setItem("walletAddress", wallet);
-    localStorage.setItem(
-      "safe-auth-sign-in-response",
-      JSON.stringify(signInInfo)
-    );
-  };
-
-  const logout = async () => {
-    if (!web3AuthModalPack) return;
-    await web3AuthModalPack.signOut();
-    setSafeAuthSignInResponse(null);
-    localStorage.removeItem("safe-auth-sign-in-response");
-  };
-
-  const [chainId, setChainId] = useState(null);
-  const [signer, setSigner] = useState(null);
-  const [provider, setProvider] = useState(null);
 
   useEffect(() => {
     if (web3AuthModalPack && safeAuthSignInResponse) {
       try {
         let provider_ = new Web3Provider(web3AuthModalPack?.getProvider());
-        setProvider(provider_);
+        dispatch(setProvider(provider_));
       } catch (err) {
         console.log(err);
-        setProvider(null);
+        dispatch(setProvider(null));
       }
     }
   }, [web3AuthModalPack, safeAuthSignInResponse]);
-
-
 
   useEffect(() => {
     if (provider) {
       try {
         let signer_ = provider.getSigner();
-        setSigner(signer_);
+        dispatch(setSigner(signer_));
       } catch (err) {
         console.log(err);
-        setSigner(null);
+        dispatch(setSigner(null));
       }
     }
   }, [provider]);
@@ -201,24 +141,16 @@ export default function MainLayout() {
       const getChainId = async () => {
         try {
           let res = await signer?.getChainId();
-          setChainId(res);
+          dispatch(setChainId(res));
         } catch (err) {
           console.log(err);
-          setChainId(null);
+          dispatch(setChainId(null));
         }
       };
 
       getChainId();
     }
   }, [signer]);
-
-  console.log("chainId", chainId);
-  console.log("signer", signer);
-  console.log("provider", provider);
-
-  console.log("activeAddress", activeAddress);
-  console.log("walletAddress", localStorage.getItem("walletAddress"));
-  console.log("isAbstract", isAbstract);
 
   if (web3AuthModalPack === null || web3AuthModalPack === undefined) {
     return <GeneralLoading />;
@@ -227,19 +159,7 @@ export default function MainLayout() {
   return (
     <AppWrapper>
       <Toaster />
-      <Header
-        login={login}
-        logout={logout}
-        provider={provider}
-        authData={safeAuthSignInResponse}
-        setSafeAuthSignInResponse={setSafeAuthSignInResponse}
-        signer={signer}
-        chainId={chainId}
-        activeAddress={activeAddress}
-        setActiveAddress={setActiveAddress}
-        isAbstract={isAbstract}
-        setIsAbstract={setIsAbstract}
-      />
+      <Header />
       <Outlet />
     </AppWrapper>
   );

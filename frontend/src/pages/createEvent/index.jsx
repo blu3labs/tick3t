@@ -11,7 +11,8 @@ import PreviewLocation from "./components/previewLocation";
 import "./index.css";
 import toast from "react-hot-toast";
 import Spin from "../../ui/spin";
-
+import { BACKEND_API_URL } from "../../utils/apiUrls";
+import axios from "axios"
 function CreateEvent() {
   const [title, setTitle] = useState(null);
   const [image, setImage] = useState(null);
@@ -121,13 +122,14 @@ function CreateEvent() {
         token: import.meta.env.VITE_WEB3STORAGE_KEY,
       });
 
-      const imageCid = await client.put([image]);
+      const imageCid = await client.put([image], { wrapWithDirectory: false });
       console.log("stored files with cid:", imageCid);
 
       //* create event on api
       let data = {
+        address: "test",
         title: title,
-        image: imageCid,
+        image: "https://w3s.link/ipfs/" + imageCid,
         category: category,
         date: date,
         description: description,
@@ -135,11 +137,18 @@ function CreateEvent() {
         venuePrice1: venuePrice1,
         venuePrice2: venuePrice2,
         venuePrice3: venuePrice3,
+        chain: "5"
       };
+
+      const {data: res} = await axios.post(`${BACKEND_API_URL}/event`,data)
+      console.log(res,"api return")
+
+      
 
       console.log(data, "data");
       toast.success("Event created successfully.");
     } catch (e) {
+      setLoading(false)
       console.log(e);
     }
     setLoading(false);

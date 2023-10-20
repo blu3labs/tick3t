@@ -7,7 +7,14 @@
   justify-content: space-between;
   padding: 1rem 0;
 }
-
+.headerLeft{
+  width: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 1rem;
+}
 .headerLogo {
   text-decoration: none;
   display: flex;
@@ -28,6 +35,18 @@
   font-size: 1.5rem;
   font-weight: 700;
   color: #000;
+}
+
+.headerLinkItem{
+  background: none;
+  outline: none;
+  border: none;
+  margin: 0;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+  text-decoration: none;
 }
 
 .headerRightContent {

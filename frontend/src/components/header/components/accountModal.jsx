@@ -5,9 +5,12 @@ import { getEthBalance } from "../../../utils/getEthBalance";
 import { AiOutlineCopy } from "react-icons/ai";
 import { IoExitOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
+import { useDispatch, useSelector } from "react-redux";
+import { handleLogout } from "@/redux/authSlice";
+
 import "../index.css";
 
-function AccountModal({ address, logout, isAbstract }) {
+function AccountModal() {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -16,14 +19,14 @@ function AccountModal({ address, logout, isAbstract }) {
     setIsModalOpen(false);
   };
 
-  const handleLogout = async () => {
-    await logout();
-    setIsModalOpen(false);
-  };
+  const dispatch = useDispatch();
+  const { safeAuthSignInResponse, isAbstract, web3AuthModalPack } = useSelector(
+    (state) => state.auth
+  );
 
   const [copyButtonText, setCopyButtonText] = useState("Copy Address");
   const handleCopyAddress = async () => {
-    navigator.clipboard.writeText(address);
+    navigator.clipboard.writeText(safeAuthSignInResponse?.eoa);
     setCopyButtonText("Copied!");
 
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -35,7 +38,7 @@ function AccountModal({ address, logout, isAbstract }) {
 
   const getUserBalance = async () => {
     try {
-      let res = await getEthBalance({ address });
+      let res = await getEthBalance({ address: safeAuthSignInResponse?.eoa });
       setBalance(res);
     } catch (err) {
       console.log(err);
@@ -45,7 +48,7 @@ function AccountModal({ address, logout, isAbstract }) {
 
   useEffect(() => {
     getUserBalance();
-  }, [address]);
+  }, [safeAuthSignInResponse]);
 
   return (
     <>
@@ -53,13 +56,19 @@ function AccountModal({ address, logout, isAbstract }) {
         onClick={showModal}
         className={isAbstract ? "useSmartAccountBtn" : "abstractAccountBtn"}
       >
-        {address?.slice(0, 6) + "..." + address?.slice(-4)}
+        {safeAuthSignInResponse?.eoa?.slice(0, 6) +
+          "..." +
+          safeAuthSignInResponse?.eoa?.slice(-4)}
       </button>
 
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null} centered>
         <div className="accountModal">
           <div className="accountModalWallet">
-            <span>{address?.slice(0, 10) + "..." + address?.slice(-8)}</span>
+            <span>
+              {safeAuthSignInResponse?.eoa?.slice(0, 10) +
+                "..." +
+                safeAuthSignInResponse?.eoa?.slice(-8)}
+            </span>
             <span>
               {parseFloat(balance?.toString(10) / 10 ** 18).toLocaleString(
                 "en-US",
@@ -82,7 +91,9 @@ function AccountModal({ address, logout, isAbstract }) {
               )}
               <span>{copyButtonText}</span>
             </button>
-            <button onClick={handleLogout}>
+            <button
+              onClick={() => dispatch(handleLogout({ web3AuthModalPack }))}
+            >
               <IoExitOutline className="accountModalButtonsIcon" />
               <span>Disconnect</span>
             </button>
