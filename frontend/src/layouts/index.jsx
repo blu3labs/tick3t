@@ -101,10 +101,58 @@ export default function MainLayout() {
     })();
   }, [safeAuthSignInResponse]);
 
+  const [activeAddress, setActiveAddress] = useState(null);
+  const [isAbstract, setIsAbstract] = useState(false);
+
+  const walletController = async () => {
+    try {
+      let localStrgAbstract = localStorage.getItem("abstractAccount");
+      let localStrgActive = localStorage.getItem("activeAddress");
+
+      if (localStrgAbstract) {
+        setIsAbstract(localStrgAbstract === "true" ? true : false);
+      } else {
+        setIsAbstract(false);
+        localStorage.setItem("abstractAccount", false);
+      }
+
+      if (localStrgActive) {
+        setActiveAddress(localStrgActive);
+      } else {
+        setActiveAddress(safeAuthSignInResponse?.eoa || null);
+        localStorage.setItem(
+          "activeAddress",
+          safeAuthSignInResponse?.eoa || null
+        );
+      }
+    } catch (err) {
+      console.log(err);
+    }
+  };
+
+  useEffect(() => {
+    walletController();
+  }, [safeAuthSignInResponse]);
+
   const login = async () => {
     if (!web3AuthModalPack) return;
     const signInInfo = await web3AuthModalPack.signIn();
     setSafeAuthSignInResponse(signInInfo);
+
+    let wallet = signInInfo?.eoa;
+    let localWallet = localStorage.getItem("walletAddress");
+    if (localWallet) {
+      if (
+        wallet?.toLowerCase() !== localWallet?.toLowerCase()
+      ) {
+        setActiveAddress(wallet);
+        setIsAbstract(false);
+        localStorage.setItem("abstractAccount", false);
+        localStorage.setItem("activeAddress", wallet);
+      }
+    }
+
+    localStorage.setItem("walletAddress", wallet);
     localStorage.setItem(
       "safe-auth-sign-in-response",
       JSON.stringify(signInInfo)
@@ -134,7 +182,7 @@ export default function MainLayout() {
     }
   }, [web3AuthModalPack, safeAuthSignInResponse]);
 
-  console.log("memoli", web3AuthModalPack?.getProvider());
+
 
   useEffect(() => {
     if (provider) {
@@ -168,7 +216,9 @@ export default function MainLayout() {
   console.log("signer", signer);
   console.log("provider", provider);
 
-  console.log(web3AuthModalPack, "web3AuthModalPack");
+  console.log("activeAddress", activeAddress);
+  console.log("walletAddress", localStorage.getItem("walletAddress"));
+  console.log("isAbstract", isAbstract);
 
   if (web3AuthModalPack === null || web3AuthModalPack === undefined) {
     return <GeneralLoading />;
@@ -185,6 +235,10 @@ export default function MainLayout() {
         setSafeAuthSignInResponse={setSafeAuthSignInResponse}
         signer={signer}
         chainId={chainId}
+        activeAddress={activeAddress}
+        setActiveAddress={setActiveAddress}
+        isAbstract={isAbstract}
+        setIsAbstract={setIsAbstract}
       />
       <Outlet />
     </AppWrapper>

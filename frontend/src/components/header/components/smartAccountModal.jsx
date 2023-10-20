@@ -10,11 +10,15 @@ import Spin from "@/ui/spin";
 import "../index.css";
 import { hashMessage, hexlify, recoverAddress } from "ethers/lib/utils";
 import { BUNDLER_API_URL } from "../../../utils/apiUrls";
+import AbstractAccount from "./abstractAccount";
 
 function SmartAccountModal({
+  walletAddress,
   list,
   isAbstract,
+  setIsAbstract,
   activeAddress,
+  setActiveAddress,
   provider,
   signer,
   setSafeAuthSignInResponse,
@@ -36,8 +40,6 @@ function SmartAccountModal({
 
     setLoading(true);
     try {
-
-
       const ethAdapter = new EthersAdapter({
         ethers,
         signerOrProvider: signer,
@@ -59,12 +61,9 @@ function SmartAccountModal({
         },
       });
 
-
-
       const relayKit = new GelatoRelayPack(
         "_mhz0rzLWDbZ6_qEdg9c5qF50kgQ_XuKOlTFxXVdIbg_"
       );
-
 
       const txNewSafe = await newSafeData.createSafeDeploymentTransaction(
         undefined,
@@ -72,7 +71,6 @@ function SmartAccountModal({
           gasLimit: 1000000,
         }
       );
-      
 
       const safeTransactionRelay = await relayKit.createRelayedTransaction({
         safe: newSafeData,
@@ -80,31 +78,26 @@ function SmartAccountModal({
           { data: txNewSafe.data, to: txNewSafe.to, value: txNewSafe.value },
         ],
       });
-   
 
-      const hashOfTx =  hashMessage(JSON.stringify(safeTransactionRelay.data))
+      const hashOfTx = hashMessage(JSON.stringify(safeTransactionRelay.data));
 
-      let signatureData = ''
-      let signedVersion = {}
-    try {
-      // eslint-disable-next-line react/prop-types
-      signatureData = await provider.send('eth_sign', [
+      let signatureData = "";
+      let signedVersion = {};
+      try {
         // eslint-disable-next-line react/prop-types
-        (await signer.getAddress()).toLowerCase(),
-        hexlify(hashOfTx)
-      ])
-
-    } catch (err) {
-       signedVersion = await newSafeData.signTransaction(safeTransactionRelay)
-       signatureData = signedVersion.encodedSignatures()
-             // eslint-disable-next-line react/prop-types
-
-    }
-    
-
+        signatureData = await provider.send("eth_sign", [
+          // eslint-disable-next-line react/prop-types
+          (await signer.getAddress()).toLowerCase(),
+          hexlify(hashOfTx),
+        ]);
+      } catch (err) {
+        signedVersion = await newSafeData.signTransaction(safeTransactionRelay);
+        signatureData = signedVersion.encodedSignatures();
+        // eslint-disable-next-line react/prop-types
+      }
 
       const request = await axios.post(
-        BUNDLER_API_URL+"/create-smartaccount",
+        BUNDLER_API_URL + "/create-smartaccount",
         JSON.stringify({
           ...safeTransactionRelay,
           signatures: signatureData,
@@ -124,6 +117,24 @@ function SmartAccountModal({
       toast.error("Failed to create smart account");
     }
     setLoading(false);
+  };
+
+  const handleBackToEOA = async () => {
+    setActiveAddress(walletAddress);
+    setIsAbstract(false);
+    localStorage.setItem("abstractAccount", "false");
+    localStorage.setItem("activeAddress", walletAddress);
+  };
+
+  const handleSwitchAbstractAccount = async (item) => {
+    if (item?.toLowerCase() === activeAddress?.toLowerCase()) {
+      return;
+    }
+
+    setActiveAddress(item);
+    setIsAbstract(true);
+    localStorage.setItem("abstractAccount", "true");
+    localStorage.setItem("activeAddress", item);
   };
 
   return (
@@ -157,7 +168,7 @@ function SmartAccountModal({
           </button>
           {isAbstract && (
             <button
-              onClick={createNewSmartAcc}
+              onClick={handleBackToEOA}
               className="smartAccountCreateBtn"
               style={{
                 backgroundColor: "var(--accent-color)",
@@ -170,27 +181,13 @@ function SmartAccountModal({
           <div className="smartAccountModalList">
             {list?.length > 0 ? (
               list?.map((item, index) => (
-                <div className="smartAccountModalListItemWrapper" key={index}>
-                  <div className="smartAccountModalListItem">
-                    <div className="smartAccountModalListItemAddress">
-                      {item}
-                    </div>
-                    <div className="smartAccountModalListItemBalance">
-                      0.01 ETH
-                    </div>
-                  </div>
-
-                  <button
-                    className="smartAccountModalListItemCopy"
-                    onClick={() => {
-                      navigator.clipboard.writeText(item);
-                      toast.success("Address Copied");
-                    }}
-                    title="Copy Address"
-                  >
-                    <AiOutlineCopy className="smartAccountModalListItemCopyIcon" />
-                  </button>
-                </div>
+                <AbstractAccount
+                  key={index}
+                  item={item}
+                  index={index}
+                  activeAddress={activeAddress}
+                  handleSwitchAbstractAccount={handleSwitchAbstractAccount}
+                />
               ))
             ) : (
               <div className="smartAccountModalListEmpty">

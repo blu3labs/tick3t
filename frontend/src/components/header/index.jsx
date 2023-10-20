@@ -7,36 +7,19 @@ import toast from "react-hot-toast";
 import AccountModal from "./components/accountModal";
 import SmartAccountModal from "./components/smartAccountModal";
 
-function Header({ login, authData, logout, provider, chainId,signer,setSafeAuthSignInResponse }) {
-  const [activeAddress, setActiveAddress] = useState(null);
-  const [isAbstract, setIsAbstract] = useState(false);
-
-  const getActiveAccount = () => {
-    let localStrgAbstract = localStorage.getItem("abstractAccount");
-    let localStrgActive = localStorage.getItem("activeAddress");
-
-    if (localStrgAbstract) {
-      setIsAbstract(localStrgAbstract === "true" ? true : false);
-    } else {
-      setIsAbstract(false);
-      localStorage.setItem("abstractAccount", false);
-    }
-
-    if (localStrgActive) {
-      setActiveAddress(localStrgActive);
-    } else {
-      setActiveAddress(authData?.eoa || null);
-      localStorage.setItem("activeAddress", authData?.eoa || null);
-    }
-  };
-
-  useEffect(() => {
-    getActiveAccount();
-  }, [authData]);
-
-  console.log("activeAddress", activeAddress);
-  console.log("isAbstract", isAbstract);
-
+function Header({
+  login,
+  authData,
+  logout,
+  provider,
+  chainId,
+  signer,
+  setSafeAuthSignInResponse,
+  activeAddress,
+  setActiveAddress,
+  isAbstract,
+  setIsAbstract,
+}) {
   const handleSwitchNetwork = async () => {
     if (typeof window.ethereum === "undefined") {
       toast.error("Metamask not found. Please install Metamask");
@@ -85,8 +68,11 @@ function Header({ login, authData, logout, provider, chainId,signer,setSafeAuthS
             <SmartAccountModal
               list={authData?.safes}
               provider={provider}
+              walletAddress={authData?.eoa}
               isAbstract={isAbstract}
+              setIsAbstract={setIsAbstract}
               activeAddress={activeAddress}
+              setActiveAddress={setActiveAddress}
               signer={signer}
               setSafeAuthSignInResponse={setSafeAuthSignInResponse}
             />

@@ -1,11 +1,11 @@
 import { ethers } from "ethers";
-import { multichainRpc } from "./multichainRpc";
+import { multiRpc } from "./multiRpc";
 
 export const getEthBalance = async ({ address }) => {
   try {
-    for (let i = 0; i < multichainRpc?.length; i++) {
+    for (let i = 0; i < multiRpc?.length; i++) {
       let provider = new ethers.providers.StaticJsonRpcProvider(
-        multichainRpc[i]
+        multiRpc[i]
       );
       try {
         const balance = provider.getBalance(address);
@@ -14,7 +14,7 @@ export const getEthBalance = async ({ address }) => {
         });
         return result_;
       } catch (error) {
-        console.log(`${multichainRpc[i]} failed to connect ${i}`);
+        console.log(`${multiRpc[i]} failed to connect ${i}`);
       }
     }
   } catch (error) {

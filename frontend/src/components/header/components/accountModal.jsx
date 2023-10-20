@@ -7,7 +7,7 @@ import { IoExitOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
 import "../index.css";
 
-function AccountModal({ address, logout,isAbstract }) {
+function AccountModal({ address, logout, isAbstract }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);
@@ -23,9 +23,6 @@ function AccountModal({ address, logout,isAbstract }) {
 
   const [copyButtonText, setCopyButtonText] = useState("Copy Address");
   const handleCopyAddress = async () => {
-
-
-
     navigator.clipboard.writeText(address);
     setCopyButtonText("Copied!");
 
@@ -52,15 +49,15 @@ function AccountModal({ address, logout,isAbstract }) {
 
   return (
     <>
-      <button onClick={showModal}  className={
-        isAbstract ? "useSmartAccountBtn" : "abstractAccountBtn"
-      }>
+      <button
+        onClick={showModal}
+        className={isAbstract ? "useSmartAccountBtn" : "abstractAccountBtn"}
+      >
         {address?.slice(0, 6) + "..." + address?.slice(-4)}
       </button>
 
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null} centered>
         <div className="accountModal">
-        
           <div className="accountModalWallet">
             <span>{address?.slice(0, 10) + "..." + address?.slice(-8)}</span>
             <span>
@@ -74,9 +71,9 @@ function AccountModal({ address, logout,isAbstract }) {
             </span>
           </div>
           <div className="accountModalButtons">
-            <button onClick={handleCopyAddress}
-            disabled={copyButtonText === "Copied!"}
-            
+            <button
+              onClick={handleCopyAddress}
+              disabled={copyButtonText === "Copied!"}
             >
               {copyButtonText === "Copied!" ? (
                 <TiTick className="accountModalButtonsIcon" />
