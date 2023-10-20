@@ -102,8 +102,7 @@ export const writeContractAbstract = async (data) => {
           value: callInformation.value,
           operation: callInformation.operation,
         },
-      ],
-      onlyCalls: true,
+      ]
     });
 
     const providerTest = new ethers.providers.Web3Provider(
