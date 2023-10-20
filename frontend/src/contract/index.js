@@ -1,4 +1,4 @@
-export const factoryAddress = "0x537cBAE1aCa36ECEd2BBb90bC586d17BBA47B359";
+export const factoryAddress = "0x5f381E56425876281E96545939c4f7452aC12760";
 
 export const factoryABI = [
   {
@@ -177,6 +177,25 @@ export const factoryABI = [
     type: "function",
   },
   {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "",
+        type: "uint256",
+      },
+    ],
+    name: "events",
+    outputs: [
+      {
+        internalType: "address",
+        name: "",
+        type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
     inputs: [],
     name: "feeRecipient",
     outputs: [
@@ -184,6 +203,47 @@ export const factoryABI = [
         internalType: "address payable",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [
+      {
+        internalType: "address",
+        name: "user",
+        type: "address",
+      },
+    ],
+    name: "getUserTicket",
+    outputs: [
+      {
+        components: [
+          {
+            internalType: "string",
+            name: "tokenUri",
+            type: "string",
+          },
+          {
+            internalType: "uint256",
+            name: "tokenId",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "amount",
+            type: "uint256",
+          },
+          {
+            internalType: "uint256",
+            name: "usedAmount",
+            type: "uint256",
+          },
+        ],
+        internalType: "struct LibTicket.TicketInfo[]",
+        name: "",
+        type: "tuple[]",
       },
     ],
     stateMutability: "view",
