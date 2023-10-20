@@ -24,6 +24,13 @@ app.get("/event/:id", async (req, res) => {
       address: address,
     },
   });
+  if (!eventData) {
+    res.json({
+      status: 404,
+      data: "Not Found",
+    });
+    return;
+  }
   res.json({
     status: 200,
     data: eventData,
@@ -33,7 +40,7 @@ app.get("/event/:id", async (req, res) => {
 app.get("/all/events/:category", async (req, res) => {
   const category = req.params.category;
 
-  if (category === "all") {
+  if (category === "All Events") {
     const eventData = await event?.All({});
     res.json({
       status: 200,
@@ -59,8 +66,9 @@ app.post("/event", async (req, res) => {
     title: body.title,
     category: body.category,
     date: body.date,
-    venue: body.location,
+    venue: body.venue,
     image: body.image,
+    description: body.description,
     venuePrice1: body.venuePrice1,
     venuePrice2: body.venuePrice2,
     venuePrice3: body.venuePrice3,

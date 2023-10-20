@@ -27,6 +27,9 @@ export const eventModel = async (orm: D1Orm, db: any) => {
         title: {
           type: DataTypes.STRING,
         },
+        description: {
+          type: DataTypes.STRING,
+        },
         category: {
           type: DataTypes.STRING,
         },
@@ -61,6 +64,7 @@ export const eventModel = async (orm: D1Orm, db: any) => {
           `CREATE TABLE ${event.tableName} (id integer primary key, 
             address text,
             title text,
+            description text,
             category text,
             date text,
             venue text,
