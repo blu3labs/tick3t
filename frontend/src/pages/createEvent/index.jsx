@@ -167,13 +167,15 @@ function CreateEvent() {
         try {
           let res = await writeContractAbstract(context);
 
-          console.log(res, "res"); //todo
+          console.log(res.result, "res"); //todo
 
-          if (res === "err") {
+          if (res.result === "err") {
             setLoading(false);
+            toast.dismiss()
+            toast.error("Transaction failed: "+ res.error);
             return;
           } else {
-
+            
             console.log(res ,"hello");
             setLoading(false)
           

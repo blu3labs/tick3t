@@ -96,7 +96,7 @@ app.post("/send-tx", async (context) =>{
     const reqData: SafeTransactionData & {signature:string, address:string} = await context.req.json() 
     const safeContract = getSafeContract(reqData?.address, globalBundlerSigner)
 
-console.log(reqData)
+
 
     const correctTx = {
         to: reqData.to,
@@ -112,7 +112,7 @@ console.log(reqData)
     }
 
     const args = Object.values(correctTx)
-
+    
     try {
      const tx = await safeContract.execTransaction(...args,{gasLimit:5000000})
      // we will wait that the transaction is mined.
@@ -120,7 +120,7 @@ console.log(reqData)
     return context.sendJson({result:"Transaction sent successfuly.", tx: data})
     }catch(err){
         console.log(err)
-        return context.sendJson({result:"error", error:err})
+        return context.sendJson({result:"err", error:err})
     }
 })
 
