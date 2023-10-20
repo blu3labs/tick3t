@@ -19,6 +19,7 @@ import { writeContract } from "../../utils/writeContract";
 import { ethers } from "ethers";
 import { setChainId } from "../../redux/authSlice";
 import { useNavigate } from "react-router-dom";
+import { writeContractAbstract } from "../../utils/writeContractAbstract";
 function CreateEvent() {
   const navigate = useNavigate();
   const [title, setTitle] = useState(null);
@@ -106,7 +107,7 @@ function CreateEvent() {
   };
 
   const dispatch = useDispatch();
-  const { isAbstract, signer, chainId, safeAuthSignInResponse } = useSelector(
+  const { activeAddress,isAbstract, signer, chainId, safeAuthSignInResponse,web3AuthModalPack } = useSelector(
     (state) => state.auth
   );
 
@@ -130,7 +131,7 @@ function CreateEvent() {
     setLoading(true);
     try {
       let methodName = {
-        "The Avenue, Paris": "setERC1155Factory",
+        "The Avenue, Paris": "createERC1155Event",
         "Theatre Hall, Istanbul": "createERC721Event",
       };
 
@@ -140,7 +141,7 @@ function CreateEvent() {
         method: methodName[venue],
         args: [
           title,
-          "http://localhost:3000",
+          BACKEND_API_URL + "/event/",
           date,
           [
             ethers.utils.parseEther(venuePrice1?.toString()),
@@ -149,7 +150,8 @@ function CreateEvent() {
           ],
           ethers.utils.randomBytes(32),
         ],
-
+        web3AuthModalPack,
+        abstractAccountAddress: activeAddress,
         signer: signer,
         chainId: chainId,
         safeAuthSignInResponse: safeAuthSignInResponse,
@@ -162,6 +164,39 @@ function CreateEvent() {
       if (isAbstract) {
         //* create event on abstract
         console.log("abstract account...");
+        try {
+          let res = await writeContractAbstract(context);
+
+          console.log(res, "res"); //todo
+
+          if (res === "err") {
+            setLoading(false);
+            return;
+          } else {
+
+            console.log(res ,"içerde");
+            return;
+            // for (let i = 0; i < res?.logs?.length; i++) {
+            //   if (
+            //     res?.logs[i]?.topics[0] ==
+            //     "0x4260f8c98a0b70328f2767f65cae27a2f61dcb6c94b0975f77af1c1440ece982"
+            //   ) {
+            //     let decoded = ethers.utils.defaultAbiCoder.decode(
+            //       ["address"],
+            //       res?.logs[i]?.topics[1]
+            //     );
+            //     address_ = decoded?.[0];
+            //     break;
+            //   }
+            // }
+          }
+        } catch (e) {
+          console.log(e);
+          setLoading(false);
+          return;
+        }
+
+
       } else {
         try {
           let res = await writeContract(context);

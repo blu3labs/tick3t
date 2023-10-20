@@ -47,6 +47,21 @@ function Event() {
     };
   }, [id]);
 
+  const getCurrentTime = () => {
+    const utcDate = moment.utc().format();
+    let seconds = new Date(utcDate).getTime() / 1000;
+    return seconds;
+  };
+
+
+  let buyButtonDisabled = () => {
+    if (parseFloat(data?.date) < getCurrentTime()) {
+      return true;
+    } else {
+      return false;
+    }
+  }
+
   if (data === null) {
     return (
       <div className="eventWrapper">
@@ -138,7 +153,18 @@ function Event() {
               <PreviewLocation venue={data.venue} minHeight={"150px"} />
             </div>
 
-            <Link to={`/event/${id}/buy`} className="buyBtn">
+            <Link 
+            to={
+              buyButtonDisabled() ? "#" :
+              `/event/${id}/buy`} 
+            
+            className="buyBtn"
+              disabled={buyButtonDisabled()}
+              style={{
+                cursor: buyButtonDisabled() ? "not-allowed" : "pointer",
+                opacity: buyButtonDisabled() && "0.5" ,
+              }}
+            >
               Buy Ticket
             </Link>
           </div>

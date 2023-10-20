@@ -1,15 +1,15 @@
 import React, { useEffect, useState } from "react";
-import SelectBox from "@/ui/selectBox";
-import { toast } from "react-hot-toast";
-import "../index.css";
-import { useDispatch, useSelector } from "react-redux";
-import { erc721ABI } from "../../../contract";
-import { setChainId } from "../../../redux/authSlice";
 import BigNumber from "bignumber.js";
+import { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { erc721ABI } from "@/contract";
+import { setChainId } from "@/redux/authSlice";
 import { ethers } from "ethers";
-import { writeContract } from "../../../utils/writeContract";
+import { writeContract } from "@/utils/writeContract";
 import { useNavigate } from "react-router-dom";
-import { readContract } from "../../../utils/readContract";
+import { readContract } from "@/utils/readContract";
+import "../index.css";
+import { writeContractAbstract } from "../../../utils/writeContractAbstract";
 
 function ScreenContent({ data, id }) {
   console.log(data);
@@ -21,8 +21,14 @@ function ScreenContent({ data, id }) {
 
   const dispatch = useDispatch();
 
-  const { activeAddress, isAbstract, signer, chainId, safeAuthSignInResponse } =
-    useSelector((state) => state.auth);
+  const {
+    activeAddress,
+    isAbstract,
+    signer,
+    chainId,
+    safeAuthSignInResponse,
+    web3AuthModalPack,
+  } = useSelector((state) => state.auth);
 
   const [seats, setSeats] = useState([]);
 
@@ -108,6 +114,7 @@ function ScreenContent({ data, id }) {
   useEffect(() => {
     calculateTotalCost();
   }, [seats, step]);
+
   const [loading, setLoading] = useState(false);
   const handleBuy = async () => {
     let idArgs = [];
@@ -133,6 +140,8 @@ function ScreenContent({ data, id }) {
       val: ethers.utils.parseEther(totalCost.toString(10)),
       signer,
       chainId,
+      abstractAccountAddress: activeAddress,
+      web3AuthModalPack,
       safeAuthSignInResponse,
       dispatch,
       setChainId: setChainId,
@@ -143,7 +152,14 @@ function ScreenContent({ data, id }) {
     setLoading(true);
     try {
       if (isAbstract) {
-        console.log("Abstract Account");
+        let res = await writeContractAbstract(context);
+
+        if (res === "err") {
+          setLoading(false);
+          return;
+        } else {
+          navigate("/my-tickets");
+        }
       } else {
         let res = await writeContract(context);
 

@@ -19,7 +19,6 @@ export const writeContract = async (data) => {
       setChainId,
     } = data;
 
-    console.log("data", data);
     if (signer == null || safeAuthSignInResponse === null) {
       toast.error("Please connect your wallet");
       toast.dismiss(loadToast);

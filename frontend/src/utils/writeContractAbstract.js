@@ -84,7 +84,7 @@ export const writeContractAbstract = async (data) => {
     });
     const callInformation = {
       to: contract.address,
-      value: "0",
+      value: val_,
       data: callData,
       operation: 0,
     };
@@ -113,6 +113,8 @@ export const writeContractAbstract = async (data) => {
     let signedVersion = {};
     const hash = await safeSDK.getTransactionHash(normalTx);
     let signatureData = "";
+
+ 
     try {
       signatureData = await providerTest.send("eth_sign", [
         (await signer.getAddress()).toLowerCase(),
@@ -124,6 +126,7 @@ export const writeContractAbstract = async (data) => {
       signedVersion = await safeSDK.signTransaction(normalTx);
       signatureData = signedVersion.encodedSignatures();
     }
+
     const responsebundler = await axios.post(
       BUNDLER_API_URL + "/send-tx",
       JSON.stringify({
@@ -135,6 +138,7 @@ export const writeContractAbstract = async (data) => {
     // const receipt = await tx.wait();
     toast.success(message ?? "Transaction successful");
     toast.dismiss(loadToast);
+
 
     return responsebundler?.data?.tx;
   } catch (error) {

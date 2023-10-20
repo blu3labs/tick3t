@@ -1,9 +1,31 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import SelectBox from "@/ui/selectBox";
+import BigNumber from "bignumber.js";
 import { toast } from "react-hot-toast";
+import { useDispatch, useSelector } from "react-redux";
+import { useNavigate } from "react-router-dom";
+import { setChainId } from "@/redux/authSlice";
+import { erc1155ABI } from "@/contract";
+import { writeContract } from "@/utils/writeContract";
+import { ethers } from "ethers";
 import "../index.css";
+import { writeContractAbstract } from "../../../utils/writeContractAbstract";
 
-function StageContent({ data,id }) {
+function StageContent({ data, id }) {
+  console.log(data);
+  let serviceFee = 0.0001;
+  const dispatch = useDispatch();
+  const navigate = useNavigate();
+
+  const {
+    activeAddress,
+    isAbstract,
+    signer,
+    chainId,
+    safeAuthSignInResponse,
+    web3AuthModalPack,
+  } = useSelector((state) => state.auth);
+
   const [category, setCategory] = useState(null);
   const [quantity, setQuantity] = useState(1);
   const categoryOptions = [
@@ -57,8 +79,6 @@ function StageContent({ data,id }) {
       address: null,
     },
   ]);
-
-  const myWalletAddress = "0x1234567890123456789012345678901234567890";
 
   const inputError = (address) => {
     if (address === null) {
@@ -115,18 +135,110 @@ function StageContent({ data,id }) {
     setCategory(value);
   };
 
+  const [totalTicketCost, setTotalTicketCost] = useState(0);
+  const [totalCost, setTotalCost] = useState(0);
+
+  let categoryPrice = {
+    Diamond: data.venuePrice1,
+    Gold: data.venuePrice2,
+    General: data.venuePrice3,
+  };
+
+  const calculateTotalCost = () => {
+    if (step === 1) return;
+
+    let value = new BigNumber(0);
+
+    value = new BigNumber(categoryPrice[category]).multipliedBy(quantity);
+
+    console.log(value.toString(10), "value");
+
+    setTotalTicketCost(value.toString(10));
+
+    value = new BigNumber(value).plus(serviceFee);
+
+    setTotalCost(value.toString(10));
+  };
+
+  useEffect(() => {
+    calculateTotalCost();
+  }, [wallets, step]);
+
+  const [loading, setLoading] = useState(false);
   const handleBuy = async () => {
     try {
-      const data = {
-        category: category,
-        quantity: quantity,
-        wallets: wallets?.slice(0, quantity),
+      let categoryId = {
+        Diamond: 1,
+        Gold: 2,
+        General: 3,
       };
 
-      console.log(data);
+      let buyerWallets = [];
+      let buyerWalletsTicketAmount = [];
+
+      for (let i = 0; i < quantity; i++) {
+        if (buyerWallets?.includes(wallets[i].address)) {
+          let index = buyerWallets.indexOf(wallets[i].address);
+          buyerWalletsTicketAmount[index] = buyerWalletsTicketAmount[index] + 1;
+        } else {
+          buyerWallets.push(wallets[i].address);
+          buyerWalletsTicketAmount.push(1);
+        }
+      }
+
+      let args_ = [
+        categoryId[category],
+        buyerWallets,
+        buyerWalletsTicketAmount,
+      ];
+
+      console.log(args_, "args_");
+
+      console.log(ethers.utils.parseEther(totalCost.toString(10)), "value");
+
+      let context = {
+        address: id,
+        abi: erc1155ABI,
+        method: "buy",
+        message: "Success! You bought the ticket.",
+        args: args_,
+        val: ethers.utils.parseEther(totalCost.toString(10)),
+        signer,
+        chainId,
+        abstractAccountAddress: activeAddress,
+        web3AuthModalPack,
+        safeAuthSignInResponse,
+        dispatch,
+        setChainId: setChainId,
+      };
+
+      console.log(context, "context");
+
+      setLoading(true);
+
+      if (isAbstract) {
+        let res = await writeContractAbstract(context);
+
+        if (res === "err") {
+          setLoading(false);
+          return;
+        } else {
+          navigate("/my-tickets");
+        }
+      } else {
+        let res = await writeContract(context);
+
+        if (res === "err") {
+          setLoading(false);
+          return;
+        } else {
+          navigate("/my-tickets");
+        }
+      }
     } catch (err) {
       console.log(err);
     }
+    setLoading(false);
   };
 
   return (
@@ -146,7 +258,7 @@ function StageContent({ data,id }) {
               onClick={() => handleChangeCategory("Diamond")}
             >
               <span>Diamond</span>
-              <span>0.1 ETH</span>
+              <span>{data.venuePrice1} ETH</span>
             </div>
             <div
               className="createLocationPreviewContentItem buyEventStage"
@@ -157,7 +269,7 @@ function StageContent({ data,id }) {
               onClick={() => handleChangeCategory("Gold")}
             >
               <span>Gold</span>
-              <span>0.01 ETH</span>
+              <span>{data.venuePrice2} ETH</span>
             </div>
             <div
               className="createLocationPreviewContentItem buyEventStage"
@@ -168,7 +280,7 @@ function StageContent({ data,id }) {
               onClick={() => handleChangeCategory("General")}
             >
               <span>General</span>
-              <span>0.01 ETH</span>
+              <span>{data.venuePrice3} ETH</span>
             </div>
           </div>
         </div>
@@ -205,7 +317,7 @@ function StageContent({ data,id }) {
                         <button
                           onClick={() => {
                             const tempWallets = [...wallets];
-                            tempWallets[index].address = myWalletAddress;
+                            tempWallets[index].address = activeAddress;
                             setWallets(tempWallets);
                           }}
                         >
@@ -248,7 +360,9 @@ function StageContent({ data,id }) {
             <div className="eventStageStep2Title">Summary</div>
             <div className="eventStageStep2Item">
               <span>Category</span>
-              <span>{category}</span>
+              <span>
+                {category} | {categoryPrice[category]} ETH
+              </span>
             </div>
 
             {Array(quantity)
@@ -265,17 +379,33 @@ function StageContent({ data,id }) {
               })}
 
             <div className="eventStageStep2Item">
+              <span>Service Fee</span>
+              <span>{serviceFee} ETH</span>
+            </div>
+
+            <div className="eventStageStep2Item">
+              <span>Total Ticket Cost</span>
+              <span>{totalTicketCost?.toString(10)} ETH</span>
+            </div>
+
+            <div className="eventStageStep2Item">
               <span>Total Cost</span>
-              <span>
-                {quantity} x {category} (0.1 ETH) = {quantity * 0.1} ETH
-              </span>
+              <span>{totalCost?.toString(10)} ETH</span>
             </div>
 
             <div className="eventStageStep2Buttons">
               <button className="buyBtn" onClick={() => setStep(1)}>
                 Back
               </button>
-              <button className="buyBtn" onClick={handleBuy}>
+              <button
+                className="buyBtn"
+                onClick={handleBuy}
+                disabled={loading}
+                style={{
+                  cursor: loading ? "not-allowed" : "pointer",
+                  opacity: loading && 0.5,
+                }}
+              >
                 Buy
               </button>
             </div>

@@ -208,7 +208,7 @@
 .createPreviewLogoActive img {
   width: 100%;
   height: 100%;
-  /* object-fit: cover; */
+  object-fit: cover;
   aspect-ratio: 16/9;
   cursor: pointer;
 }
