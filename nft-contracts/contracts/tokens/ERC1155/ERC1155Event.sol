@@ -28,19 +28,18 @@ contract ERC1155Event is ERC1155, IEvent, TicketValidatorERC1155, ReentrancyGuar
 
     constructor(
         string memory name_,
-        string memory uri_,
         address payable organizer_,
         address payable feeRecipient_,
         uint256 serviceFee_,
         uint256 date_,
         uint256[3] memory prices_
-    ) ERC1155(uri_) TicketValidatorERC1155(name_, "1") {
+    ) ERC1155("") TicketValidatorERC1155(name_, "1") {
         organizer = organizer_;
         feeRecipient = feeRecipient_;
         serviceFee = serviceFee_;
         date = date_;
         prices = prices_;
-        _setURI(string.concat(uri_, address(this).toHexString()));
+        _setURI(address(this).toHexString());
     }
 
     modifier whenNotEnded() {
@@ -77,14 +76,6 @@ contract ERC1155Event is ERC1155, IEvent, TicketValidatorERC1155, ReentrancyGuar
         require(balance > 0, "Invalid balance");
         _validateTicket(balance, ticket, signature);
     }
-
-    // function tokenURI(uint256 tokenId) public view returns (string memory) {
-    //     string memory baseURI = uri(0);
-    //     return
-    //         bytes(baseURI).length > 0
-    //             ? string.concat(baseURI, tokenId.toString())
-    //             : "";
-    // }
 
     function getUserTickets(
         address user

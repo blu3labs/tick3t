@@ -1,4 +1,4 @@
-export const factoryAddress = "0xfa9Fdd64e4Bf38750895BAdca455b75B58E5b998";
+export const factoryAddress = "0xd7874248f9750F45B63f451E7463f5BEDc555b84";
 
 export const factoryABI = [
   {
@@ -118,11 +118,6 @@ export const factoryABI = [
         type: "string",
       },
       {
-        internalType: "string",
-        name: "uri",
-        type: "string",
-      },
-      {
         internalType: "uint256",
         name: "date",
         type: "uint256",
@@ -148,11 +143,6 @@ export const factoryABI = [
       {
         internalType: "string",
         name: "name",
-        type: "string",
-      },
-      {
-        internalType: "string",
-        name: "uri",
         type: "string",
       },
       {
@@ -203,6 +193,19 @@ export const factoryABI = [
         internalType: "address payable",
         name: "",
         type: "address",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
+    name: "getEvents",
+    outputs: [
+      {
+        internalType: "address[]",
+        name: "",
+        type: "address[]",
       },
     ],
     stateMutability: "view",

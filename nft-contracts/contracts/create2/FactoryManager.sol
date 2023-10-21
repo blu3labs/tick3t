@@ -41,14 +41,12 @@ contract FactoryManager is Ownable {
 
     function createERC721Event(
         string memory name,
-        string memory uri,
         uint256 date,
         uint256[3] memory prices,
         bytes32 salt
     ) external {
         address eventContract = ERC721Factory.createEvent(
             name,
-            uri,
             payable(msg.sender),
             feeRecipient,
             serviceFee,
@@ -66,14 +64,12 @@ contract FactoryManager is Ownable {
 
     function createERC1155Event(
         string memory name,
-        string memory uri,
         uint256 date,
         uint256[3] memory prices,
         bytes32 salt
     ) external {
         address eventContract = ERC1155Factory.createEvent(
             name,
-            uri,
             payable(msg.sender),
             feeRecipient,
             serviceFee,
@@ -89,7 +85,7 @@ contract FactoryManager is Ownable {
         return events;
     }
 
-    function getUserTicket(address user) external view returns (LibTicket.TicketInfo[] memory) {
+    function getUserTickets(address user) external view returns (LibTicket.TicketInfo[] memory) {
         uint256 length;
         for (uint256 i = 0; i < events.length; i++) {
             length += IEvent(events[i]).getUserTickets(user).length;

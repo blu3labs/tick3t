@@ -10,7 +10,6 @@ contract ERC1155Factory is Factory {
 
     function createEvent(
         string memory name,
-        string memory uri,
         address payable organizer,
         address payable feeRecipient,
         uint256 serviceFee,
@@ -20,7 +19,6 @@ contract ERC1155Factory is Factory {
     ) external override onlyFactoryManager returns (address){
         ERC1155Event eventContract = new ERC1155Event{salt: salt}(
             name,
-            uri,
             organizer,
             feeRecipient,
             serviceFee,
