@@ -18,16 +18,29 @@ function Card({ index, item }) {
   let generateDisabled =
     item.status?.toLowerCase() == "past" || item.usedTicket == 1;
 
+    const [loading, setLoading] = useState(false)
+    const handleGenerateQr = async () => {
+      setLoading(true)
+      try{
+        // code area
+
+      }catch(err){
+        console.log(err)
+      }
+      setLoading(false)
+    }
+
   return (
     <div className="myTicketsCard" key={index}>
       <div class="myTicketsCardLeft">
         <img src={item.image} alt={item.title} draggable="false" />
         <button
-          disabled={generateDisabled}
+          disabled={generateDisabled || loading}
           style={{
-            cursor: generateDisabled ? "not-allowed" : "pointer",
-            opacity: generateDisabled ? "0.5" : "1",
+            cursor: generateDisabled || loading? "not-allowed" : "pointer",
+            opacity: generateDisabled || loading ? "0.5" : "1",
           }}
+          onClick={handleGenerateQr}
         >
           Generate QR
         </button>
