@@ -10,7 +10,17 @@ import { NonceManager } from "@ethersproject/experimental";
 import { Database } from "@tableland/sdk";
 import { Wallet, ethers } from "ethers";
 
+
+let orm: D1Orm
+let db: Database
+
 export const tableland = async ():Promise<{ orm: D1Orm | undefined,  db: Database | undefined}> => {
+  if (orm && db) {
+    return {
+      orm,
+      db
+    }
+  }
   try {
     const privateKey = process.env.KEY || "";
     const provider = new ethers.providers.JsonRpcProvider(
@@ -19,11 +29,13 @@ export const tableland = async ():Promise<{ orm: D1Orm | undefined,  db: Databas
     const baseSigner = new ethers.Wallet(privateKey, provider);
     const signer = new NonceManager(baseSigner);
 
-    const db = new Database({ signer, autoWait: true });
-    const orm = new D1Orm(db);
+    const dbValue = new Database({ signer, autoWait: true });
+    const ormValue = new D1Orm(db);
+    orm = ormValue
+    db = dbValue
     return { orm, db };
   } catch (error) {
     console.log(error);
   }
-  return {orm: undefined, db: undefined}
+  return {orm, db}
 };
