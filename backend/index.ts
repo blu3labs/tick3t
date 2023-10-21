@@ -90,6 +90,8 @@ app.post("/event", async (req, res) => {
       data: "success",
     });
   } catch (error) {
+    console.log(error);
+
     res.json({
       status: 500,
       data: "Unexpected Error",
@@ -115,6 +117,8 @@ app.post("/qr", async (req, res) => {
       data: "success",
     });
   } catch (error) {
+    console.log(error);
+
     res.json({
       status: 500,
       data: "Unexpected Error",
@@ -135,6 +139,8 @@ app.get("/qr/:id", async (req, res) => {
       data: qrData,
     });
   } catch (error) {
+    console.log(error);
+
     res.json({
       status: 500,
       data: "Unexpected Error",
@@ -158,6 +164,7 @@ app.get("/check/qr", async (req, res) => {
       data: msg,
     });
   } catch (error) {
+    console.log(error);
     res.json({
       status: 500,
       data: "Unexpected Error",
