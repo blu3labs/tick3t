@@ -67,16 +67,17 @@ export async function ValidateTicket(
   const tokenId_ = parseUnits(tokenId, 0);
   const deadline_ = parseUnits(deadline, 0);
   const salt_ = parseUnits(salt, 0);
+  let signatureNotNull = signature !== ""
   try {
-    const estimate = contract.estimateGas.use(
-      {
+    const estimate = await contract.estimateGas.use(
+      [
         owner,
         collection,
         tokenId_,
         deadline_,
         salt_,
-      },
-      signature
+      ],
+      signatureNotNull ?  signature : []
     );
   } catch (error: any) {
     let message = error
@@ -93,16 +94,17 @@ export async function ValidateTicket(
     return message;
   }
   try {
-    const tx = contract.use(
-      {
+    const tx = await contract.use(
+      [
         owner,
         collection,
         tokenId_,
         deadline_,
         salt_,
-      },
-      signature
+      ],
+      signatureNotNull ?  signature : []
     );
+    await tx.wait()
   } catch (error: any) {
     let message = error
       ? error.reason !== undefined

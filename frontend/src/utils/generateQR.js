@@ -40,6 +40,8 @@ async function getValues(ticketInfo) {
 export async function SignTyped(ticketInfo, wallet) {
     const domain = await getDomain(ticketInfo);
     const value = await getValues(ticketInfo);
+
+
     const signature = await wallet._signTypedData(domain, types, value);
     return signature;
 }
@@ -71,12 +73,16 @@ export const generateQRCode = async (
 
   const hashedValue = hashMessage(JSON.stringify({...ticketInfo}));
 
-  let safeHash = calculateSafeMessageHash(hashedValue, smartAccAddress, 5);
+  const domainData = await getDomain(ticketInfo);
+    const valueData = await getValues(ticketInfo);
+
+
+  const typedDataHash =  _TypedDataEncoder.hash(domainData, types, valueData);
   if (!isAbstract) {
     try {
 
 
-      safeHash =   calculateSafeMessageHash(hashedValue,  ticketInfo.collection , 5);
+
       const signature = await SignTyped(ticketInfo, signer)
       await axios.post(BACKEND_API_URL + "/qr", {
         owner: ticketInfo.owner,
@@ -99,16 +105,19 @@ export const generateQRCode = async (
   const relayKit = new GelatoRelayPack(
     "_mhz0rzLWDbZ6_qEdg9c5qF50kgQ_XuKOlTFxXVdIbg_"
   );
-  const safeSDK = Safe.create({
+  const safeSDK = await Safe.create({
+
     ethAdapter,
     safeAddress: smartAccAddress,
   });
+
   try {
-    await signMessageTransaction(safeSDK, ethAdapter, hashedValue, relayKit);
+    
+    await signMessageTransaction(safeSDK, ethAdapter, typedDataHash, relayKit);
     // send the hash and the object value to backend to store the values.
     await axios.post(BACKEND_API_URL + "/qr", {
       ...ticketInfo,
-      hash: hashedValue,
+      hash: typedDataHash,
     });
 
     return "";
@@ -133,6 +142,7 @@ export const signMessageTransaction = async (
   const callInside = signatureLib.interface.encodeFunctionData("signMessage", [
     value,
   ]);
+
   const txCallInside = await safeSDK.createTransaction({
     safeTransactionData: {
       data: callInside,

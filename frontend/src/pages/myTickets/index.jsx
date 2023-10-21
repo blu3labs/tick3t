@@ -42,7 +42,7 @@ function MyTickets() {
       let context = {
         address: factoryAddress,
         abi: factoryABI,
-        method: "getUserTicket",
+        method: "getUserTickets",
         args: [activeAddress],
       };
 

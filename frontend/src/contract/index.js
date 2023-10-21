@@ -216,7 +216,7 @@ export const factoryABI = [
         type: "address",
       },
     ],
-    name: "getUserTicket",
+    name: "getUserTickets",
     outputs: [
       {
         components: [
@@ -806,7 +806,7 @@ export const erc721ABI = [
         type: "address",
       },
     ],
-    name: "getUserTickets",
+    name: "getUserTicket",
     outputs: [
       {
         components: [
@@ -1656,7 +1656,7 @@ export const erc1155ABI = [
         type: "address",
       },
     ],
-    name: "getUserTickets",
+    name: "getUserTicket",
     outputs: [
       {
         components: [
