@@ -89,7 +89,7 @@ contract FactoryManager is Ownable {
         return events;
     }
 
-    function getUserTicket(address user) external view returns (LibTicket.TicketInfo[] memory) {
+    function getUserTickets(address user) external view returns (LibTicket.TicketInfo[] memory) {
         uint256 length;
         for (uint256 i = 0; i < events.length; i++) {
             length += IEvent(events[i]).getUserTickets(user).length;
