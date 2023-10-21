@@ -60,8 +60,18 @@ function MyTickets() {
           if (backRes?.status == 200) {
             let backdata = backRes?.data?.data;
 
-            let status =
+            let status1 =
+              parseFloat(res?.[i]?.usedAmount?.toString(10)) > 0
+                ? "Past"
+                : parseFloat(backdata?.date) > getCurrentTime()
+                ? "Active"
+                : "Past";
+
+            let status2 =
               parseFloat(backdata?.date) > getCurrentTime() ? "Active" : "Past";
+
+            let status =
+              backdata?.venue == "Theatre Hall, Istanbul" ? status1 : status2;
 
             let obj = {
               address: backdata?.address,
@@ -101,7 +111,7 @@ function MyTickets() {
                     title: arr_?.[i]?.title,
                     venue: arr_?.[i]?.venue,
                     tokenId: arr_?.[i]?.tokenId,
-                    status: arr_?.[i]?.status,
+                    status: "Past",
                     totalTicket: 1,
                     usedTicket: 1,
                   };

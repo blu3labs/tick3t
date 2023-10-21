@@ -67,7 +67,7 @@ function Card({ index, item, getCurrentTime }) {
         isAbstract
       );
 
-      console.log(res, "res");
+   
 
       if (res !== "err") {
         let api =
@@ -86,7 +86,7 @@ function Card({ index, item, getCurrentTime }) {
           "&signature=" +
           res;
 
-        console.log(api, "api");
+       
 
 
         showModal(api);

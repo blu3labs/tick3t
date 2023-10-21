@@ -13,8 +13,6 @@ import { Web3Provider } from "@ethersproject/providers";
 import "../index.css";
 
 function ScreenContent({ data, id }) {
-
-
   const navigate = useNavigate();
 
   let serviceFee = 0.0001;
@@ -33,27 +31,29 @@ function ScreenContent({ data, id }) {
 
   const [seats, setSeats] = useState([]);
 
-  const [disabledSeats, setDisabledSeats] = useState([]);
+  const [disabledSeats, setDisabledSeats] = useState(null);
 
   const getDisabledSeats = async () => {
     try {
       let context = {
         address: id,
         abi: erc721ABI,
-        method: "getUsedTickets",
+        method: "getSoldTickets",
       };
 
       let res = await readContract(context);
 
-      setDisabledSeats(res.map((e) => new BigNumber(e._hex).toNumber()));
+      setDisabledSeats(res?.map((e) => new BigNumber(e._hex).toNumber()));
     } catch (err) {
       console.log(err);
+      setDisabledSeats([]);
     }
   };
 
   useEffect(() => {
     getDisabledSeats();
   }, [id]);
+
 
   const inputError = (address) => {
     if (address === null) {
@@ -141,8 +141,6 @@ function ScreenContent({ data, id }) {
       }
     }
 
- 
-
     let context = {
       address: id,
       abi: erc721ABI,
@@ -158,8 +156,6 @@ function ScreenContent({ data, id }) {
       dispatch,
       setChainId: setChainId,
     };
-
-  
 
     setLoading(true);
     try {
@@ -189,7 +185,7 @@ function ScreenContent({ data, id }) {
   };
 
   const handleAddorRemoveSeat = (seat) => {
-    if(step === 2){
+    if (step === 2) {
       toast.error("You can not change your seats, please go back.");
       return;
     }
@@ -204,7 +200,7 @@ function ScreenContent({ data, id }) {
         return;
       }
 
-      if (disabledSeats.includes(seat)) {
+      if (disabledSeats?.includes(seat)) {
         toast.error("Seat is not available.");
         return;
       }
@@ -256,238 +252,241 @@ function ScreenContent({ data, id }) {
     setSeats(tempWallets);
   };
 
-  
-
-  return (
-    <div className="eventBuyBottomSection">
-      <div className="eventStageLeftSection">
-        <div className="createLocationPreview">
-          <div className="createLocationPreviewTitle">
-            <span>Theatre Hall, Istanbul</span>
-          </div>
-          <div className="createLocationPreviewContent">
-            <div className="createLocationPreviewTheatreItem eventBuySeat">
-              {Array(30)
-                .fill(0)
-                .map((item, index) => {
-                  return (
-                    <span
-                      style={{
-                        cursor: disabledSeats.includes(index + 1)
-                          ? "not-allowed"
-                          : "pointer",
-                        background: disabledSeats.includes(index + 1)
-                          ? "#d9d9d9"
-                          : seats?.find((seat) => seat?.number === index + 1)
-                          ? "#17E7A4"
-                          : "linear-gradient(-72deg,#dedeff,#fff 16%,#dedeff 27%,#dedeff 36%,#fff 45%,#fff 60%,#dedeff 72%,#fff 80%,#dedeff 84%)",
-                      }}
-                      onClick={() => handleAddorRemoveSeat(index + 1)}
-                    >
-                      {index + 1}
-                    </span>
-                  );
-                })}
+  if (!disabledSeats) {
+    return (
+      <div className="eventBuyBottomSectionLoading">Seats are loading...</div>
+    );
+  } else {
+    return (
+      <div className="eventBuyBottomSection">
+        <div className="eventStageLeftSection">
+          <div className="createLocationPreview">
+            <div className="createLocationPreviewTitle">
+              <span>Theatre Hall, Istanbul</span>
             </div>
-            <div className="createLocationPreviewTheatreItem eventBuySeat">
-              {Array(30)
-                .fill(0)
-                .map((item, index) => {
-                  return (
-                    <span
-                      style={{
-                        cursor: disabledSeats.includes(index + 31)
-                          ? "not-allowed"
-                          : "pointer",
-                        background: disabledSeats.includes(index + 31)
-                          ? "#d9d9d9"
-                          : seats?.find((seat) => seat?.number === index + 31)
-                          ? "#17E7A4"
-                          : "#FDB931",
-                      }}
-                      onClick={() => handleAddorRemoveSeat(index + 31)}
-                    >
-                      {index + 31}
-                    </span>
-                  );
-                })}
-            </div>
-            <div className="createLocationPreviewTheatreItem eventBuySeat">
-              {Array(30)
-                .fill(0)
-                .map((item, index) => {
-                  return (
-                    <span
-                      style={{
-                        cursor: disabledSeats.includes(index + 61)
-                          ? "not-allowed"
-                          : "pointer",
-                        background: disabledSeats.includes(index + 61)
-                          ? "#d9d9d9"
-                          : seats?.find((seat) => seat?.number === index + 61)
-                          ? "#17E7A4"
-                          : "linear-gradient(to right, rgb(222, 222, 222), rgb(255, 255, 255), rgb(222, 222, 222), rgb(255, 255, 255)",
-                      }}
-                      onClick={() => handleAddorRemoveSeat(index + 61)}
-                    >
-                      {index + 61}
-                    </span>
-                  );
-                })}
-            </div>
-            <div className="eventSeatInfo">
-              <div className="eventSeatInfoBox">
-                <span
-                  style={{
-                    background:
-                      "linear-gradient(-72deg, rgb(222, 222, 255), rgb(255, 255, 255) 16%, rgb(222, 222, 255) 27%, rgb(222, 222, 255) 36%, rgb(255, 255, 255) 45%, rgb(255, 255, 255) 60%, rgb(222, 222, 255) 72%, rgb(255, 255, 255) 80%, rgb(222, 222, 255) 84%)",
-                  }}
-                ></span>
-                <span>{data.venuePrice1} ETH</span>
+            <div className="createLocationPreviewContent">
+              <div className="createLocationPreviewTheatreItem eventBuySeat">
+                {Array(30)
+                  .fill(0)
+                  .map((item, index) => {
+                    return (
+                      <span
+                        style={{
+                          cursor: disabledSeats?.includes(index + 1)
+                            ? "not-allowed"
+                            : "pointer",
+                          background: disabledSeats?.includes(index + 1)
+                            ? "#d9d9d9"
+                            : seats?.find((seat) => seat?.number === index + 1)
+                            ? "#17E7A4"
+                            : "linear-gradient(-72deg,#dedeff,#fff 16%,#dedeff 27%,#dedeff 36%,#fff 45%,#fff 60%,#dedeff 72%,#fff 80%,#dedeff 84%)",
+                        }}
+                        onClick={() => handleAddorRemoveSeat(index + 1)}
+                      >
+                        {index + 1}
+                      </span>
+                    );
+                  })}
               </div>
-              <div className="eventSeatInfoBox">
-                <span
-                  style={{
-                    background:
-                      "#FDB931",
-                  }}
-                ></span>
-                <span>{data.venuePrice2} ETH</span>
+              <div className="createLocationPreviewTheatreItem eventBuySeat">
+                {Array(30)
+                  .fill(0)
+                  .map((item, index) => {
+                    return (
+                      <span
+                        style={{
+                          cursor: disabledSeats?.includes(index + 31)
+                            ? "not-allowed"
+                            : "pointer",
+                          background: disabledSeats?.includes(index + 31)
+                            ? "#d9d9d9"
+                            : seats?.find((seat) => seat?.number === index + 31)
+                            ? "#17E7A4"
+                            : "#FDB931",
+                        }}
+                        onClick={() => handleAddorRemoveSeat(index + 31)}
+                      >
+                        {index + 31}
+                      </span>
+                    );
+                  })}
               </div>
-              <div className="eventSeatInfoBox">
-                <span
-                  style={{
-                    background:
-                      "linear-gradient(to right, rgb(222, 222, 222), rgb(255, 255, 255), rgb(222, 222, 222), rgb(255, 255, 255)",
-                  }}
-                ></span>
-                <span>{data.venuePrice3} ETH</span>
+              <div className="createLocationPreviewTheatreItem eventBuySeat">
+                {Array(30)
+                  .fill(0)
+                  .map((item, index) => {
+                    return (
+                      <span
+                        style={{
+                          cursor: disabledSeats?.includes(index + 61)
+                            ? "not-allowed"
+                            : "pointer",
+                          background: disabledSeats?.includes(index + 61)
+                            ? "#d9d9d9"
+                            : seats?.find((seat) => seat?.number === index + 61)
+                            ? "#17E7A4"
+                            : "linear-gradient(to right, rgb(222, 222, 222), rgb(255, 255, 255), rgb(222, 222, 222), rgb(255, 255, 255)",
+                        }}
+                        onClick={() => handleAddorRemoveSeat(index + 61)}
+                      >
+                        {index + 61}
+                      </span>
+                    );
+                  })}
               </div>
-              <div className="eventSeatInfoBox">
-                <span
-                  style={{
-                    background: "#17E7A4",
-                  }}
-                ></span>
-                <span>Selected</span>
-              </div>
-
-              <div className="eventSeatInfoBox">
-                <span
-                  style={{
-                    background: "#d9d9d9",
-                  }}
-                ></span>
-                <span>Not Available</span>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-
-      {step === 1 && (
-        <div className="eventStageRightSection">
-          {
-            <div className="eventStageStep1">
-              {seats.length === 0 ? (
-                <span>
-                  Please select your seats. You can buy max 5 tickets.
-                </span>
-              ) : (
-                seats.map((item, index) => {
-                  return (
-                    <div className="eventRightSectionInputBox">
-                      <div className="eventRightSectionInputBoxHeader">
-                        <span>
-                          {index + 1}.Ticket | Seat {item.number} | {item.price}{" "}
-                          ETH
-                        </span>
-                        <button onClick={() => useMyWallet(item.number)}>
-                          Use My Wallet
-                        </button>
-                      </div>
-                      <div className="eventRightSectionInputArea">
-                        <input
-                          type="text"
-                          placeholder="Enter your wallet"
-                          style={{
-                            borderColor:
-                              inputError(seats?.[index]?.wallet) &&
-                              "var(--accent-color)",
-                          }}
-                          value={seats?.[index]?.wallet}
-                          onChange={(e) =>
-                            handleChangeWallets(item.number, e.target.value)
-                          }
-                        />
-                        <p>{inputError(seats?.[index]?.wallet)}</p>
-                      </div>
-                    </div>
-                  );
-                })
-              )}
-            </div>
-          }
-          <button className="buyBtn" onClick={handleNext}>
-            Next
-          </button>
-        </div>
-      )}
-
-      {step === 2 && (
-        <div className="eventStageRightSection">
-          <div className="eventStageStep2">
-            <div className="eventStageStep2Title">Summary</div>
-
-            {seats.map((item, index) => {
-              return (
-                <div className="eventStageStep2Item">
-                  <span>
-                    {index + 1}.Ticket | Seat {item.number}
-                    <br />
-                    {item.price} ETH
-                  </span>
-                  <span title={item.wallet}>{item.wallet}</span>
+              <div className="eventSeatInfo">
+                <div className="eventSeatInfoBox">
+                  <span
+                    style={{
+                      background:
+                        "linear-gradient(-72deg, rgb(222, 222, 255), rgb(255, 255, 255) 16%, rgb(222, 222, 255) 27%, rgb(222, 222, 255) 36%, rgb(255, 255, 255) 45%, rgb(255, 255, 255) 60%, rgb(222, 222, 255) 72%, rgb(255, 255, 255) 80%, rgb(222, 222, 255) 84%)",
+                    }}
+                  ></span>
+                  <span>{data.venuePrice1} ETH</span>
                 </div>
-              );
-            })}
+                <div className="eventSeatInfoBox">
+                  <span
+                    style={{
+                      background: "#FDB931",
+                    }}
+                  ></span>
+                  <span>{data.venuePrice2} ETH</span>
+                </div>
+                <div className="eventSeatInfoBox">
+                  <span
+                    style={{
+                      background:
+                        "linear-gradient(to right, rgb(222, 222, 222), rgb(255, 255, 255), rgb(222, 222, 222), rgb(255, 255, 255)",
+                    }}
+                  ></span>
+                  <span>{data.venuePrice3} ETH</span>
+                </div>
+                <div className="eventSeatInfoBox">
+                  <span
+                    style={{
+                      background: "#17E7A4",
+                    }}
+                  ></span>
+                  <span>Selected</span>
+                </div>
 
-            <div className="eventStageStep2Item">
-              <span>Service Fee</span>
-              <span>{serviceFee} ETH</span>
-            </div>
-
-            <div className="eventStageStep2Item">
-              <span>Total Ticket Cost</span>
-              <span>{totalTicketCost?.toString(10)} ETH</span>
-            </div>
-
-            <div className="eventStageStep2Item">
-              <span>Total Cost</span>
-              <span>{totalCost?.toString(10)} ETH</span>
-            </div>
-
-            <div className="eventStageStep2Buttons">
-              <button className="buyBtn" onClick={() => setStep(1)}>
-                Back
-              </button>
-              <button
-                className="buyBtn"
-                onClick={handleBuy}
-                disabled={loading}
-                style={{
-                  cursor: loading ? "not-allowed" : "pointer",
-                  opacity: loading && 0.5,
-                }}
-              >
-                Buy
-              </button>
+                <div className="eventSeatInfoBox">
+                  <span
+                    style={{
+                      background: "#d9d9d9",
+                    }}
+                  ></span>
+                  <span>Not Available</span>
+                </div>
+              </div>
             </div>
           </div>
         </div>
-      )}
-    </div>
-  );
+
+        {step === 1 && (
+          <div className="eventStageRightSection">
+            {
+              <div className="eventStageStep1">
+                {seats.length === 0 ? (
+                  <span>
+                    Please select your seats. You can buy max 5 tickets.
+                  </span>
+                ) : (
+                  seats.map((item, index) => {
+                    return (
+                      <div className="eventRightSectionInputBox">
+                        <div className="eventRightSectionInputBoxHeader">
+                          <span>
+                            {index + 1}.Ticket | Seat {item.number} |{" "}
+                            {item.price} ETH
+                          </span>
+                          <button onClick={() => useMyWallet(item.number)}>
+                            Use My Wallet
+                          </button>
+                        </div>
+                        <div className="eventRightSectionInputArea">
+                          <input
+                            type="text"
+                            placeholder="Enter your wallet"
+                            style={{
+                              borderColor:
+                                inputError(seats?.[index]?.wallet) &&
+                                "var(--accent-color)",
+                            }}
+                            value={seats?.[index]?.wallet}
+                            onChange={(e) =>
+                              handleChangeWallets(item.number, e.target.value)
+                            }
+                          />
+                          <p>{inputError(seats?.[index]?.wallet)}</p>
+                        </div>
+                      </div>
+                    );
+                  })
+                )}
+              </div>
+            }
+            <button className="buyBtn" onClick={handleNext}>
+              Next
+            </button>
+          </div>
+        )}
+
+        {step === 2 && (
+          <div className="eventStageRightSection">
+            <div className="eventStageStep2">
+              <div className="eventStageStep2Title">Summary</div>
+
+              {seats.map((item, index) => {
+                return (
+                  <div className="eventStageStep2Item">
+                    <span>
+                      {index + 1}.Ticket | Seat {item.number}
+                      <br />
+                      {item.price} ETH
+                    </span>
+                    <span title={item.wallet}>{item.wallet}</span>
+                  </div>
+                );
+              })}
+
+              <div className="eventStageStep2Item">
+                <span>Service Fee</span>
+                <span>{serviceFee} ETH</span>
+              </div>
+
+              <div className="eventStageStep2Item">
+                <span>Total Ticket Cost</span>
+                <span>{totalTicketCost?.toString(10)} ETH</span>
+              </div>
+
+              <div className="eventStageStep2Item">
+                <span>Total Cost</span>
+                <span>{totalCost?.toString(10)} ETH</span>
+              </div>
+
+              <div className="eventStageStep2Buttons">
+                <button className="buyBtn" onClick={() => setStep(1)}>
+                  Back
+                </button>
+                <button
+                  className="buyBtn"
+                  onClick={handleBuy}
+                  disabled={loading}
+                  style={{
+                    cursor: loading ? "not-allowed" : "pointer",
+                    opacity: loading && 0.5,
+                  }}
+                >
+                  Buy
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
+      </div>
+    );
+  }
 }
 
 export default ScreenContent;

@@ -111,6 +111,15 @@
   gap: 1rem;
   border-top: 1px solid var(--button-color);
 }
+.eventBuyBottomSectionLoading {
+  padding-top: 1rem;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-top: 1px solid var(--button-color);
+}
 
 .eventStageLeftSection {
   width: 100%;

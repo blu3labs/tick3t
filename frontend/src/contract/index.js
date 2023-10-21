@@ -1,4 +1,4 @@
-export const factoryAddress = "0xd7874248f9750F45B63f451E7463f5BEDc555b84";
+export const factoryAddress = "0x4e186030c42c2138E59217D1eB3B15574b145E4F";
 
 export const factoryABI = [
   {
@@ -361,9 +361,9 @@ export const erc721ABI = [
         type: "string",
       },
       {
-        internalType: "string",
-        name: "uri_",
-        type: "string",
+        internalType: "address payable",
+        name: "organizer_",
+        type: "address",
       },
       {
         internalType: "address payable",
@@ -398,6 +398,33 @@ export const erc721ABI = [
       },
     ],
     name: "AddressInsufficientBalance",
+    type: "error",
+  },
+  {
+    inputs: [],
+    name: "ECDSAInvalidSignature",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "uint256",
+        name: "length",
+        type: "uint256",
+      },
+    ],
+    name: "ECDSAInvalidSignatureLength",
+    type: "error",
+  },
+  {
+    inputs: [
+      {
+        internalType: "bytes32",
+        name: "s",
+        type: "bytes32",
+      },
+    ],
+    name: "ECDSAInvalidSignatureS",
     type: "error",
   },
   {
@@ -790,6 +817,19 @@ export const erc721ABI = [
   },
   {
     inputs: [],
+    name: "getSoldTickets",
+    outputs: [
+      {
+        internalType: "uint256[]",
+        name: "",
+        type: "uint256[]",
+      },
+    ],
+    stateMutability: "view",
+    type: "function",
+  },
+  {
+    inputs: [],
     name: "getUsedTickets",
     outputs: [
       {
@@ -809,7 +849,7 @@ export const erc721ABI = [
         type: "address",
       },
     ],
-    name: "getUserTicket",
+    name: "getUserTickets",
     outputs: [
       {
         components: [
