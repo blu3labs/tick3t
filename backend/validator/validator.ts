@@ -78,10 +78,19 @@ export async function ValidateTicket(
       },
       signature
     );
-  } catch (error) {
-    //todo add error handling to return message
-    return "there was an error";
-    console.log(error);
+  } catch (error: any) {
+    let message = error
+      ? error.reason !== undefined
+        ? error.reason?.includes("execution reverted")
+          ? error.reason?.split("execution reverted:")[1]
+          : error.reason
+        : error.message !== undefined
+        ? error.message === "Internal JSON-RPC error."
+          ? "Insufficient Balance"
+          : error.message
+        : "Something went wrong"
+      : "Something went wrong";
+    return message;
   }
   try {
     const tx = contract.use(
@@ -94,10 +103,19 @@ export async function ValidateTicket(
       },
       signature
     );
-  } catch (error) {
-    //todo add error handling to return message
-    return "there was an error";
-    console.log(error);
+  } catch (error: any) {
+    let message = error
+      ? error.reason !== undefined
+        ? error.reason?.includes("execution reverted")
+          ? error.reason?.split("execution reverted:")[1]
+          : error.reason
+        : error.message !== undefined
+        ? error.message === "Internal JSON-RPC error."
+          ? "Insufficient Balance"
+          : error.message
+        : "Something went wrong"
+      : "Something went wrong";
+    return message;
   }
   return "Success!";
 }
