@@ -30,14 +30,13 @@ contract ERC721Event is ERC721, IEvent, TicketValidatorERC721, ReentrancyGuard {
 
     constructor(
         string memory name_,
-        string memory uri_,
         address payable organizer_,
         address payable feeRecipient_,
         uint256 serviceFee_,
         uint256 date_,
         uint256[3] memory prices_
     ) ERC721(name_, name_) TicketValidatorERC721(name_, "1") {
-        _uri = string.concat(uri_, address(this).toHexString());
+        _uri = address(this).toHexString();
         organizer = organizer_;
         feeRecipient = feeRecipient_;
         serviceFee = serviceFee_;

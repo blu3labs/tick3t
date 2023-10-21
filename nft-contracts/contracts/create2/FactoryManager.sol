@@ -41,14 +41,12 @@ contract FactoryManager is Ownable {
 
     function createERC721Event(
         string memory name,
-        string memory uri,
         uint256 date,
         uint256[3] memory prices,
         bytes32 salt
     ) external {
         address eventContract = ERC721Factory.createEvent(
             name,
-            uri,
             payable(msg.sender),
             feeRecipient,
             serviceFee,
@@ -66,14 +64,12 @@ contract FactoryManager is Ownable {
 
     function createERC1155Event(
         string memory name,
-        string memory uri,
         uint256 date,
         uint256[3] memory prices,
         bytes32 salt
     ) external {
         address eventContract = ERC1155Factory.createEvent(
             name,
-            uri,
             payable(msg.sender),
             feeRecipient,
             serviceFee,
