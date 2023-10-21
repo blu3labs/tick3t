@@ -8,6 +8,7 @@ import moment from "moment";
 import "./index.css";
 import axios from "axios";
 import { useNavigate } from "react-router-dom";
+import { BACKEND_API_URL } from "../../utils/apiUrls";
 
 function MyTickets() {
   const [tab, setTab] = useState("All");
@@ -52,7 +53,9 @@ function MyTickets() {
         let arr_ = [];
 
         for (let i = 0; i < res?.length; i++) {
-          let backRes = await axios.get(res?.[i]?.tokenUri);
+          let backRes = await axios.get(
+            BACKEND_API_URL + "/event/" + res?.[i]?.tokenUri
+          );
 
           if (backRes?.status == 200) {
             let backdata = backRes?.data?.data;
