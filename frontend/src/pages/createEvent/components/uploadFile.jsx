@@ -78,7 +78,7 @@ function UploadFile({ image, setImage }) {
               ) : (
                 <div className="createPreviewLogoBox">
                   <FaCloudUploadAlt className="createPreviewLogoBoxIcon" />
-                  <span>Please upload a image</span>
+                  <span>Please upload an image</span>
                 </div>
               )}
             </>

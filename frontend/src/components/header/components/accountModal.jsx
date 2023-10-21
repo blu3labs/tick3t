@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import { Modal } from "antd";
 import { getEthBalance } from "../../../utils/getEthBalance";
-// import { MetaMaskAvatar } from "react-metamask-avatar";
+
 import { AiOutlineCopy } from "react-icons/ai";
 import { IoExitOutline } from "react-icons/io5";
 import { TiTick } from "react-icons/ti";
@@ -63,6 +63,7 @@ function AccountModal() {
 
       <Modal open={isModalOpen} onCancel={handleCancel} footer={null} centered>
         <div className="accountModal">
+    
           <div className="accountModalWallet">
             <span>
               {safeAuthSignInResponse?.eoa?.slice(0, 10) +

@@ -23,7 +23,7 @@ function PreviewLocation({ venue, minHeight }) {
           className="createLocationPreviewContentItem"
           style={{
             background:
-              "linear-gradient(to right, rgb(191, 149, 63), rgb(252, 246, 186), #e3a214, rgb(251, 245, 183), rgb(170, 119, 28))",
+              "#FDB931",
           }}
         >
           <span>Gold</span>
@@ -57,7 +57,7 @@ function PreviewLocation({ venue, minHeight }) {
                 <span
                   style={{
                     background:
-                      "linear-gradient(-72deg,#dedeff,#fff 16%,#dedeff 27%,#dedeff 36%,#fff 45%,#fff 60%,#dedeff 72%,#fff 80%,#dedeff 84%)",
+                      "#6BCB77",
                   }}
                 >
                   {index + 1}
@@ -73,7 +73,7 @@ function PreviewLocation({ venue, minHeight }) {
                 <span
                   style={{
                     background:
-                      "linear-gradient(to right, rgb(191, 149, 63), rgb(252, 246, 186), #e3a214, rgb(251, 245, 183), rgb(170, 119, 28))",
+                      "#FDB931",
                   }}
                 >
                   {index + 31}

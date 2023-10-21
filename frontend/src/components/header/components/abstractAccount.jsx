@@ -36,7 +36,7 @@ function AbstractAccount({
         style={{
           background:
             activeAddress?.toLowerCase() === item?.toLowerCase() &&
-            "var(--accent-color)",
+            "var(--button-color)",
           color:
             activeAddress?.toLowerCase() === item?.toLowerCase() && "white",
         }}

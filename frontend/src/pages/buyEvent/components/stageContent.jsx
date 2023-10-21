@@ -257,7 +257,7 @@ function StageContent({ data, id }) {
               className="createLocationPreviewContentItem buyEventStage"
               style={{
                 background:
-                  "linear-gradient(to right, rgb(191, 149, 63), rgb(252, 246, 186), #e3a214, rgb(251, 245, 183), rgb(170, 119, 28))",
+                  "#FDB931",
               }}
               onClick={() => handleChangeCategory("Gold")}
             >

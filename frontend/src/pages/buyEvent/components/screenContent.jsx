@@ -267,7 +267,7 @@ function ScreenContent({ data, id }) {
                         background: disabledSeats.includes(index + 1)
                           ? "#d9d9d9"
                           : seats?.find((seat) => seat?.number === index + 1)
-                          ? "lime"
+                          ? "#17E7A4"
                           : "linear-gradient(-72deg,#dedeff,#fff 16%,#dedeff 27%,#dedeff 36%,#fff 45%,#fff 60%,#dedeff 72%,#fff 80%,#dedeff 84%)",
                       }}
                       onClick={() => handleAddorRemoveSeat(index + 1)}
@@ -290,8 +290,8 @@ function ScreenContent({ data, id }) {
                         background: disabledSeats.includes(index + 31)
                           ? "#d9d9d9"
                           : seats?.find((seat) => seat?.number === index + 31)
-                          ? "lime"
-                          : "linear-gradient(to right, rgb(191, 149, 63), rgb(252, 246, 186), #e3a214, rgb(251, 245, 183), rgb(170, 119, 28))",
+                          ? "#17E7A4"
+                          : "#FDB931",
                       }}
                       onClick={() => handleAddorRemoveSeat(index + 31)}
                     >
@@ -313,7 +313,7 @@ function ScreenContent({ data, id }) {
                         background: disabledSeats.includes(index + 61)
                           ? "#d9d9d9"
                           : seats?.find((seat) => seat?.number === index + 61)
-                          ? "lime"
+                          ? "#17E7A4"
                           : "linear-gradient(to right, rgb(222, 222, 222), rgb(255, 255, 255), rgb(222, 222, 222), rgb(255, 255, 255)",
                       }}
                       onClick={() => handleAddorRemoveSeat(index + 61)}
@@ -337,7 +337,7 @@ function ScreenContent({ data, id }) {
                 <span
                   style={{
                     background:
-                      "linear-gradient(to right, rgb(191, 149, 63), rgb(252, 246, 186), #e3a214, rgb(251, 245, 183), rgb(170, 119, 28))",
+                      "#FDB931",
                   }}
                 ></span>
                 <span>{data.venuePrice2} ETH</span>
@@ -354,7 +354,7 @@ function ScreenContent({ data, id }) {
               <div className="eventSeatInfoBox">
                 <span
                   style={{
-                    background: "lime",
+                    background: "#17E7A4",
                   }}
                 ></span>
                 <span>Selected</span>

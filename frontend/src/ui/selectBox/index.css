@@ -1,5 +1,5 @@
 .ant-select-selector{
-    background: none !important;
+    background: var(--box-color) !important;
     height: 36px !important;
     width: 100%;
     border-radius: 8px;

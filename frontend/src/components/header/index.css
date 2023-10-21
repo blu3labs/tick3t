@@ -37,6 +37,12 @@
   color: #000;
 }
 
+.headerLogo span b{
+  color: var(--accent-color);
+  font-size: 1.5rem;
+  font-weight: 700;
+}
+
 .headerLinks{
   display: flex;
   flex-direction: row;
@@ -216,7 +222,7 @@
 .smartAccountModalListItemBalance{
   font-size: 16px;
   font-weight: 500;
-  max-width: 80px;
+  max-width: 88px;
   text-overflow: ellipsis;
   overflow: hidden;
   white-space: nowrap;
@@ -226,7 +232,7 @@
 }
 
 .smartAccountModalListItemAddress{
-  width: calc(100% - 88px);
+  width: calc(100% - 95px);
   font-size: 16px;
   font-weight: 500;
   text-overflow: ellipsis;

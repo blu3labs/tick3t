@@ -383,6 +383,7 @@ function CreateEvent() {
           </div>
         </div>
         <div className="createPreviewArea">
+          <div className="createPreviewTitle">Preview</div>
           <PreviewCard
             title={title}
             category={category}

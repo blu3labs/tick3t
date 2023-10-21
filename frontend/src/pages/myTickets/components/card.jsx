@@ -143,7 +143,8 @@ function Card({ index, item, getCurrentTime }) {
           )}
         </div>
         <Link to={`/event/${item.address}`} className="goEvent">
-          <FaRegEye className="goEvenetIcon" />
+     
+          View
         </Link>
       </div>
 
@@ -152,7 +153,7 @@ function Card({ index, item, getCurrentTime }) {
         onCancel={handleCancel}
         footer={null}
         centered
-        closeIcon={null}
+        // closeIcon={null}
       >
         <div className="qrModal">
           <QRCode value={qrValue} />
