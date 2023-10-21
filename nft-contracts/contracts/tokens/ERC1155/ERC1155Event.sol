@@ -8,9 +8,10 @@ import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {LibTicket} from "../common/LibTicket.sol";
+import {IEvent} from "../common/IEvent.sol";
 import {TicketValidatorERC1155} from "./TicketValidatorERC1155.sol";
 
-contract ERC1155Event is ERC1155, TicketValidatorERC1155, ReentrancyGuard {
+contract ERC1155Event is ERC1155, IEvent, TicketValidatorERC1155, ReentrancyGuard {
     using Address for address payable;
     using EnumerableSet for EnumerableSet.UintSet;
     using Strings for address;
@@ -23,17 +24,18 @@ contract ERC1155Event is ERC1155, TicketValidatorERC1155, ReentrancyGuard {
 
     mapping(address => EnumerableSet.UintSet) private _userTickets;
 
-    event Sold(address indexed to, uint256 indexed tokenId);
+    event Sold(address indexed to, uint256 indexed tokenId, uint256 amount);
 
     constructor(
         string memory name_,
         string memory uri_,
+        address payable organizer_,
         address payable feeRecipient_,
         uint256 serviceFee_,
         uint256 date_,
         uint256[3] memory prices_
     ) ERC1155(uri_) TicketValidatorERC1155(name_, "1") {
-        organizer = payable(msg.sender);
+        organizer = organizer_;
         feeRecipient = feeRecipient_;
         serviceFee = serviceFee_;
         date = date_;
@@ -57,14 +59,14 @@ contract ERC1155Event is ERC1155, TicketValidatorERC1155, ReentrancyGuard {
             totalAmount += amount[i];
             _mint(recipients[i], tokenId, amount[i], "");
             _userTickets[recipients[i]].add(tokenId);
+            emit Sold(recipients[i], tokenId, amount[i]);
         }
         require(
             msg.value == (_getPrice(tokenId) * totalAmount) + serviceFee,
             "Invalid price"
         );
-        organizer.sendValue(msg.value - serviceFee);
         feeRecipient.sendValue(serviceFee);
-        emit Sold(msg.sender, tokenId);
+        organizer.sendValue(msg.value - serviceFee);
     }
 
     function use(

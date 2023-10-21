@@ -32,4 +32,9 @@ module.exports = {
       accounts: [process.env.PV_KEY],
     },
   },
+  etherscan: {
+    apiKey: {
+      goerli: process.env.ETHERSCAN_API_KEY,
+    }
+  }
 };

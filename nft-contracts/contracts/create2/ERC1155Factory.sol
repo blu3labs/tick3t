@@ -11,6 +11,7 @@ contract ERC1155Factory is Factory {
     function createEvent(
         string memory name,
         string memory uri,
+        address payable organizer,
         address payable feeRecipient,
         uint256 serviceFee,
         uint256 date,
@@ -20,6 +21,7 @@ contract ERC1155Factory is Factory {
         ERC1155Event eventContract = new ERC1155Event{salt: salt}(
             name,
             uri,
+            organizer,
             feeRecipient,
             serviceFee,
             date,

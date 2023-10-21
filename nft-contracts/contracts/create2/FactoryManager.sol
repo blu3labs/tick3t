@@ -4,6 +4,8 @@ pragma solidity 0.8.20;
 
 import {Ownable} from "@openzeppelin/contracts/access/Ownable.sol";
 import {IFactory} from "./common/IFactory.sol";
+import {LibTicket} from "../tokens/common/LibTicket.sol";
+import {IEvent} from "../tokens/common/IEvent.sol";
 
 contract FactoryManager is Ownable {
     address payable public feeRecipient;
@@ -11,6 +13,8 @@ contract FactoryManager is Ownable {
 
     IFactory public ERC721Factory;
     IFactory public ERC1155Factory;
+
+    address[] public events;
 
     constructor(
         address payable feeRecipient_,
@@ -45,12 +49,14 @@ contract FactoryManager is Ownable {
         address eventContract = ERC721Factory.createEvent(
             name,
             uri,
+            payable(msg.sender),
             feeRecipient,
             serviceFee,
             date,
             prices,
             salt
         );
+        events.push(eventContract);
         emit ERC721EventCreated(eventContract);
     }
 
@@ -68,12 +74,35 @@ contract FactoryManager is Ownable {
         address eventContract = ERC1155Factory.createEvent(
             name,
             uri,
+            payable(msg.sender),
             feeRecipient,
             serviceFee,
             date,
             prices,
             salt
         );
+        events.push(eventContract);
         emit ERC1155EventCreated(eventContract);
+    }
+
+    function getEvents() external view returns (address[] memory) {
+        return events;
+    }
+
+    function getUserTicket(address user) external view returns (LibTicket.TicketInfo[] memory) {
+        uint256 length;
+        for (uint256 i = 0; i < events.length; i++) {
+            length += IEvent(events[i]).getUserTickets(user).length;
+        }
+        LibTicket.TicketInfo[] memory tickets = new LibTicket.TicketInfo[](length);
+        uint256 index;
+        for (uint256 i = 0; i < events.length; i++) {
+            LibTicket.TicketInfo[] memory userTickets = IEvent(events[i]).getUserTickets(user);
+            for (uint256 j = 0; j < userTickets.length; j++) {
+                tickets[index] = userTickets[j];
+                index++;
+            }
+        }
+        return tickets;
     }
 }

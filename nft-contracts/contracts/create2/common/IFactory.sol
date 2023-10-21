@@ -6,6 +6,7 @@ interface IFactory {
     function createEvent(
         string memory name,
         string memory uri,
+        address payable organizer,
         address payable feeRecipient,
         uint256 serviceFee,
         uint256 date,

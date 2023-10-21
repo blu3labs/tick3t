@@ -11,6 +11,7 @@ contract ERC721Factory is Factory {
     function createEvent(
         string memory name,
         string memory uri,
+        address payable organizer,
         address payable feeRecipient,
         uint256 serviceFee,
         uint256 date,
@@ -20,6 +21,7 @@ contract ERC721Factory is Factory {
         ERC721Event eventContract = new ERC721Event{salt: salt}(
             name,
             uri,
+            organizer,
             feeRecipient,
             serviceFee,
             date,

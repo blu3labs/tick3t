@@ -8,9 +8,10 @@ import {EnumerableSet} from "@openzeppelin/contracts/utils/structs/EnumerableSet
 import {Strings} from "@openzeppelin/contracts/utils/Strings.sol";
 import {Address} from "@openzeppelin/contracts/utils/Address.sol";
 import {LibTicket} from "../common/LibTicket.sol";
+import {IEvent} from "../common/IEvent.sol";
 import {TicketValidatorERC721} from "./TicketValidatorERC721.sol";
 
-contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
+contract ERC721Event is ERC721, IEvent, TicketValidatorERC721, ReentrancyGuard {
     using Address for address payable;
     using EnumerableSet for EnumerableSet.UintSet;
     using Strings for address;
@@ -30,13 +31,14 @@ contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
     constructor(
         string memory name_,
         string memory uri_,
+        address payable organizer_,
         address payable feeRecipient_,
         uint256 serviceFee_,
         uint256 date_,
         uint256[3] memory prices_
     ) ERC721(name_, name_) TicketValidatorERC721(name_, "1") {
         _uri = string.concat(uri_, address(this).toHexString());
-        organizer = payable(msg.sender);
+        organizer = organizer_;
         feeRecipient = feeRecipient_;
         serviceFee = serviceFee_;
         date = date_;
@@ -64,8 +66,8 @@ contract ERC721Event is ERC721, TicketValidatorERC721, ReentrancyGuard {
             emit Sold(recipients[i], tokenId);
         }
         require(msg.value == totalPrice + serviceFee, "Invalid msg.value");
-        organizer.sendValue(msg.value - serviceFee);
         feeRecipient.sendValue(serviceFee);
+        organizer.sendValue(totalPrice);
     }
 
     function use(
