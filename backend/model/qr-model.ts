@@ -15,13 +15,13 @@ export const qrModel = async (orm: D1Orm, db: any) => {
         D1Orm: orm,
         tableName: "qr",
         primaryKeys: "hash",
-        autoIncrement: "id",
+        // autoIncrement: "id",
       },
       {
-        id: {
-          type: DataTypes.INTEGER,
-          notNull: true,
-        },
+        // id: {
+        //   type: DataTypes.INTEGER,
+        //   notNull: true,
+        // },
         signature: {
           type: DataTypes.STRING,
         },

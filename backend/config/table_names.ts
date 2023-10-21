@@ -8,5 +8,5 @@ export interface TableNameI {
 
 export const TABLE_NAMES: TableNameI = {
     event: "event_421613_242",
-    qr: "qr_421613_235"
+    qr: "qr_421613_244"
 }
