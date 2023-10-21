@@ -101,7 +101,7 @@ app.get("/qr/:id", async (req, res) => {
 
 app.get("/check/qr", async (req, res) => {
   const query = req.query
-  const [msg] = await ValidateTicket(
+  const msg = await ValidateTicket(
     query.owner,
     query.collection,
     query.tokenId,
