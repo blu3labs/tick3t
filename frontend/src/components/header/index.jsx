@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import { Link, useLocation } from "react-router-dom";
 import Logo from "@/assets/vite.svg";
 import "./index.css";
-
+import logo from "../../assets/ticket_logo.png";
 import toast from "react-hot-toast";
 import AccountModal from "./components/accountModal";
 import SmartAccountModal from "./components/smartAccountModal";
@@ -46,8 +46,8 @@ function Header() {
           to="/"
           className={`headerLogo ${!safeAuthSignInResponse && "mobileLogo"}`}
         >
-          {/* <img src={Logo} alt="logo" draggable="false" /> */}
-          <span>TICK<b>3</b>T</span>
+          <img src={logo} alt="logo" draggable="false" />
+          {/* <span>TICK<b>3</b>T</span> */}
         </Link>
         {safeAuthSignInResponse && (
           <div className="headerLinks">
