@@ -144,7 +144,7 @@ export const signMessageTransaction = async (
   const callInside = signatureLib.interface.encodeFunctionData("signMessage", [
     hashValue,
   ]);
-  console.log("heoodds")
+
 
   const txCallInside = await safeSDK.createTransaction({
     safeTransactionData: {
@@ -155,7 +155,7 @@ export const signMessageTransaction = async (
     },
     onlyCalls: true,
   });
-  console.log("heoo")
+
   const safeSignTxRelayInside = await relayKit.createRelayedTransaction({
     safe: safeSDK,
     transactions: [
@@ -168,18 +168,19 @@ export const signMessageTransaction = async (
     ],
   });
 
-  console.log("gaydirigubap")
+  const hashTx = await safeSDK.getTransactionHash(safeSignTxRelayInside);
+
   let signedVersionInside = ""
   let signature = ""
   try {
 
     let signatureData = await (await ethAdapter.getProvider()).send("eth_sign", [
       (await (ethAdapter.getSigner()).getAddress()).toLowerCase(),
-      hashValue,
+      hexlify(hashTx),
     ]);
     signedVersionInside = {...safeSignTxRelayInside.data}
     signature = signatureData
-    console.log("signeerr")
+ 
 
 
   }catch(err){
@@ -187,7 +188,11 @@ export const signMessageTransaction = async (
      signedVersionInside = await safeSDK.signTransaction(
       safeSignTxRelayInside
     );
-    signature = signedVersionInside.encodeSignatures()
+
+    
+    signature = signedVersionInside.encodedSignatures()
+    signedVersionInside = {...signedVersionInside.data, signature: signature}
+    
   }
   const tx = await axios.post(
     BUNDLER_API_URL + "/send-tx",
