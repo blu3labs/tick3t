@@ -21,11 +21,9 @@ function Card({ index, item, getCurrentTime,getMyTickets }) {
     setQrValue(value);
     setIsModalOpen(true);
   };
-  const handleCancel = async () => {
-    await getMyTickets();
+  const handleCancel = () => {
     setQrValue(null);
     setIsModalOpen(false);
-
   };
 
   let categoryId = {
@@ -76,6 +74,9 @@ function Card({ index, item, getCurrentTime,getMyTickets }) {
         "&collection=" + item.address + "&tokenId=" + item.tokenId + "&salt=" + 
         ticketInfo.salt + "&deadline=" + currentTime 
         + "&signature=" + res;
+
+
+        console.log(api, "api");
         
         showModal(api);
       }
