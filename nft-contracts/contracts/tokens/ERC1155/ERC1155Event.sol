@@ -78,14 +78,6 @@ contract ERC1155Event is ERC1155, IEvent, TicketValidatorERC1155, ReentrancyGuar
         _validateTicket(balance, ticket, signature);
     }
 
-    // function tokenURI(uint256 tokenId) public view returns (string memory) {
-    //     string memory baseURI = uri(0);
-    //     return
-    //         bytes(baseURI).length > 0
-    //             ? string.concat(baseURI, tokenId.toString())
-    //             : "";
-    // }
-
     function getUserTickets(
         address user
     ) external view returns (LibTicket.TicketInfo[] memory) {
