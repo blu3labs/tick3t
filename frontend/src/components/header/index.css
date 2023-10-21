@@ -349,6 +349,27 @@
   opacity: 0.8;
 }
 
+.mobileHeaderLogo{
+  display: flex;
+  width: auto;
+}
+
+.headerMobileWrapper{
+  flex-direction: row !important;
+  align-items: center !important;
+  justify-content: space-between !important;
+}
+
+.headerRightMobile{
+  width: auto !important;
+  justify-content: flex-end !important;  
+  display: flex;
+}
+
+.headerLeftMobile{
+  width: auto !important;
+}
+
 
 @media only screen and (max-width: 768px){
   .header{

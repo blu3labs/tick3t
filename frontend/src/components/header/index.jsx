@@ -37,69 +37,100 @@ function Header() {
     }
   };
 
+  if (safeAuthSignInResponse === null || chainId === null || chainId !== 5) {
+    return (
+      <div className="header headerMobileWrapper">
+        <div className="headerLeft headerLeftMobile">
+          <Link to="/" className={`headerLogo mobileHeaderLogo`}>
+            <img src={logo} alt="logo" draggable="false" />
+          </Link>
+        </div>
 
-
-  return (
-    <div className="header">
-      <div className="headerLeft">
-        <Link
-          to="/"
-          className={`headerLogo ${!safeAuthSignInResponse && "mobileLogo"}`}
-        >
-          <img src={logo} alt="logo" draggable="false" />
-          {/* <span>TICK<b>3</b>T</span> */}
-        </Link>
-        {safeAuthSignInResponse && (
-          <div className="headerLinks">
-            <Link
-              to="/create-event"
-              className="headerLinkItem"
+        <div className="headerRightContent headerRightMobile">
+          {safeAuthSignInResponse === null || chainId === null ? (
+            <button
+              className="connectBtn"
+              onClick={() => dispatch(handleLogin({ web3AuthModalPack }))}
+            >
+              Connect
+            </button>
+          ) : chainId !== 5 ? (
+            <button
+              className="connectBtn"
+              onClick={handleSwitchNetwork}
               style={{
-                color: isCreatePage && "var(--accent-color)",
+                background: "red",
               }}
             >
-              Create
-            </Link>
-            <Link
-              to="/my-tickets"
-              className="headerLinkItem"
+              Switch to Goerli
+            </button>
+          ) : null}
+        </div>
+      </div>
+    );
+  } else {
+    return (
+      <div className="header">
+        <div className="headerLeft">
+          <Link
+            to="/"
+            className={`headerLogo ${!safeAuthSignInResponse && "mobileLogo"}`}
+          >
+            <img src={logo} alt="logo" draggable="false" />
+            {/* <span>TICK<b>3</b>T</span> */}
+          </Link>
+          {safeAuthSignInResponse && (
+            <div className="headerLinks">
+              <Link
+                to="/create-event"
+                className="headerLinkItem"
+                style={{
+                  color: isCreatePage && "var(--accent-color)",
+                }}
+              >
+                Create
+              </Link>
+              <Link
+                to="/my-tickets"
+                className="headerLinkItem"
+                style={{
+                  color: isMyTicketsPage && "var(--accent-color)",
+                }}
+              >
+                My Tickets
+              </Link>
+            </div>
+          )}
+        </div>
+
+        <div className="headerRightContent">
+          {safeAuthSignInResponse === null || chainId === null ? (
+            <button
+              className="connectBtn"
+              onClick={() => dispatch(handleLogin({ web3AuthModalPack }))}
+            >
+              Connect
+            </button>
+          ) : chainId !== 5 ? (
+            <button
+              className="connectBtn"
+              onClick={handleSwitchNetwork}
               style={{
-                color: isMyTicketsPage && "var(--accent-color)",
+                background: "red",
               }}
             >
-              My Tickets
-            </Link>
-          </div>
-        )}
+              Switch to Goerli
+            </button>
+          ) : (
+            <>
+              <SmartAccountModal />
+              <AccountModal />
+            </>
+          )}
+        </div>
       </div>
-
-      <div className="headerRightContent">
-        {safeAuthSignInResponse === null || chainId === null ? (
-          <button
-            className="connectBtn"
-            onClick={() => dispatch(handleLogin({ web3AuthModalPack }))}
-          >
-            Connect
-          </button>
-        ) : chainId !== 5 ? (
-          <button
-            className="connectBtn"
-            onClick={handleSwitchNetwork}
-            style={{
-              background: "red",
-            }}
-          >
-            Switch to Goerli
-          </button>
-        ) : (
-          <>
-            <SmartAccountModal />
-            <AccountModal />
-          </>
-        )}
-      </div>
-    </div>
-  );
+    );
+  }
 }
 
 export default Header;
