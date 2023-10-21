@@ -3,8 +3,10 @@ import { FaRegCalendarAlt } from "react-icons/fa";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MdOutlineEventNote } from "react-icons/md";
 import { BsTicketPerforated } from "react-icons/bs";
-import "../index.css";
+import { FaRegEye } from "react-icons/fa";
+import { Link } from "react-router-dom";
 import moment from "moment";
+import "../index.css";
 
 function Card({ index, item }) {
   let categoryId = {
@@ -60,6 +62,10 @@ function Card({ index, item }) {
             <span>{categoryId[item.tokenId]}</span>
           )}
         </div>
+            <Link to={`/event/${item.address}`} className="goEvent">
+        <FaRegEye className="goEvenetIcon" />
+      </Link>
+    
       </div>
     </div>
   );

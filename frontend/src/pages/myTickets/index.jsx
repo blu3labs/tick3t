@@ -161,7 +161,7 @@ function MyTickets() {
         </div>
       ) : filteredTickets?.length == 0 ? (
         <div className="noMyTickets">
-          <span>There is no tickets.</span>
+          <span>There are no tickets.</span>
         </div>
       ) : (
         <div className="myTickets">

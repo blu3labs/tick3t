@@ -1,4 +1,7 @@
-import Safe, { EthersAdapter, getSafeContract } from "@safe-global/protocol-kit";
+import Safe, {
+  EthersAdapter,
+  getSafeContract,
+} from "@safe-global/protocol-kit";
 import axios from "axios";
 import { BigNumber, ethers } from "ethers";
 import { hexlify } from "ethers/lib/utils";
@@ -26,7 +29,6 @@ export const writeContractAbstract = async (data) => {
       setChainId,
     } = data;
 
-  
     if (signer == null || safeAuthSignInResponse === null) {
       toast.error("Please connect your wallet");
       toast.dismiss(loadToast);
@@ -70,9 +72,8 @@ export const writeContractAbstract = async (data) => {
       args_ = [];
     }
 
-  
     const callData = contract.interface.encodeFunctionData(method, args);
- 
+
     const ethAdapter = new EthersAdapter({
       ethers,
       signerOrProvider: signer,
@@ -83,18 +84,23 @@ export const writeContractAbstract = async (data) => {
       safeAddress: abstractAccountAddress,
     });
     const safeContract = getSafeContract({
-        ethAdapter,
-        safeVersion:"1.3.0",
-        customSafeAddress:abstractAccountAddress
-    })
-    const isOwner = await (await safeContract).isOwner((await signer.getAddress()));
+      ethAdapter,
+      safeVersion: "1.3.0",
+      customSafeAddress: abstractAccountAddress,
+    });
+    const isOwner = await (
+      await safeContract
+    ).isOwner(await signer.getAddress());
 
-    if (!isOwner)  {
-        
-        return {
-            result:"err",
-            error:"You're not owner of the smart account."
-        }
+    if (!isOwner) {
+    
+
+      toast.error("You're not owner of the smart account.");
+
+      toast.dismiss(loadToast);
+      return "err";
+
+
     }
     const callInformation = {
       to: contract.address,
@@ -102,6 +108,8 @@ export const writeContractAbstract = async (data) => {
       data: callData,
       operation: 0,
     };
+
+    console.log(callInformation, "iso 1");
 
     const relayKit = new GelatoRelayPack(
       "_mhz0rzLWDbZ6_qEdg9c5qF50kgQ_XuKOlTFxXVdIbg_"
@@ -116,11 +124,13 @@ export const writeContractAbstract = async (data) => {
           value: callInformation.value,
           operation: callInformation.operation,
         },
-      ]
+      ],
     });
 
-    normalTx.data.refundReceiver = ethers.constants.AddressZero
-    normalTx.data.gasPrice = "0"
+    console.log(normalTx, "iso 2");
+
+    normalTx.data.refundReceiver = ethers.constants.AddressZero;
+    normalTx.data.gasPrice = "0";
 
     const providerTest = new ethers.providers.Web3Provider(
       web3AuthModalPack?.getProvider()
@@ -130,20 +140,20 @@ export const writeContractAbstract = async (data) => {
     const hash = await safeSDK.getTransactionHash(normalTx);
     let signatureData = "";
 
- 
+    console.log(hash, "iso 3");
+
     try {
       signatureData = await providerTest.send("eth_sign", [
         (await signer.getAddress()).toLowerCase(),
         hexlify(hash),
       ]);
 
-      signedVersion = normalTx
+      signedVersion = normalTx;
       //   signedVersion = await safeSDK.signTransaction(normalTx)
     } catch (err) {
       signedVersion = await safeSDK.signTransaction(normalTx);
       signatureData = signedVersion.encodedSignatures();
     }
-
 
     const responsebundler = await axios.post(
       BUNDLER_API_URL + "/send-tx",
@@ -153,16 +163,40 @@ export const writeContractAbstract = async (data) => {
         address: abstractAccountAddress,
       })
     );
+
+    console.log(responsebundler, "iso 4");
     // const receipt = await tx.wait();
+
+
+    if (
+      responsebundler?.data?.error &&
+      typeof responsebundler?.data?.error === "object"
+    ) {
+      toast.error(
+        responsebundler?.data?.error
+          ? responsebundler?.data?.error.reason !== undefined
+            ? responsebundler?.data?.error.reason?.includes(
+                "execution reverted"
+              )
+              ? responsebundler?.data?.error.reason?.split(
+                  "execution reverted:"
+                )[1]
+              : responsebundler?.data?.error.reason
+            : responsebundler?.data?.error.message !== undefined
+            ? responsebundler?.data?.error.message ===
+              "Internal JSON-RPC error."
+              ? "Insufficient Balance"
+              : responsebundler?.data?.error.message
+            : "Something went wrong"
+          : "Something went wrong"
+      );
+      toast.dismiss(loadToast);
+      return "err";
+    }
+
+
     toast.success(message ?? "Transaction successful");
     toast.dismiss(loadToast);
-
-    if(responsebundler?.data?.error && typeof responsebundler?.data?.error === "object") {
-        return {
-            result:"err",
-            error:responsebundler?.data?.error?.message
-        }
-    }
     return responsebundler?.data;
   } catch (error) {
     console.log(error);

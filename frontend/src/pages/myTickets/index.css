@@ -175,6 +175,25 @@
   width: calc(100% - 22px);
 }
 
+
+.goEvent{
+  text-decoration: none;
+  position: absolute;
+  right: 16px;
+  bottom: 12px;
+}
+.goEvenetIcon{
+  width: 24px;
+  height: auto;
+  color: #000;
+  cursor: pointer;
+}
+
+.goEvenetIcon:hover{
+  color: var(--accent-color);
+
+}
+
 @media only screen and (max-width: 768px) {
   .myTickets {
     grid-template-columns: 1fr;
@@ -216,5 +235,13 @@
     left: auto;
     top: -11px;
     bottom: auto;
+  }
+
+  .goEvent{
+    right: 8px;
+    bottom: 0px;
+  }
+  .goEvenetIcon{
+    width: 24px;
   }
 }
