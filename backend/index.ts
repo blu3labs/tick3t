@@ -21,7 +21,7 @@ app.get("/event/:id", async (req, res) => {
   const address = req.params.id;
   const eventData = await event?.First({
     where: {
-      address: address,
+      address: ethers.utils.getAddress(address),
     },
   });
   if (!eventData) {
@@ -38,7 +38,6 @@ app.get("/event/:id", async (req, res) => {
 });
 
 app.get("/all/events", async (req, res) => {
-
   const eventData = await event?.All({});
   // reverse the array
 
