@@ -7,11 +7,22 @@ import { readContract } from "../../utils/readContract";
 import moment from "moment";
 import "./index.css";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
 
 function MyTickets() {
   const [tab, setTab] = useState("All");
 
-  const { activeAddress } = useSelector((state) => state.auth);
+  const { activeAddress, safeAuthSignInResponse } = useSelector(
+    (state) => state.auth
+  );
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!activeAddress || !safeAuthSignInResponse) {
+      navigate("/");
+    }
+  }, [activeAddress, safeAuthSignInResponse]);
 
   const getCurrentTime = () => {
     const utcDate = moment.utc().format();
@@ -20,7 +31,6 @@ function MyTickets() {
   };
 
   const [myTickets, setMyTickets] = useState(null);
-
 
   const getMyTickets = async () => {
     if (!activeAddress) {
@@ -131,8 +141,7 @@ function MyTickets() {
 
     let interval = setInterval(() => {
       getMyTickets();
-    }
-    , 7_000);
+    }, 7_000);
 
     return () => clearInterval(interval);
   }, [activeAddress]);
@@ -172,7 +181,6 @@ function MyTickets() {
                 index={index}
                 item={item}
                 getCurrentTime={getCurrentTime()}
-      
               />
             );
           })}

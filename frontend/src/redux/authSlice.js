@@ -4,7 +4,6 @@ const initialState = {
   provider: null,
   signer: null,
   chainId: null,
-  walletAddress: null,
   web3AuthModalPack: null,
   activeAddress: localStorage.getItem("activeAddress") || null,
   isAbstract: localStorage.getItem("abstractAccount") || false,
