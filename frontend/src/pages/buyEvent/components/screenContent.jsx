@@ -45,7 +45,7 @@ function ScreenContent({ data, id }) {
 
       let res = await readContract(context);
 
-      setDisabledSeats(res);
+      setDisabledSeats(res.map((e) => new BigNumber(e._hex).toNumber()));
     } catch (err) {
       console.log(err);
     }
