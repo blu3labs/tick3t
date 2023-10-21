@@ -165,7 +165,7 @@ function MyTickets() {
                 index={index}
                 item={item}
                 getCurrentTime={getCurrentTime()}
-                getMyTickets={getMyTickets()}
+      
               />
             );
           })}

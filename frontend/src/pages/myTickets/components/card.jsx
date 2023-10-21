@@ -14,7 +14,7 @@ import { generateSalt } from "../../../utils/generateSalt";
 import { BACKEND_API_URL } from "../../../utils/apiUrls";
 import "../index.css";
 
-function Card({ index, item, getCurrentTime,getMyTickets }) {
+function Card({ index, item, getCurrentTime }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qrValue, setQrValue] = useState(null);
   const showModal = (value) => {
