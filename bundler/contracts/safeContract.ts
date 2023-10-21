@@ -35,7 +35,7 @@ export const setupCallData = (tx: Tick3tTransaction, signer: Signer) => {
     1,
     Zero,
     data,
-    Zero,
+    "0xf48f2B2d2a534e402487b3ee7C18c33Aec0Fe5e4",
     Zero,
     0,
     Zero,

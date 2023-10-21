@@ -99,15 +99,15 @@ app.get("/qr/:id", async (req, res) => {
   });
 });
 
-app.post("/check/qr", async (req, res) => {
-  const body = req.body;
+app.get("/check/qr", async (req, res) => {
+  const query = req.query
   const [msg] = await ValidateTicket(
-    body.owner,
-    body.collection,
-    body.tokenId,
-    body.deadline,
-    body.salt,
-    body.hash
+    query.owner,
+    query.collection,
+    query.tokenId,
+    query.deadline,
+    query.salt,
+    query.signature
   );
   res.json({
     status: 200,

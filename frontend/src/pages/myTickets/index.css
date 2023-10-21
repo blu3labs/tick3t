@@ -194,6 +194,28 @@
 
 }
 
+.qrModal{
+
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.ant-qrcode{
+  width: 250px !important;
+  height: 250px !important;
+  border: none !important;
+  padding: 0;
+}
+
+.ant-qrcode canvas{
+  width: 90% !important;
+  height: 90% !important;
+}
+
 @media only screen and (max-width: 768px) {
   .myTickets {
     grid-template-columns: 1fr;

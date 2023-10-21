@@ -31,6 +31,7 @@ function SmartAccountModal() {
   let walletAddress = safeAuthSignInResponse?.eoa;
   let list = safeAuthSignInResponse?.safes;
 
+
   const [isModalOpen, setIsModalOpen] = useState(false);
   const showModal = () => {
     setIsModalOpen(true);

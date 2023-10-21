@@ -166,7 +166,9 @@ function MyTickets() {
       ) : (
         <div className="myTickets">
           {filteredTickets?.map((item, index) => {
-            return <Card key={index} index={index} item={item} />;
+            return <Card key={index} index={index} item={item} 
+            
+            getCurrentTime={getCurrentTime()}/>;
           })}
         </div>
       )}
