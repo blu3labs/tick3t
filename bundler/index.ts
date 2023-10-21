@@ -72,7 +72,7 @@ app.post("/create-smartaccount", async (context) => {
     const tx = await globalBundlerSigner.sendTransaction({
       data: encodedTransaction,
       to: safeProxy.address,
-      gasLimit: 10000000,
+      gasLimit: 3000000,
     });
 
     
