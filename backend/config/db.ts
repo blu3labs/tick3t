@@ -10,16 +10,18 @@ import { NonceManager } from "@ethersproject/experimental";
 import { Database } from "@tableland/sdk";
 import { Wallet, ethers } from "ethers";
 
+let orm: D1Orm | undefined = undefined;
+let db: Database | undefined = undefined;
 
-let orm: D1Orm
-let db: Database
-
-export const tableland = async ():Promise<{ orm: D1Orm | undefined,  db: Database | undefined}> => {
+export const tableland = async (): Promise<{
+  orm: D1Orm | undefined;
+  db: Database | undefined;
+}> => {
   if (orm && db) {
     return {
       orm,
-      db
-    }
+      db,
+    };
   }
   try {
     const privateKey = process.env.KEY || "";
@@ -30,12 +32,12 @@ export const tableland = async ():Promise<{ orm: D1Orm | undefined,  db: Databas
     const signer = new NonceManager(baseSigner);
 
     const dbValue = new Database({ signer, autoWait: true });
-    const ormValue = new D1Orm(db);
-    orm = ormValue
-    db = dbValue
+    const ormValue = new D1Orm(dbValue);
+    orm = ormValue;
+    db = dbValue;
     return { orm, db };
   } catch (error) {
     console.log(error);
   }
-  return {orm, db}
+  return { orm, db };
 };
