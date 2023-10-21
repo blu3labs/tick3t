@@ -8,8 +8,9 @@ import { setChainId } from "@/redux/authSlice";
 import { erc1155ABI } from "@/contract";
 import { writeContract } from "@/utils/writeContract";
 import { ethers } from "ethers";
-import "../index.css";
+import { Web3Provider } from "@ethersproject/providers";
 import { writeContractAbstract } from "../../../utils/writeContractAbstract";
+import "../index.css";
 
 function StageContent({ data, id }) {
   let serviceFee = 0.0001;
@@ -182,6 +183,20 @@ function StageContent({ data, id }) {
         } else {
           buyerWallets.push(wallets[i].address);
           buyerWalletsTicketAmount.push(1);
+        }
+      }
+
+      if (isAbstract) {
+        const provider = new Web3Provider(web3AuthModalPack?.getProvider());
+
+        const balance = await provider.getBalance(activeAddress);
+
+        if (balance.lt(ethers.utils.parseEther(totalCost.toString(10)))) {
+          toast.error(
+            "Transaction failed. Please check the balance of your smart account."
+          );
+          setLoading(false);
+          return;
         }
       }
 

@@ -175,16 +175,16 @@ function CreateEvent() {
             toast.error("Transaction failed: " + res.error);
             return;
           } else {
-            for (let i = 0; i < res?.logs?.length; i++) {
+            for (let i = 0; i < res?.tx?.logs?.length; i++) {
               if (
-                res?.logs[i]?.topics[0] ==
+                res?.tx?.logs[i]?.topics[0] ==
                   "0x4260f8c98a0b70328f2767f65cae27a2f61dcb6c94b0975f77af1c1440ece982" ||
-                res?.logs[i]?.topics[0] ==
+                res?.tx?.logs[i]?.topics[0] ==
                   "0xd19c82cdcad5bee22fef91dc8eedbc9bdf6c70752b0acc18670e5e0b64eb9b59"
               ) {
                 let decoded = ethers.utils.defaultAbiCoder.decode(
                   ["address"],
-                  res?.logs[i]?.topics[1]
+                  res?.tx?.logs[i]?.topics[1]
                 );
                 address_ = decoded?.[0];
                 break;

@@ -8,8 +8,9 @@ import { ethers } from "ethers";
 import { writeContract } from "@/utils/writeContract";
 import { useNavigate } from "react-router-dom";
 import { readContract } from "@/utils/readContract";
-import "../index.css";
 import { writeContractAbstract } from "../../../utils/writeContractAbstract";
+import { Web3Provider } from "@ethersproject/providers";
+import "../index.css";
 
 function ScreenContent({ data, id }) {
 
@@ -127,7 +128,18 @@ function ScreenContent({ data, id }) {
 
     let args_ = [idArgs, walletArgs];
 
-   
+    if (isAbstract) {
+      const provider = new Web3Provider(web3AuthModalPack?.getProvider());
+      const balance = await provider.getBalance(activeAddress);
+
+      if (balance.lt(ethers.utils.parseEther(totalCost.toString(10)))) {
+        toast.error(
+          "Transaction failed. Please check the balance of your smart account."
+        );
+        setLoading(false);
+        return;
+      }
+    }
 
  
 
