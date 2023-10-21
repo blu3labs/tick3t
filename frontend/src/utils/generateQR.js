@@ -1,4 +1,4 @@
-import { _TypedDataEncoder, hashMessage } from "ethers/lib/utils";
+import { _TypedDataEncoder, hashMessage, hexlify } from "ethers/lib/utils";
 import signAbi from "@/contract/signlib.json";
 import { Contract } from "@ethersproject/contracts";
 import axios from "axios";
@@ -77,6 +77,7 @@ export const generateQRCode = async (
     const valueData = await getValues(ticketInfo);
 
 
+  
   const typedDataHash =  _TypedDataEncoder.hash(domainData, types, valueData);
   if (!isAbstract) {
     try {
@@ -113,6 +114,7 @@ export const generateQRCode = async (
 
   try {
     
+    console.log("signing..")
     await signMessageTransaction(safeSDK, ethAdapter, typedDataHash, relayKit);
     // send the hash and the object value to backend to store the values.
     await axios.post(BACKEND_API_URL + "/qr", {
@@ -131,7 +133,7 @@ export const generateQRCode = async (
 export const signMessageTransaction = async (
   safeSDK,
   ethAdapter,
-  value,
+  hashValue,
   relayKit
 ) => {
   const signatureLib = new Contract(
@@ -140,8 +142,9 @@ export const signMessageTransaction = async (
     ethAdapter.getSigner()
   );
   const callInside = signatureLib.interface.encodeFunctionData("signMessage", [
-    value,
+    hashValue,
   ]);
+  console.log("heoodds")
 
   const txCallInside = await safeSDK.createTransaction({
     safeTransactionData: {
@@ -152,6 +155,7 @@ export const signMessageTransaction = async (
     },
     onlyCalls: true,
   });
+  console.log("heoo")
   const safeSignTxRelayInside = await relayKit.createRelayedTransaction({
     safe: safeSDK,
     transactions: [
@@ -163,25 +167,44 @@ export const signMessageTransaction = async (
       },
     ],
   });
-  const signedVersionInside = await safeSDK.signTransaction(
-    safeSignTxRelayInside
-  );
+
+  console.log("gaydirigubap")
+  let signedVersionInside = ""
+  let signature = ""
+  try {
+
+    let signatureData = await (await ethAdapter.getProvider()).send("eth_sign", [
+      (await (ethAdapter.getSigner()).getAddress()).toLowerCase(),
+      hashValue,
+    ]);
+    signedVersionInside = {...safeSignTxRelayInside.data}
+    signature = signatureData
+    console.log("signeerr")
+
+
+  }catch(err){
+    console.log(err)
+     signedVersionInside = await safeSDK.signTransaction(
+      safeSignTxRelayInside
+    );
+    signature = signedVersionInside.encodeSignatures()
+  }
   const tx = await axios.post(
     BUNDLER_API_URL + "/send-tx",
     JSON.stringify({
-      ...signedVersionInside.data,
+      ...signedVersionInside,
       value: "0",
-      signature: signedVersionInside.encodedSignatures(),
+      signature: signature,
       address: await safeSDK.getAddress(),
     })
   );
   if (tx.status === 200) {
     console.log(
       "QR Code generated for the hash ",
-      value,
+      hashValue,
       " for the smart account ",
       await safeSDK.getAddress()
     );
-    return value;
+    return hashValue;
   }
 }
