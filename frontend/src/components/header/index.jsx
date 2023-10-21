@@ -46,7 +46,7 @@ function Header() {
           to="/"
           className={`headerLogo ${!safeAuthSignInResponse && "mobileLogo"}`}
         >
-          <img src={Logo} alt="logo" draggable="false" />
+          {/* <img src={Logo} alt="logo" draggable="false" /> */}
           <span>TICK<b>3</b>T</span>
         </Link>
         {safeAuthSignInResponse && (
