@@ -10,14 +10,18 @@ import moment from "moment";
 import { BACKEND_API_URL } from "../../utils/apiUrls";
 
 import "./index.css";
+import { useSelector } from "react-redux";
 
 function Event() {
   const { id } = useParams();
 
+  const { safeAuthSignInResponse, activeAddress } = useSelector(
+    (state) => state.auth
+  );
+
   const [data, setData] = useState(null);
   const getEvent = async () => {
     try {
-    
       const { data: res } = await axios.get(`${BACKEND_API_URL}/event/${id}`);
 
       if (res?.status == 200) {
@@ -53,14 +57,17 @@ function Event() {
     return seconds;
   };
 
-
   let buyButtonDisabled = () => {
+    if (!safeAuthSignInResponse || !activeAddress) {
+      return true;
+    }
+
     if (parseFloat(data?.date) < getCurrentTime()) {
       return true;
     } else {
       return false;
     }
-  }
+  };
 
   if (data === null) {
     return (
@@ -150,22 +157,16 @@ function Event() {
                 <span>Seating Plane</span>
               </div>
 
-
-             
-
               <PreviewLocation venue={data.venue} minHeight={"150px"} />
             </div>
 
-            <Link 
-            to={
-              buyButtonDisabled() ? "#" :
-              `/event/${id}/buy`} 
-            
-            className="buyBtn"
+            <Link
+              to={buyButtonDisabled() ? "#" : `/event/${id}/buy`}
+              className="buyBtn"
               disabled={buyButtonDisabled()}
               style={{
                 cursor: buyButtonDisabled() ? "not-allowed" : "pointer",
-                opacity: buyButtonDisabled() && "0.5" ,
+                opacity: buyButtonDisabled() && "0.5",
               }}
             >
               Buy Ticket

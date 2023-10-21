@@ -12,7 +12,6 @@ import "../index.css";
 import { writeContractAbstract } from "../../../utils/writeContractAbstract";
 
 function StageContent({ data, id }) {
-
   let serviceFee = 0.0001;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -25,6 +24,8 @@ function StageContent({ data, id }) {
     safeAuthSignInResponse,
     web3AuthModalPack,
   } = useSelector((state) => state.auth);
+
+
 
   const [category, setCategory] = useState(null);
   const [quantity, setQuantity] = useState(1);
@@ -151,8 +152,6 @@ function StageContent({ data, id }) {
 
     value = new BigNumber(categoryPrice[category]).multipliedBy(quantity);
 
-
-
     setTotalTicketCost(value.toString(10));
 
     value = new BigNumber(value).plus(serviceFee);
@@ -192,10 +191,6 @@ function StageContent({ data, id }) {
         buyerWalletsTicketAmount,
       ];
 
-      
-
-     
-
       let context = {
         address: id,
         abi: erc1155ABI,
@@ -211,8 +206,6 @@ function StageContent({ data, id }) {
         dispatch,
         setChainId: setChainId,
       };
-
-   
 
       setLoading(true);
 

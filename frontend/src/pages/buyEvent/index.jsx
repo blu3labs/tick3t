@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from "react";
-import { useParams } from "react-router-dom";
+import { useNavigate, useParams } from "react-router-dom";
 import { events } from "../../utils/events";
 import { FaRegCalendarAlt } from "react-icons/fa";
 import { HiOutlineLocationMarker } from "react-icons/hi";
@@ -10,9 +10,23 @@ import ScreenContent from "./components/screenContent";
 import { BACKEND_API_URL } from "@/utils/apiUrls";
 import axios from "axios";
 import moment from "moment";
+import { useSelector } from "react-redux";
 
 function BuyEvent() {
   const { id } = useParams();
+
+  const { activeAddress, safeAuthSignInResponse } = useSelector(
+    (state) => state.auth
+  );
+
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!activeAddress || !safeAuthSignInResponse) {
+      navigate("/event/" + id);
+    }
+  }, [activeAddress, safeAuthSignInResponse]);
+
 
   const [data, setData] = useState(null);
   const getEvent = async () => {
@@ -29,7 +43,6 @@ function BuyEvent() {
       setData(false);
     }
   };
-
 
   useEffect(() => {
     getEvent();
@@ -106,9 +119,9 @@ function BuyEvent() {
         </div>
 
         {data.venue == "The Avenue, Paris" ? (
-          <StageContent data={data} id={id}/>
+          <StageContent data={data} id={id} />
         ) : (
-          <ScreenContent data={data} id={id}/>
+          <ScreenContent data={data} id={id} />
         )}
       </div>
     );
