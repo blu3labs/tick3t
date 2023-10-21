@@ -14,6 +14,12 @@ const app: express.Application = express();
 app.use(cors());
 app.use(express.json());
 const { orm, db } = await tableland();
+if (!orm || !db) {
+  app.use((req, res) => {
+    res.json({ message: "Error on database connection" });
+    return;
+  });
+}
 const event = await eventModel(orm!, db);
 const qr = await qrModel(orm!, db);
 
@@ -141,7 +147,7 @@ app.get("/check/qr", async (req, res) => {
     const query = req.query;
     const msg = await ValidateTicket(
       query.owner as string,
-      query.collection as string, 
+      query.collection as string,
       query.tokenId as string,
       query.deadline as string,
       query.salt as string,
