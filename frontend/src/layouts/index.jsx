@@ -112,6 +112,8 @@ export default function MainLayout() {
     dispatch(walletController());
   }, [safeAuthSignInResponse]);
 
+
+
   useEffect(() => {
     if (web3AuthModalPack && safeAuthSignInResponse) {
       try {

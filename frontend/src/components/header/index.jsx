@@ -37,6 +37,8 @@ function Header() {
     }
   };
 
+  console.log("safeAuthSignInResponse", safeAuthSignInResponse);
+
   return (
     <div className="header">
       <div className="headerLeft">
