@@ -21,6 +21,7 @@ function MyTickets() {
 
   const [myTickets, setMyTickets] = useState(null);
 
+
   const getMyTickets = async () => {
     if (!activeAddress) {
       setMyTickets(false);
@@ -41,10 +42,7 @@ function MyTickets() {
         let arr_ = [];
 
         for (let i = 0; i < res?.length; i++) {
-     
           let backRes = await axios.get(res?.[i]?.tokenUri);
-
-      
 
           if (backRes?.status == 200) {
             let backdata = backRes?.data?.data;
@@ -74,8 +72,6 @@ function MyTickets() {
 
         if (arr_?.length > 0) {
           for (let i = 0; i < arr_?.length; i++) {
-        
-
             if (arr_?.[i]?.totalTicket > 1) {
               let usedTicket_ = 0;
 
@@ -119,8 +115,7 @@ function MyTickets() {
           }
         }
 
-
-        arr2 = arr2?.reverse()
+        arr2 = arr2?.reverse();
         setMyTickets(arr2);
       } else {
         setMyTickets([]);
@@ -134,8 +129,6 @@ function MyTickets() {
   useEffect(() => {
     getMyTickets();
   }, [activeAddress]);
-
-
 
   let filteredTickets = myTickets
     ? myTickets?.filter((item) => {
@@ -166,9 +159,15 @@ function MyTickets() {
       ) : (
         <div className="myTickets">
           {filteredTickets?.map((item, index) => {
-            return <Card key={index} index={index} item={item} 
-            
-            getCurrentTime={getCurrentTime()}/>;
+            return (
+              <Card
+                key={index}
+                index={index}
+                item={item}
+                getCurrentTime={getCurrentTime()}
+                getMyTickets={getMyTickets()}
+              />
+            );
           })}
         </div>
       )}

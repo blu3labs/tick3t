@@ -14,16 +14,18 @@ import { generateSalt } from "../../../utils/generateSalt";
 import { BACKEND_API_URL } from "../../../utils/apiUrls";
 import "../index.css";
 
-function Card({ index, item, getCurrentTime }) {
+function Card({ index, item, getCurrentTime,getMyTickets }) {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [qrValue, setQrValue] = useState(null);
   const showModal = (value) => {
     setQrValue(value);
     setIsModalOpen(true);
   };
-  const handleCancel = () => {
+  const handleCancel = async () => {
+    await getMyTickets();
     setQrValue(null);
     setIsModalOpen(false);
+
   };
 
   let categoryId = {
@@ -75,7 +77,6 @@ function Card({ index, item, getCurrentTime }) {
         ticketInfo.salt + "&deadline=" + currentTime 
         + "&signature=" + res;
         
-
         showModal(api);
       }
     } catch (err) {
