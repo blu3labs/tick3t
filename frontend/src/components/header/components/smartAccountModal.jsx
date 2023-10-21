@@ -117,10 +117,10 @@ function SmartAccountModal() {
       setLoading(false);
       const newAddress = request?.data?.smartAccountAddress;
       dispatch(
-        setSafeAuthSignInResponse((oldData) => ({
+        setSafeAuthSignInResponse({
           eoa: signeAddr,
-          safes: [newAddress, ...oldData?.safes],
-        }))
+          safes: [newAddress, ...safeAuthSignInResponse?.safes],
+        })
       );
       toast.success(
         "Smart Account Created:" +
