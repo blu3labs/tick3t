@@ -9,7 +9,10 @@ const initialState = {
   activeAddress: localStorage.getItem("activeAddress") || null,
   isAbstract: localStorage.getItem("abstractAccount") || false,
   safeAuthSignInResponse:
-    JSON.parse(localStorage.getItem("safe-auth-sign-in-response")) || null,
+  localStorage.getItem("safe-auth-sign-in-response") !== "null"
+  ? JSON.parse(
+    localStorage.getItem("safe-auth-sign-in-response")
+    ) : null
 };
 
 export const handleLogin = createAsyncThunk(
@@ -65,17 +68,15 @@ const authSlice = createSlice({
 
     setActiveAddress: (state, action) => {
       state.activeAddress = action.payload;
-    localStorage.setItem("activeAddress", action.payload);
-
-
+      localStorage.setItem("activeAddress", action.payload);
     },
     setSafeAuthSignInResponse: (state, action) => {
-        state.safeAuthSignInResponse = action.payload;
-        localStorage.setItem(
-          "safe-auth-sign-in-response",
-          JSON.stringify(action.payload)
-        );
-        },
+      state.safeAuthSignInResponse = action.payload;
+      localStorage.setItem(
+        "safe-auth-sign-in-response",
+        JSON.stringify(action.payload)
+      );
+    },
 
     setWeb3AuthModalPack: (state, action) => {
       state.web3AuthModalPack = action.payload;
@@ -85,14 +86,14 @@ const authSlice = createSlice({
       let localStrgAbstract = localStorage.getItem("abstractAccount");
       let localStrgActive = localStorage.getItem("activeAddress");
 
-      if (localStrgAbstract) {
+      if (localStrgAbstract && localStrgAbstract !== "null") {
         state.isAbstract = localStrgAbstract === "true" ? true : false;
       } else {
         state.isAbstract = false;
         localStorage.setItem("abstractAccount", false);
       }
 
-      if (localStrgActive) {
+      if (localStrgActive && localStrgActive !== "null") {
         state.activeAddress = localStrgActive;
       } else {
         state.activeAddress = state.safeAuthSignInResponse?.eoa || null;
@@ -109,17 +110,24 @@ const authSlice = createSlice({
     }),
   extraReducers(builder) {
     builder.addCase(handleLogin.fulfilled, (state, action) => {
+      if (!action.payload) return;
       state.safeAuthSignInResponse = action.payload;
       let wallet = action.payload?.eoa;
 
       let localWallet = localStorage.getItem("walletAddress");
-      if (localWallet) {
+      if (localWallet && localWallet !== "null") {
         if (wallet?.toLowerCase() !== localWallet?.toLowerCase()) {
           state.activeAddress = wallet;
           state.isAbstract = false;
           localStorage.setItem("abstractAccount", false);
           localStorage.setItem("activeAddress", wallet);
         }
+      }
+
+      let localActiveAddress = localStorage.getItem("activeAddress");
+
+      if (!localActiveAddress || localActiveAddress === "null") {
+        localStorage.setItem("activeAddress", wallet);
       }
 
       localStorage.setItem("walletAddress", wallet);

@@ -1,4 +1,4 @@
-export const factoryAddress = "0x5f381E56425876281E96545939c4f7452aC12760";
+export const factoryAddress = "0x08F52Aa7523076B3F045Af661D089a2E8107acc8";
 
 export const factoryABI = [
   {
@@ -216,7 +216,7 @@ export const factoryABI = [
         type: "address",
       },
     ],
-    name: "getUserTicket",
+    name: "getUserTickets",
     outputs: [
       {
         components: [
