@@ -26,7 +26,7 @@ export const writeContractAbstract = async (data) => {
       setChainId,
     } = data;
 
-    console.log("data", data);
+  
     if (signer == null || safeAuthSignInResponse === null) {
       toast.error("Please connect your wallet");
       toast.dismiss(loadToast);
@@ -88,7 +88,7 @@ export const writeContractAbstract = async (data) => {
         customSafeAddress:abstractAccountAddress
     })
     const isOwner = await (await safeContract).isOwner((await signer.getAddress()));
-    console.log(isOwner)
+
     if (!isOwner)  {
         
         return {

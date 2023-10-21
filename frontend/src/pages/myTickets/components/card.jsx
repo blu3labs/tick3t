@@ -4,17 +4,27 @@ import { HiOutlineLocationMarker } from "react-icons/hi";
 import { MdOutlineEventNote } from "react-icons/md";
 import { BsTicketPerforated } from "react-icons/bs";
 import "../index.css";
+import moment from "moment";
 
 function Card({ index, item }) {
+  let categoryId = {
+    1: "Diamond",
+    2: "Gold",
+    3: "General",
+  };
+
+  let generateDisabled =
+    item.status?.toLowerCase() == "past" || item.usedTicket == 1;
+
   return (
     <div className="myTicketsCard" key={index}>
       <div class="myTicketsCardLeft">
-        <img src={item.image} alt={item.title} />
+        <img src={item.image} alt={item.title} draggable="false" />
         <button
-          disabled={item.status === "past"}
+          disabled={generateDisabled}
           style={{
-            cursor: item.status === "past" ? "not-allowed" : "pointer",
-            opacity: item.status === "past" ? "0.5" : "1",
+            cursor: generateDisabled ? "not-allowed" : "pointer",
+            opacity: generateDisabled ? "0.5" : "1",
           }}
         >
           Generate QR
@@ -30,19 +40,25 @@ function Card({ index, item }) {
         <div className="myTicketsCardItem">
           <FaRegCalendarAlt className="myTicketsCardIcon" />
           <span>
-            {item.date}
-            {item.clock ? ", " + item.clock : ""}
+            {moment(item.date * 1000)
+              .utc()
+              .format("DD.MM.YYYY, HH:mm")}
           </span>
         </div>
 
         <div className="myTicketsCardItem">
           <HiOutlineLocationMarker className="myTicketsCardIcon" />
-          <span>{item.location}</span>
+          <span>{item.venue}</span>
         </div>
 
         <div className="myTicketsCardItem">
           <BsTicketPerforated className="myTicketsCardIcon" />
-          <span>{item.seat}</span>
+
+          {item.venue == "Theatre Hall, Istanbul" ? (
+            <span>Seat {item.tokenId}</span>
+          ) : (
+            <span>{categoryId[item.tokenId]}</span>
+          )}
         </div>
       </div>
     </div>

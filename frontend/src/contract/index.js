@@ -216,7 +216,7 @@ export const factoryABI = [
         type: "address",
       },
     ],
-    name: "getUserTickets",
+    name: "getUserTicket",
     outputs: [
       {
         components: [

@@ -12,7 +12,7 @@ import "../index.css";
 import { writeContractAbstract } from "../../../utils/writeContractAbstract";
 
 function ScreenContent({ data, id }) {
-  console.log(data);
+
 
   const navigate = useNavigate();
 
@@ -127,9 +127,9 @@ function ScreenContent({ data, id }) {
 
     let args_ = [idArgs, walletArgs];
 
-    console.log(args_, "args");
+   
 
-    console.log(ethers.utils.parseEther(totalCost.toString(10)), "value");
+ 
 
     let context = {
       address: id,
@@ -147,7 +147,7 @@ function ScreenContent({ data, id }) {
       setChainId: setChainId,
     };
 
-    console.log(context, "context");
+  
 
     setLoading(true);
     try {
@@ -244,7 +244,7 @@ function ScreenContent({ data, id }) {
     setSeats(tempWallets);
   };
 
-  console.log(seats);
+  
 
   return (
     <div className="eventBuyBottomSection">

@@ -114,11 +114,13 @@ export default function MainLayout() {
 
 
 
+
   useEffect(() => {
     if (web3AuthModalPack && safeAuthSignInResponse) {
       try {
         let provider_ = new Web3Provider(web3AuthModalPack?.getProvider());
         dispatch(setProvider(provider_));
+        
       } catch (err) {
         console.log(err);
         dispatch(setProvider(null));

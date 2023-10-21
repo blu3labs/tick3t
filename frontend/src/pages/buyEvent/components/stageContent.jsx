@@ -12,7 +12,7 @@ import "../index.css";
 import { writeContractAbstract } from "../../../utils/writeContractAbstract";
 
 function StageContent({ data, id }) {
-  console.log(data);
+
   let serviceFee = 0.0001;
   const dispatch = useDispatch();
   const navigate = useNavigate();
@@ -151,7 +151,7 @@ function StageContent({ data, id }) {
 
     value = new BigNumber(categoryPrice[category]).multipliedBy(quantity);
 
-    console.log(value.toString(10), "value");
+
 
     setTotalTicketCost(value.toString(10));
 
@@ -192,9 +192,9 @@ function StageContent({ data, id }) {
         buyerWalletsTicketAmount,
       ];
 
-      console.log(args_, "args_");
+      
 
-      console.log(ethers.utils.parseEther(totalCost.toString(10)), "value");
+     
 
       let context = {
         address: id,
@@ -212,7 +212,7 @@ function StageContent({ data, id }) {
         setChainId: setChainId,
       };
 
-      console.log(context, "context");
+   
 
       setLoading(true);
 

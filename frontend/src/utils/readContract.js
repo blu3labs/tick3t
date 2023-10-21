@@ -42,8 +42,9 @@ export const readContract = async (data) => {
       .catch((error) => {
         console.log(error);
       });
-
+   
     const result_ = await contract?.[method](...args_);
+   
 
     return result_;
   } catch (error) {
