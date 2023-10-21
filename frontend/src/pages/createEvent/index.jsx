@@ -162,27 +162,28 @@ function CreateEvent() {
       let address_ = "";
 
       if (isAbstract) {
-        //* create event on abstract
-        console.log("abstract account...");
+     
         try {
           let res = await writeContractAbstract(context);
 
-          console.log(res.result, "res"); //todo
+     
 
-          if (res.result === "err") {
+          if (res?.result === "err" || res === "err") {
             setLoading(false);
             toast.dismiss()
             toast.error("Transaction failed: "+ res.error);
             return;
           } else {
             
-            console.log(res ,"hello");
-            setLoading(false)
+        
+           
           
             for (let i = 0; i < res?.logs?.length; i++) {
               if (
                 res?.logs[i]?.topics[0] ==
-                "0x4260f8c98a0b70328f2767f65cae27a2f61dcb6c94b0975f77af1c1440ece982"
+                "0x4260f8c98a0b70328f2767f65cae27a2f61dcb6c94b0975f77af1c1440ece982" || 
+                res?.logs[i]?.topics[0] == 
+                "0xd19c82cdcad5bee22fef91dc8eedbc9bdf6c70752b0acc18670e5e0b64eb9b59"
               ) {
                 let decoded = ethers.utils.defaultAbiCoder.decode(
                   ["address"],
