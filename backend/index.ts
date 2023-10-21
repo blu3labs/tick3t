@@ -72,6 +72,7 @@ app.post("/qr", async (req, res) => {
   const body = req.body;
   const createEvent = await qr?.InsertOne({
     hash: body.hash,
+    signature: body.signature,
     owner: body.owner,
     collection: body.collection,
     tokenId: body.tokenId,
