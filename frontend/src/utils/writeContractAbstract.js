@@ -1,6 +1,6 @@
-import Safe, { EthersAdapter } from "@safe-global/protocol-kit";
+import Safe, { EthersAdapter, getSafeContract } from "@safe-global/protocol-kit";
 import axios from "axios";
-import { ethers } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { hexlify } from "ethers/lib/utils";
 import { toast } from "react-hot-toast";
 import { BUNDLER_API_URL } from "./apiUrls";
@@ -72,7 +72,7 @@ export const writeContractAbstract = async (data) => {
 
   
     const callData = contract.interface.encodeFunctionData(method, args);
-
+ 
     const ethAdapter = new EthersAdapter({
       ethers,
       signerOrProvider: signer,
@@ -82,9 +82,23 @@ export const writeContractAbstract = async (data) => {
       ethAdapter,
       safeAddress: abstractAccountAddress,
     });
+    const safeContract = getSafeContract({
+        ethAdapter,
+        safeVersion:"1.3.0",
+        customSafeAddress:abstractAccountAddress
+    })
+    const isOwner = await (await safeContract).isOwner((await signer.getAddress()));
+    console.log(isOwner)
+    if (!isOwner)  {
+        
+        return {
+            result:"err",
+            error:"You're not owner of the smart account."
+        }
+    }
     const callInformation = {
       to: contract.address,
-      value: val_,
+      value: BigNumber.from(val_).toString(),
       data: callData,
       operation: 0,
     };
@@ -102,9 +116,11 @@ export const writeContractAbstract = async (data) => {
           value: callInformation.value,
           operation: callInformation.operation,
         },
-      ],
-      onlyCalls: true,
+      ]
     });
+
+    normalTx.data.refundReceiver = ethers.constants.AddressZero
+    normalTx.data.gasPrice = "0"
 
     const providerTest = new ethers.providers.Web3Provider(
       web3AuthModalPack?.getProvider()
@@ -121,11 +137,13 @@ export const writeContractAbstract = async (data) => {
         hexlify(hash),
       ]);
 
+      signedVersion = normalTx
       //   signedVersion = await safeSDK.signTransaction(normalTx)
     } catch (err) {
       signedVersion = await safeSDK.signTransaction(normalTx);
       signatureData = signedVersion.encodedSignatures();
     }
+
 
     const responsebundler = await axios.post(
       BUNDLER_API_URL + "/send-tx",
@@ -139,8 +157,13 @@ export const writeContractAbstract = async (data) => {
     toast.success(message ?? "Transaction successful");
     toast.dismiss(loadToast);
 
-
-    return responsebundler?.data?.tx;
+    if(responsebundler?.data?.error && typeof responsebundler?.data?.error === "object") {
+        return {
+            result:"err",
+            error:responsebundler?.data?.error?.message
+        }
+    }
+    return responsebundler?.data;
   } catch (error) {
     console.log(error);
     toast.error(

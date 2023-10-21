@@ -38,13 +38,13 @@ function Home() {
     }
   }, []);
 
-  let filteredEvents = events?.filter((item) => {
+  let filteredEvents = events ? events?.filter((item) => {
     if (category === "All Events") {
       return item;
     } else {
       return item.category === category;
     }
-  });
+  }): [];
 
   return (
     <div className="homeWrapper">

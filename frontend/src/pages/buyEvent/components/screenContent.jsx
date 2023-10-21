@@ -177,6 +177,11 @@ function ScreenContent({ data, id }) {
   };
 
   const handleAddorRemoveSeat = (seat) => {
+    if(step === 2){
+      toast.error("You can not change your seats, please go back.");
+      return;
+    }
+
     let seatsNums = seats?.map((item) => item?.number);
 
     if (seatsNums?.includes(seat)) {

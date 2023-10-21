@@ -105,7 +105,7 @@ function BuyEvent() {
           </div>
         </div>
 
-        {data.venue !== "The Avenue, Paris" ? (
+        {data.venue == "The Avenue, Paris" ? (
           <StageContent data={data} id={id}/>
         ) : (
           <ScreenContent data={data} id={id}/>
