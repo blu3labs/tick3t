@@ -70,14 +70,24 @@ function Card({ index, item, getCurrentTime }) {
       console.log(res, "res");
 
       if (res !== "err") {
-        let api = BACKEND_API_URL + "/check/qr" + "?owner=" + activeAddress +
-        "&collection=" + item.address + "&tokenId=" + item.tokenId + "&salt=" + 
-        ticketInfo.salt + "&deadline=" + currentTime 
-        + "&signature=" + res;
-
+        let api =
+          BACKEND_API_URL +
+          "/check/qr" +
+          "?owner=" +
+          activeAddress +
+          "&collection=" +
+          item.address +
+          "&tokenId=" +
+          item.tokenId +
+          "&salt=" +
+          ticketInfo.salt +
+          "&deadline=" +
+          currentTime +
+          "&signature=" +
+          res;
 
         console.log(api, "api");
-        
+
         showModal(api);
       }
     } catch (err) {
@@ -147,7 +157,7 @@ function Card({ index, item, getCurrentTime }) {
           <QRCode value={qrValue} />
 
           <div className="qrModalTimer">
-            <span>Ticket will be expired in </span>
+            <div className="qrModalTimerText">Ticket will be expired in </div>
             <Date date={timer * 1000} />
           </div>
         </div>

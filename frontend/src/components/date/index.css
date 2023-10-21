@@ -9,8 +9,18 @@
   }
   
   .qrDateItem {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .qrDateItem span:nth-child(1) {
+    font-size: 20px;
+    font-weight: 600;
+    color: #fff;
     background: var(--accent-color);
-    padding: 6px;
+    padding: 0;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -18,27 +28,12 @@
     width: 36px;
     height: 36px;
   }
+
+    .qrDateItem span:nth-child(2) {
+        font-size: 14px;
+        font-weight: 500;
+        color: #000;
+    }
   
-  .qrDateItem span {
-    font-size: 16px;
-    font-weight: 600;
-    color: #000;
-  }
-  
-  .qrDateWithText {
-    width: 100%;
-    height: auto;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 4px;
-  }
-  
-  .qrDateText {
-    width: 100%;
-    text-align: center;
-    font-size: 14px;
-    color: #000;
-  }
+
   
