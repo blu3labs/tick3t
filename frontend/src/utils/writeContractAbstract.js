@@ -109,7 +109,6 @@ export const writeContractAbstract = async (data) => {
       operation: 0,
     };
 
-    console.log(callInformation, "iso 1");
 
     const relayKit = new GelatoRelayPack(
       "_mhz0rzLWDbZ6_qEdg9c5qF50kgQ_XuKOlTFxXVdIbg_"
@@ -127,7 +126,6 @@ export const writeContractAbstract = async (data) => {
       ],
     });
 
-    console.log(normalTx, "iso 2");
 
     normalTx.data.refundReceiver = ethers.constants.AddressZero;
     normalTx.data.gasPrice = "0";
@@ -139,8 +137,6 @@ export const writeContractAbstract = async (data) => {
     let signedVersion = {};
     const hash = await safeSDK.getTransactionHash(normalTx);
     let signatureData = "";
-
-    console.log(hash, "iso 3");
 
     try {
       signatureData = await providerTest.send("eth_sign", [
@@ -164,8 +160,7 @@ export const writeContractAbstract = async (data) => {
       })
     );
 
-    console.log(responsebundler, "iso 4");
-    // const receipt = await tx.wait();
+
 
 
     if (

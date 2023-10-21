@@ -88,6 +88,7 @@ function Card({ index, item, getCurrentTime }) {
 
         console.log(api, "api");
 
+
         showModal(api);
       }
     } catch (err) {

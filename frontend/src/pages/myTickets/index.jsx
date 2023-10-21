@@ -128,6 +128,13 @@ function MyTickets() {
 
   useEffect(() => {
     getMyTickets();
+
+    let interval = setInterval(() => {
+      getMyTickets();
+    }
+    , 7_000);
+
+    return () => clearInterval(interval);
   }, [activeAddress]);
 
   let filteredTickets = myTickets

@@ -93,9 +93,9 @@ function Event() {
               <span>{data.description}</span>
             </div>
 
-            <div className="eventDetailChatArea">
+            {/* <div className="eventDetailChatArea">
               <span>CHAT AREA</span>
-            </div>
+            </div> */}
           </div>
           <div className="eventRightWrapper">
             <div className="eventRightTitle">
