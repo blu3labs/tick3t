@@ -58,9 +58,8 @@ contract ERC721Event is ERC721, IEvent, TicketValidatorERC721, ReentrancyGuard {
         for (uint256 i = 0; i < recipients.length; i++) {
             uint256 tokenId = tokenIds[i];
             require(tokenId > 0 && tokenId <= 90, "Invalid tokenId");
-
-            _safeMint(msg.sender, tokenId);
-            _userTickets[msg.sender].add(tokenId);
+            _safeMint(recipients[i], tokenId);
+            _userTickets[recipients[i]].add(tokenId);
             totalPrice += _getPrice(tokenId);
             emit Sold(recipients[i], tokenId);
         }
