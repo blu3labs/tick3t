@@ -21,8 +21,8 @@ contract ERC721Event is ERC721, IEvent, TicketValidatorERC721, ReentrancyGuard {
     uint256 public immutable serviceFee;
     uint256 public immutable date;
     uint256[3] public prices;
-
     string private _uri;
+    EnumerableSet.UintSet private _soldTickets;
 
     mapping(address => EnumerableSet.UintSet) private _userTickets;
 
@@ -60,6 +60,7 @@ contract ERC721Event is ERC721, IEvent, TicketValidatorERC721, ReentrancyGuard {
             require(tokenId > 0 && tokenId <= 90, "Invalid tokenId");
             _safeMint(recipients[i], tokenId);
             _userTickets[recipients[i]].add(tokenId);
+            _soldTickets.add(tokenId);
             totalPrice += _getPrice(tokenId);
             emit Sold(recipients[i], tokenId);
         }
@@ -94,6 +95,10 @@ contract ERC721Event is ERC721, IEvent, TicketValidatorERC721, ReentrancyGuard {
             });
         }
         return tickets;
+    }
+
+    function getSoldTickets() external view returns (uint256[] memory) {
+        return _soldTickets.values();
     }
 
     function _getPrice(uint256 tokenId) internal view returns (uint256) {
