@@ -51,13 +51,12 @@ function Verify() {
     const verifyTicket = async () => {
       setLoading(true)
         try {
-          console.log(              `${BACKEND_API_URL}/check/qr?owner=${dataQuery.owner}&ticketId=${dataQuery.ticketId}&collection=${dataQuery.collection}&deadline=${dataQuery.deadline}&salt=${dataQuery.salt}&signature=${dataQuery.signature}`
-          )
+        
             const { data: res } = await axios.get(
               `${BACKEND_API_URL}/check/qr?owner=${dataQuery.owner}&collection=${dataQuery.collection}&tokenId=${dataQuery.ticketId}&salt=${dataQuery.salt}&deadline=${dataQuery.deadline}&signature=${dataQuery.signature}`
             );
           
-            console.log(res)
+      
             if ( res?.data && res?.data === "Success!") {
             toast.success(res?.data)
             setSuccess(true)
