@@ -16,11 +16,7 @@ let categoryId = {
 function Card({ index, item, dataQuery, onClick, loading, success }) {
   return (
     <>
-    {item === {} && <span>Loading...</span>}
-      {item !== {} &&  (<Link
-        className="verifyEventCard"
-        key={index}
-      >
+      <Link className="verifyEventCard" key={index}>
         <img src={item.image} alt={item.title} draggable="false" />
         <div
           className="verifyEventCategoryColor"
@@ -48,11 +44,23 @@ function Card({ index, item, dataQuery, onClick, loading, success }) {
             </div>
           </div>
           <div className="verifyEventCardLocation">
+            <div className="verifyEventLocationPart">
             <HiOutlineLocationMarker className="verifyEventCardLocationIcon" />
             <span>{item.venue}</span>
-          </div>
+            </div>
+            <div className="verifyMyTicket">
+              <BsTicketPerforated className="myTicketsCardIcon" />
 
-          <div className="verifyMyTicket">
+              <span>
+                {item.venue === "The Avenue, Paris"
+                  ? categoryId[dataQuery.ticketId]
+                  : "Seat " + dataQuery?.ticketId}
+              </span>
+              </div>
+            </div>
+    
+
+          {/* <div className="verifyMyTicket">
             <BsTicketPerforated className="myTicketsCardIcon" />
 
             <span>
@@ -60,18 +68,18 @@ function Card({ index, item, dataQuery, onClick, loading, success }) {
                 ? categoryId[dataQuery.ticketId]
                 : "Seat " + dataQuery?.ticketId}
             </span>
-          </div>
+          </div> */}
         </div>
-      </Link>)}
+      </Link>
       <div className="buttonVerify">
-         <button
-        onClick={ success ? () => {} : onClick}
+        <button
+          onClick={success ? () => {} : onClick}
           style={{
-            cursor: loading ? "default": "pointer",
-            opacity:   loading ? "0.5": "1",
+            cursor: loading ? "default" : "pointer",
+            opacity: loading ? "0.5" : "1",
           }}
         >
-         {success ? "Verified successfuly!" : "Verify"}
+          {success ? "Verified successfuly!" : "Verify"}
         </button>
       </div>
     </>
