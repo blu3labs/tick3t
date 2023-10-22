@@ -57,7 +57,7 @@ function Verify() {
             );
           
             console.log(res)
-            if ( res?.message && res?.message?.includes("Success")) {
+            if ( res?.message && res?.message === "Success!") {
             toast.success(res?.message)
             } else {
               toast.error(res?.message ?? res?.data)
