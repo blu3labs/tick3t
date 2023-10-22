@@ -41,8 +41,14 @@ export async function SignTyped(ticketInfo, wallet) {
     const domain = await getDomain(ticketInfo);
     const value = await getValues(ticketInfo);
 
+    let signature = ""
 
-    const signature = await wallet._signTypedData(domain, types, value);
+    try {
+     signature = await wallet._signTypedData(domain, types, value);
+    }catch(err){
+
+      signature = await wallet._signTypedData(domain, types, value);
+    }
     return signature;
 }
   
@@ -167,13 +173,15 @@ export const signMessageTransaction = async (
       },
     ],
   });
+  safeSignTxRelayInside.data.gasPrice = "0"
+  safeSignTxRelayInside.data.refundReceiver = ethers.constants.AddressZero
+
 
   const hashTx = await safeSDK.getTransactionHash(safeSignTxRelayInside);
 
   let signedVersionInside = ""
   let signature = ""
   try {
-
     let signatureData = await (await ethAdapter.getProvider()).send("eth_sign", [
       (await (ethAdapter.getSigner()).getAddress()).toLowerCase(),
       hexlify(hashTx),
