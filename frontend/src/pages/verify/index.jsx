@@ -61,8 +61,11 @@ function Verify() {
             if ( res?.data && res?.data === "Success!") {
             toast.success(res?.data)
             setSuccess(true)
+
             } else {
               toast.error(res?.data)
+              setLoading(false)
+
             }
           } catch (error) {
             console.log(error);
