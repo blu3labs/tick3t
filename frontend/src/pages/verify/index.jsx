@@ -19,6 +19,7 @@ function Verify() {
 
     const [event, setEvent] = useState(null)
     const [loading, setLoading] = useState(false)
+    const [success, setSuccess] = useState(false)
     const query = useQuery()
     const dataQuery = {
         owner: query.get("owner"),
@@ -57,20 +58,22 @@ function Verify() {
             );
           
             console.log(res)
-            if ( res?.message && res?.message === "Success!") {
-            toast.success(res?.message)
+            if ( res?.data && res?.data === "Success!") {
+            toast.success(res?.data)
+            setSuccess(true)
             } else {
-              toast.error(res?.message ?? res?.data)
+              toast.error(res?.data)
             }
           } catch (error) {
             console.log(error);
             toast.error(error?.response?.data?.message)
+            setLoading(false)
           }
-          setLoading(false)
+      
     }
     return (
         <div className="verifyWrapper">
-            <Card  item={event ?? {}} dataQuery={dataQuery} onClick={verifyTicket}  loading={loading} setLoading={setLoading}/>
+            <Card  item={event ?? {}} dataQuery={dataQuery} onClick={verifyTicket}  loading={loading} success={success}/>
         </div>
     )
 }

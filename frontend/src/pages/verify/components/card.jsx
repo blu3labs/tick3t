@@ -13,12 +13,11 @@ let categoryId = {
   3: "General",
 };
 
-function Card({ index, item, dataQuery, onClick, loading, setLoading }) {
+function Card({ index, item, dataQuery, onClick, loading, success }) {
   return (
     <>
     {item === {} && <span>Loading...</span>}
       {item !== {} &&  (<Link
-        to={`event/${item.address}`}
         className="verifyEventCard"
         key={index}
       >
@@ -64,15 +63,15 @@ function Card({ index, item, dataQuery, onClick, loading, setLoading }) {
           </div>
         </div>
       </Link>)}
-      <div class="myTicketsCardLeft">
-        <button
-        onClick={onClick}
+      <div className="buttonVerify">
+         <button
+        onClick={ success ? () => {} : onClick}
           style={{
-            cursor: loading ? "none": "pointer",
+            cursor: loading ? "default": "pointer",
             opacity:   loading ? "0.5": "1",
           }}
         >
-          Verify
+         {success ? "Verified successfuly!" : "Verify"}
         </button>
       </div>
     </>

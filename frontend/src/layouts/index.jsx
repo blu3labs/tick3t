@@ -1,4 +1,4 @@
-import { Outlet, useLocation } from "react-router-dom";
+import { Outlet } from "react-router-dom";
 import AppWrapper from "@/ui/wrapper/app";
 import Header from "@/components/header";
 import toast, { Toaster } from "react-hot-toast";
@@ -26,7 +26,6 @@ export default function MainLayout() {
   const dispatch = useDispatch();
   const { web3AuthModalPack, safeAuthSignInResponse, signer, provider } =
     useSelector((state) => state.auth);
-    const location = useLocation()
 
   const connectedHandler = () => console.log("CONNECTED");
   const disconnectedHandler = () => console.log("DISCONNECTED");
@@ -164,7 +163,7 @@ export default function MainLayout() {
   return (
     <AppWrapper>
       <Toaster />
-      {location.pathname.includes("verify/qr") ? null : <Header />}
+      <Header />
       <Outlet />
     </AppWrapper>
   );

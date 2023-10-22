@@ -46,7 +46,7 @@ function Header() {
           </Link>
         </div>
 
-        <div className="headerRightContent headerRightMobile">
+         {!location.pathname.includes("verify/qr")&&( <div className="headerRightContent headerRightMobile">
           {safeAuthSignInResponse === null || chainId === null ? (
             <button
               className="connectBtn"
@@ -65,7 +65,7 @@ function Header() {
               Switch to Goerli
             </button>
           ) : null}
-        </div>
+        </div>)}
       </div>
     );
   } else {
@@ -79,7 +79,7 @@ function Header() {
             <img src={logo} alt="logo" draggable="false" />
             {/* <span>TICK<b>3</b>T</span> */}
           </Link>
-          {safeAuthSignInResponse && (
+          {   !location.pathname.includes("verify/qr")&&safeAuthSignInResponse && (
             <div className="headerLinks">
               <Link
                 to="/create-event"
@@ -103,7 +103,7 @@ function Header() {
           )}
         </div>
 
-        <div className="headerRightContent">
+        { !location.pathname.includes("verify/qr") && (<div className="headerRightContent">
           {safeAuthSignInResponse === null || chainId === null ? (
             <button
               className="connectBtn"
@@ -127,7 +127,7 @@ function Header() {
               <AccountModal />
             </>
           )}
-        </div>
+        </div>)}
       </div>
     );
   }
