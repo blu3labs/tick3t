@@ -15,7 +15,7 @@ const types = {
     { name: "tokenId", type: "uint256" },
     { name: "deadline", type: "uint256" },
     { name: "salt", type: "uint256" },
-  ]
+  ],
 };
 
 async function getDomain(ticketInfo) {
@@ -37,21 +37,22 @@ async function getValues(ticketInfo) {
   };
   return values;
 }
-export async function SignTyped(ticketInfo, wallet) {
-    const domain = await getDomain(ticketInfo);
-    const value = await getValues(ticketInfo);
+export async function SignTyped(ticketInfo, wallet, provider) {
+  const domain = await getDomain(ticketInfo);
+  const value = await getValues(ticketInfo);
 
-    let signature = ""
-
-    try {
-     signature = await wallet._signTypedData(domain, types, value);
-    }catch(err){
-
-      signature = await wallet._signTypedData(domain, types, value);
-    }
-    return signature;
+  let signature = "";
+  let hash = _TypedDataEncoder.hash(domain, types, value);
+  try {
+    signature = await wallet._signTypedData(domain, types, value);
+  } catch (err) {
+    signature = await provider.send("eth_sign", [
+      await wallet.getAddress(),
+      hash,
+    ]);
+  }
+  return signature;
 }
-  
 
 export const EIP712_SAFE_MESSAGE_TYPE = {
   // "SafeMessage(bytes message)"
@@ -70,27 +71,24 @@ export const generateQRCode = async (
   signer,
   isAbstract
 ) => {
+  const ethAdapter = new EthersAdapter({
+    signerOrProvider: signer,
+    ethers,
+  });
 
-
-  const ethAdapter  = new EthersAdapter({
-    signerOrProvider:signer,
-    ethers
-  })
-
-  const hashedValue = hashMessage(JSON.stringify({...ticketInfo}));
+  const hashedValue = hashMessage(JSON.stringify({ ...ticketInfo }));
 
   const domainData = await getDomain(ticketInfo);
-    const valueData = await getValues(ticketInfo);
+  const valueData = await getValues(ticketInfo);
 
-
-  
-  const typedDataHash =  _TypedDataEncoder.hash(domainData, types, valueData);
+  const typedDataHash = _TypedDataEncoder.hash(domainData, types, valueData);
   if (!isAbstract) {
     try {
-
-
-
-      const signature = await SignTyped(ticketInfo, signer)
+      const signature = await SignTyped(
+        ticketInfo,
+        signer,
+        ethAdapter.getProvider()
+      );
       await axios.post(BACKEND_API_URL + "/qr", {
         owner: ticketInfo.owner,
         collection: ticketInfo.collection,
@@ -113,14 +111,12 @@ export const generateQRCode = async (
     "_mhz0rzLWDbZ6_qEdg9c5qF50kgQ_XuKOlTFxXVdIbg_"
   );
   const safeSDK = await Safe.create({
-
     ethAdapter,
     safeAddress: smartAccAddress,
   });
 
   try {
-    
-    console.log("signing..")
+    console.log("signing..");
     await signMessageTransaction(safeSDK, ethAdapter, typedDataHash, relayKit);
     // send the hash and the object value to backend to store the values.
     await axios.post(BACKEND_API_URL + "/qr", {
@@ -151,7 +147,6 @@ export const signMessageTransaction = async (
     hashValue,
   ]);
 
-
   const txCallInside = await safeSDK.createTransaction({
     safeTransactionData: {
       data: callInside,
@@ -173,34 +168,28 @@ export const signMessageTransaction = async (
       },
     ],
   });
-  safeSignTxRelayInside.data.gasPrice = "0"
-  safeSignTxRelayInside.data.refundReceiver = ethers.constants.AddressZero
-
+  safeSignTxRelayInside.data.gasPrice = "0";
+  safeSignTxRelayInside.data.refundReceiver = ethers.constants.AddressZero;
 
   const hashTx = await safeSDK.getTransactionHash(safeSignTxRelayInside);
 
-  let signedVersionInside = ""
-  let signature = ""
+  let signedVersionInside = "";
+  let signature = "";
   try {
-    let signatureData = await (await ethAdapter.getProvider()).send("eth_sign", [
-      (await (ethAdapter.getSigner()).getAddress()).toLowerCase(),
+    let signatureData = await (
+      await ethAdapter.getProvider()
+    ).send("eth_sign", [
+      (await ethAdapter.getSigner().getAddress()).toLowerCase(),
       hexlify(hashTx),
     ]);
-    signedVersionInside = {...safeSignTxRelayInside.data}
-    signature = signatureData
- 
+    signedVersionInside = { ...safeSignTxRelayInside.data };
+    signature = signatureData;
+  } catch (err) {
+    console.log(err);
+    signedVersionInside = await safeSDK.signTransaction(safeSignTxRelayInside);
 
-
-  }catch(err){
-    console.log(err)
-     signedVersionInside = await safeSDK.signTransaction(
-      safeSignTxRelayInside
-    );
-
-    
-    signature = signedVersionInside.encodedSignatures()
-    signedVersionInside = {...signedVersionInside.data, signature: signature}
-    
+    signature = signedVersionInside.encodedSignatures();
+    signedVersionInside = { ...signedVersionInside.data, signature: signature };
   }
   const tx = await axios.post(
     BUNDLER_API_URL + "/send-tx",
@@ -220,4 +209,4 @@ export const signMessageTransaction = async (
     );
     return hashValue;
   }
-}
+};
