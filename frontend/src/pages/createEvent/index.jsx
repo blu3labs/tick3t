@@ -331,7 +331,7 @@ function CreateEvent() {
                     title={
                       venue == "The Avenue, Paris"
                         ? "Diamond Price (ETH)"
-                        : "0-30 Seat Price (ETH)"
+                        : "1-30 Seat Price (ETH)"
                     }
                     onKeyPress={(event) => {
                       if (!/[0-9+.]/.test(event.key)) {

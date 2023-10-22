@@ -140,7 +140,7 @@ function Event() {
               </div>
               <div className="eventRightDetailItemContentVenue">
                 <span>
-                  {data.venue == "The Avenue, Paris" ? "Diamond" : "0-30 Seat"}{" "}
+                  {data.venue == "The Avenue, Paris" ? "Diamond" : "1-30 Seat"}{" "}
                   - <b>{data.venuePrice1} ETH</b>
                 </span>
                 <span>
