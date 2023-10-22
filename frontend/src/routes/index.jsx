@@ -6,6 +6,7 @@ import Event from "@/pages/event";
 import CreateEvent from "@/pages/createEvent";
 import BuyEvent from "@/pages/buyEvent";
 import MyTickets from "@/pages/myTickets";
+import Verify from "../pages/verify";
 
 const routes = createBrowserRouter([
   {
@@ -15,6 +16,10 @@ const routes = createBrowserRouter([
       {
         index: true,
         element: <Home />,
+      },
+      {
+        path:"/verify/qr",
+        element: <Verify />
       },
       {
         path: "/event/:id",

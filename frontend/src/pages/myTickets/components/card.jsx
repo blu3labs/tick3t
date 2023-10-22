@@ -71,7 +71,7 @@ function Card({ index, item, getCurrentTime }) {
 
       if (res !== "err") {
         let api =
-          BACKEND_API_URL +
+          "https://blu3labs-tick3t-frontend.blu3.app" +
           "/check/qr" +
           "?owner=" +
           activeAddress +

@@ -1,0 +1,238 @@
+.verifyWrapper {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: auto;
+  gap: 1rem;
+}
+
+.verifyTopArea {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+}
+.myTicketsCardIcon {
+  margin-top: 1px;
+}
+.myTicketsCardLeft {
+  border-top-left-radius: 8px;
+  border-bottom-left-radius: 8px;
+  width: calc(100% - 8px);
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  padding-right: 8px;
+}
+
+.myTicketsCardLeft img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  aspect-ratio: 16 / 9;
+  border-radius: 4px;
+}
+
+.myTicketWrapper {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+.verifyMyTicket {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.verifyMyTicket span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+}
+
+
+.verifyCategory {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 8px;
+  width: auto;
+}
+
+.verifyCategoryItem {
+  background: none;
+  outline: none;
+  border: none;
+  margin: 0;
+  cursor: pointer;
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+}
+
+.verifyActiveCategory {
+  color: var(--accent-color);
+}
+
+.verifyNoEvents {
+  width: 100%;
+  text-align: center;
+  justify-content: center;
+  display: flex;
+  align-items: center;
+}
+
+.verifyNoEvents span {
+  font-size: 16px;
+  font-weight: 500;
+  color: #000;
+}
+
+.verifyEvents {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 1rem;
+  width: 100%;
+  height: auto;
+  margin-bottom: 1rem;
+}
+
+.verifyEventCard {
+  border: 1px solid #868484;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border-radius: 4px;
+  overflow: hidden;
+  cursor: pointer;
+  text-decoration: none;
+}
+
+.verifyEventCard img {
+  width: 100%;
+  height: auto;
+  aspect-ratio: 16/9;
+  object-fit: cover;
+
+}
+
+.verifyEventCategoryColor {
+  width: 100%;
+  height: 8px;
+  background: #000;
+}
+
+.verifyEventCardInfo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: calc(100% - 16px);
+  padding: 8px;
+  gap: 4px;
+  background: var(--box-color);
+}
+
+.verifyEventCardInfoTop {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+  justify-content: space-between;
+}
+
+.verifyEventCardTitle {
+  font-size: 16px;
+  font-weight: 600;
+  color: #000;
+  text-align: left;
+  max-width: 65%;
+}
+
+.verifyEventCardDateClock {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  justify-content: flex-start;
+  max-width: 35%;
+}
+
+.verifyEventCardDate {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 4px;
+}
+
+.verifyEventCardDate span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  text-align: right;
+}
+
+.verifyEventCardDateIcon {
+  font-size: 14px;
+  color: var(--accent-color);
+}
+
+.verifyEventCardClock {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+  text-align: right;
+  min-height: 20px;
+}
+
+.verifyEventCardLocation {
+  width: 100%;
+  height: auto;
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  justify-content: flex-start;
+  gap: 4px;
+}
+
+.verifyEventCardLocation span {
+  font-size: 14px;
+  font-weight: 500;
+  color: #000;
+}
+
+.verifyEventCardLocationIcon {
+  font-size: 16px;
+  color: var(--accent-color);
+}
+
+@media only screen and (max-width: 768px) {
+  .verifyEvents {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media only screen and (max-width: 600px) {
+  .verifyEvents {
+    grid-template-columns: 1fr;
+  }
+  .verifyTopArea {
+    justify-content: center;
+  }
+  .verifyCategoryItem{
+    padding: 0 4px;
+  }
+}

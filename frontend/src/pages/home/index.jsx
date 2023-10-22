@@ -5,7 +5,7 @@ import Card from "./components/card";
 import "./index.css";
 import axios from "axios";
 import { BACKEND_API_URL } from "../../utils/apiUrls";
-import { useSelector } from "react-redux";
+
 function Home() {
   const [category, setCategory] = useState("All Events");
 
