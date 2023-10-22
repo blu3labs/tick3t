@@ -305,6 +305,7 @@ function CreateEvent() {
             onChange={(e) => setDescription(e.target.value)}
             error={description === "" ? "Description is a required." : null}
             rows={4}
+            maxLength={1000}
           />
 
           <div className="createLocationArea">
@@ -329,8 +330,8 @@ function CreateEvent() {
                   <Input
                     title={
                       venue == "The Avenue, Paris"
-                        ? "Diamond Price"
-                        : "0-30 Seat Price"
+                        ? "Diamond Price (ETH)"
+                        : "0-30 Seat Price (ETH)"
                     }
                     onKeyPress={(event) => {
                       if (!/[0-9+.]/.test(event.key)) {
@@ -346,8 +347,8 @@ function CreateEvent() {
                   <Input
                     title={
                       venue == "The Avenue, Paris"
-                        ? "Gold Price"
-                        : "31-60 Seat Price"
+                        ? "Gold Price (ETH)"
+                        : "31-60 Seat Price (ETH)"
                     }
                     onKeyPress={(event) => {
                       if (!/[0-9+.]/.test(event.key)) {
@@ -363,8 +364,8 @@ function CreateEvent() {
                   <Input
                     title={
                       venue == "The Avenue, Paris"
-                        ? "General Price"
-                        : "61-90 Seat Price"
+                        ? "General Price (ETH)"
+                        : "61-90 Seat Price (ETH)"
                     }
                     onKeyPress={(event) => {
                       if (!/[0-9+.]/.test(event.key)) {
