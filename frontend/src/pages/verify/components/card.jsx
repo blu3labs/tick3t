@@ -14,9 +14,13 @@ let categoryId = {
 };
 
 function Card({ index, item, dataQuery, onClick, loading, success }) {
+  console.log(item)
   return (
     <>
-      <Link className="verifyEventCard" key={index}>
+    {!item.address && <>Loading...</>}
+
+
+    {item?.address?.length > 0 &&(  <Link className="verifyEventCard" key={index}>
         <img src={item.image} alt={item.title} draggable="false" />
         <div
           className="verifyEventCategoryColor"
@@ -70,8 +74,8 @@ function Card({ index, item, dataQuery, onClick, loading, success }) {
             </span>
           </div> */}
         </div>
-      </Link>
-      <div className="buttonVerify">
+      </Link>)}
+      {item.address && (<div className="buttonVerify">
         <button
           onClick={success ? () => {} : onClick}
           style={{
@@ -81,7 +85,7 @@ function Card({ index, item, dataQuery, onClick, loading, success }) {
         >
           {success ? "Verified successfuly!" : "Verify"}
         </button>
-      </div>
+      </div>)}
     </>
   );
 }
